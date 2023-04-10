@@ -1,0 +1,48 @@
+  .store-item {
+      display     : flex;
+      margin      : 20px 5px;
+      align-items : center;
+      position    : relative;
+      padding-left: 20px;
+
+      &.store-item-checked {
+          border       : 1px solid red;
+          border-radius: 10px;
+          outline      : none;
+      }
+
+      .checkbox-item {
+          width : 20px;
+          height: 20px;
+      }
+
+      .image-item {
+          margin-left        : 20px;
+          width              : 100px;
+          height             : 100px;
+          background-size    : contain;
+          background-position: center;
+          background-repeat  : no-repeat;
+      }
+
+      .infor-item {
+          margin-left: 20px;
+
+          .name-product {
+              font-size  : 20px;
+              font-weight: 600;
+          }
+
+          .modal-child {
+              height: 200px !important;
+          }
+
+          .btn-update-count-item {
+              position   : absolute;
+              right      : 0;
+              top        : 50%;
+              transform  : translate(-50%, -50%);
+              font-weight: 600;
+          }
+      }
+  }

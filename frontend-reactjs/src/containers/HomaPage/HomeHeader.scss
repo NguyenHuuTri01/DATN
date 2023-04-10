@@ -1,0 +1,23 @@
+  .left-header {
+    width    : 20%;
+    font-size: 20px;
+    border   : 1px solid red;
+  }
+
+  .right-header {
+    padding        : 0 20px;
+    width          : 20%;
+    font-size      : 20px;
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    border         : 1px solid blue;
+  }
+
+  .tab-list {
+    width: 60%;
+
+    button {
+      font-weight: 600;
+    }
+  }

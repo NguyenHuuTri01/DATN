@@ -1,0 +1,24 @@
+import React, { Component } from "react";
+import { connect } from "react-redux";
+
+class Description extends Component {
+    render() {
+        return (
+            <div>
+                Hello word
+            </div>
+        );
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        isLoggedIn: state.user.isLoggedIn,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Description);

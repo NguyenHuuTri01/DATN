@@ -1,0 +1,152 @@
+import React, { Component } from "react";
+import './HomeHeader.scss';
+import { connect } from "react-redux";
+
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@material-ui/lab/TabContext';
+import TabList from '@material-ui/lab/TabList';
+import TabPanel from '@material-ui/lab/TabPanel';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Badge from '@mui/material/Badge';
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import Shoping from "./products/Shoping";
+import data from "./products/data";
+import ModalStore from "./modals/ModalStore";
+
+const GioHang = data[1];
+
+class HomeHeader extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: '1',
+      store: [],
+      isOpenModal: false
+    }
+  }
+  async componentDidMount() {
+    this.setState({
+      store: [GioHang]
+    })
+  }
+
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+
+  }
+
+  handleChange = (value) => {
+    this.setState({
+      value: value
+    })
+  }
+
+  handleAddToCart = (item) => {
+    for (let i = 0; i < this.state.store.length; i++) {
+      if (this.state.store[i].id === item.id) {
+        return
+      }
+    }
+    let copyStore = [...this.state.store];
+    copyStore.push(item);
+    this.setState({
+      store: [...copyStore]
+    })
+  }
+
+  handleOpenModal = () => {
+    this.setState({
+      isOpenModal: true
+    })
+  }
+
+  handleCloseModal = () => {
+    this.setState({
+      isOpenModal: false
+    })
+  }
+
+  popItemArray = (list, item) => {
+    let removeIndex = list.findIndex((itemList) => itemList.id === item.id);
+    list.splice(removeIndex, 1)
+    return list;
+  }
+
+  handlePayPainBucket = (data, totalMoney) => {
+    console.log(totalMoney)
+    let copyStore = this.state.store;
+    data.forEach((item, index) => {
+      this.popItemArray(copyStore, item)
+    })
+    this.setState({
+      store: [...copyStore]
+    })
+  }
+
+  render() {
+    let { value, store } = this.state;
+    return (
+      <>
+        <Box sx={{ width: '100%', typography: 'body1' }}>
+          <TabContext value={value} >
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
+              <div className="left-header">Logo</div>
+              <TabList
+                aria-label="lab API tabs example"
+                centered={true}
+                className="tab-list"
+              >
+                <Tab label="Giới thiệu" value="1" onClick={() => this.handleChange('1')} />
+                <Tab label="Các sản phẩm" value="2" onClick={() => this.handleChange('2')} />
+                <Tab label="Item Three" value="3" onClick={() => this.handleChange('3')} />
+              </TabList>
+              <div className="right-header">
+                <Badge badgeContent={store && store.length} color="primary">
+                  <ShoppingCartIcon
+                    style={{ cursor: "pointer" }}
+                    color="action"
+                    fontSize="large"
+                    onClick={() => this.handleOpenModal()}
+                  />
+                </Badge>
+                <Stack direction="row" spacing={2}>
+                  <Avatar src="/broken-image.jpg" />
+                </Stack>
+              </div>
+            </Box>
+            <TabPanel value="1">Home</TabPanel>
+            <TabPanel value="2">
+              <Shoping
+                addToCart={store}
+                handleAddToCart={this.handleAddToCart}
+              />
+            </TabPanel>
+            <TabPanel value="3">Item Three</TabPanel>
+          </TabContext>
+        </Box>
+
+        <ModalStore
+          isOpenModal={this.state.isOpenModal}
+          handleCloseModal={this.handleCloseModal}
+          store={this.state.store}
+          handlePayPainBucket={this.handlePayPainBucket}
+        />
+      </>
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeHeader);
