@@ -21,7 +21,7 @@ let handleUserLogin = (email, password) => {
       let isExist = await checkUserEmail(email);
       if (isExist) {
         let user = await db.User.findOne({
-          attributes: ["id", "email", "roleId", "password", "firstName", "lastName"],
+          attributes: ["id", "email", "roleId", "password", "name"],
           where: { email: email },
           raw: true,
         });
@@ -109,14 +109,10 @@ let createNewUser = (data) => {
         await db.User.create({
           email: data.email,
           password: hashPasswordFromBcrypt,
-          firstName: data.firstName,
-          lastName: data.lastName,
+          name: data.name,
           address: data.address,
           phonenumber: data.phonenumber,
-          gender: data.gender,
-          roleId: data.roleId,
-          positionId: data.positionId,
-          image: data.avatar,
+          roleId: 'R2',
         });
         resolve({
           errCode: 0,
@@ -153,7 +149,7 @@ let deleteUser = (userId) => {
 let updateUser = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.id || !data.roleId || !data.positionId || !data.gender) {
+      if (!data.id) {
         resolve({
           errCode: 2,
           errMessage: "Missing require parameters",
@@ -164,19 +160,11 @@ let updateUser = (data) => {
         raw: false,
       });
       if (user) {
-        user.firstName = data.firstName;
-        user.lastName = data.lastName;
+        user.name = data.name;
         user.address = data.address;
         user.roleId = data.roleId;
-        user.positionId = data.positionId;
-        user.gender = data.gender;
         user.phonenumber = data.phonenumber;
-        if (data.avatar) {
-          user.image = data.avatar;
-        }
-
         await user.save();
-
         resolve({
           errCode: 0,
           message: "Update the user succeeds!",
@@ -192,6 +180,7 @@ let updateUser = (data) => {
     }
   });
 };
+
 let getAllCodeService = (typeInput) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -215,10 +204,11 @@ let getAllCodeService = (typeInput) => {
   });
 };
 module.exports = {
-  handleUserLogin: handleUserLogin,
-  getAllUsers: getAllUsers,
   createNewUser: createNewUser,
-  deleteUser: deleteUser,
+  handleUserLogin: handleUserLogin,
   updateUser: updateUser,
+  getAllUsers: getAllUsers,
+  deleteUser: deleteUser,
+
   getAllCodeService: getAllCodeService,
 };

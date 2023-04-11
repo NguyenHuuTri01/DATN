@@ -14,16 +14,10 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
       },
-      firstName: {
-        type: Sequelize.STRING,
-      },
-      lastName: {
+      name: {
         type: Sequelize.STRING,
       },
       address: {
-        type: Sequelize.STRING,
-      },
-      gender: {
         type: Sequelize.STRING,
       },
       roleId: {
@@ -32,13 +26,6 @@ module.exports = {
       phonenumber: {
         type: Sequelize.STRING,
       },
-      positionId: {
-        type: Sequelize.STRING,
-      },
-      image: {
-        type: Sequelize.STRING,
-      },
-
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
