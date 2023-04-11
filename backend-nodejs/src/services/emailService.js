@@ -18,49 +18,23 @@ let sendSimpleEmail = async (dataSend) => {
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Huu Tri Dev 👻" <nguyenhuutri0905@gmail.com>', // sender address
+        from: '<nguyenhuutri0905@gmail.com>', // sender address
         to: dataSend.reciverEmail, // list of receivers
-        subject: "Thông tin đặt lịch khám bệnh", // Subject line
+        subject: "Xác nhận tạo tài khoản", // Subject line
         html: getBodyHTMLEmail(dataSend), // html body
     });
 }
 
 let getBodyHTMLEmail = (dataSend) => {
     let result = ''
-    if (dataSend.language === 'vi') {
-        result = `
-        <h3>Xin Chào ${dataSend.patientName}!</h3>
-        <p>Bạn nhận được email thì đã đặt lịch khám bệnh online trên Website</p>
-        <p>Thông tin đặt lịch khám bệnh:</p>
-        <div><b>Thời gian: ${dataSend.time}</b></div>
-         <div><b>Bác sĩ: ${dataSend.doctorName}</b></div>
-
-         <p>Nếu các thông tin trên là đúng sự thật vui lòng click vào đường link bên 
-         dưới để xác nhận và hoàn tất thủ tục đặt lịch khám bệnh
+    result = `
+         <p>
+         Nhấn đường link bên dưới để hoàn tất việc tạo tài khoản
          </p>
          <div>
          <a href=${dataSend.redirectLink} target = "_blank">Click here</a>
          </div>
-         <div>Xin chân thành cảm ơn</div>
         `
-    }
-    if (dataSend.language === 'en') {
-        result = `
-        <h3>Dear ${dataSend.patientName}!</h3>
-        <p>Bạn nhận được email thì đã đặt lịch khám bệnh online trên Website</p>
-        <p>Thông tin đặt lịch khám bệnh:</p>
-        <div><b>Thời gian: ${dataSend.time}</b></div>
-         <div><b>Bác sĩ: ${dataSend.doctorName}</b></div>
-
-         <p>Nếu các thông tin trên là đúng sự thật vui lòng click vào đường link bên 
-         dưới để xác nhận và hoàn tất thủ tục đặt lịch khám bệnh
-         </p>
-         <div>
-         <a href=${dataSend.redirectLink} target = "_blank">Click here</a>
-         </div>
-         <div>Xin chân thành cảm ơn</div>
-        `
-    }
     return result;
 }
 let getBodyHTMLEmailRemedy = (dataSend) => {

@@ -20,6 +20,7 @@ let handleLogin = async (req, res) => {
     user: userData.user ? userData.user : {},
   });
 };
+
 let handleGetAllUsers = async (req, res) => {
   let id = req.query.id;
   if (!id) {
@@ -43,6 +44,21 @@ let handleCreateNewUser = async (req, res) => {
   return res.status(200).json(message);
 };
 
+let postVerifyAccount = async (req, res) => {
+  try {
+    let infor = await userService.postVerifyAccount(req.body);
+    return res.status(200).json(
+      infor
+    )
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: 'Error from the server'
+    })
+  }
+}
+
 let handleDelelteUser = async (req, res) => {
   if (!req.body.id) {
     return res.status(200).json({
@@ -59,6 +75,7 @@ let handleEditUser = async (req, res) => {
   let message = await userService.updateUser(data);
   return res.status(200).json(message);
 };
+
 let getAllCode = async (req, res) => {
   try {
     let data = await userService.getAllCodeService(req.query.type);
@@ -79,4 +96,5 @@ module.exports = {
   handleEditUser: handleEditUser,
   handleDelelteUser: handleDelelteUser,
   getAllCode,
+  postVerifyAccount: postVerifyAccount,
 };

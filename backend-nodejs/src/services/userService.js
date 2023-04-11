@@ -1,7 +1,12 @@
 import db from "../models/index";
 import bcrypt from "bcryptjs";
-
+import emailService from './emailService';
 const salt = bcrypt.genSaltSync(10);
+
+let buildUrlEmail = (email, password) => {
+  let result = `${process.env.REACT_URL}/verify-account?email=${email}&password=${password}`;
+  return result;
+}
 
 let hashUserPassword = (password) => {
   return new Promise(async (resolve, reject) => {
@@ -106,14 +111,20 @@ let createNewUser = (data) => {
         });
       } else {
         let hashPasswordFromBcrypt = await hashUserPassword(data.password);
-        await db.User.create({
-          email: data.email,
-          password: hashPasswordFromBcrypt,
-          name: data.name,
-          address: data.address,
-          phonenumber: data.phonenumber,
-          roleId: 'R2',
-        });
+
+        await emailService.sendSimpleEmail({
+          reciverEmail: data.email,
+          redirectLink: buildUrlEmail(data.email, hashPasswordFromBcrypt)
+        })
+
+        // await db.User.create({
+        //   email: data.email,
+        //   password: hashPasswordFromBcrypt,
+        //   name: data.name,
+        //   address: data.address,
+        //   phonenumber: data.phonenumber,
+        //   roleId: 'R0',
+        // });
         resolve({
           errCode: 0,
           message: "OK",
@@ -124,6 +135,34 @@ let createNewUser = (data) => {
     }
   });
 };
+let postVerifyAccount = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.email || !data.password) {
+        resolve({
+          errCode: 1,
+          errMessage: 'Missing parameter'
+        })
+      } else {
+        await db.User.findOrCreate({
+          where: { email: data.email },
+          defaults: {
+            email: data.email,
+            password: data.password,
+            roleId: 'R2',
+          }
+        });
+        resolve({
+          errCode: 0,
+          errMessage: "Create new user succeed!"
+        })
+      }
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
+
 
 let deleteUser = (userId) => {
   return new Promise(async (resolve, reject) => {
@@ -209,6 +248,6 @@ module.exports = {
   updateUser: updateUser,
   getAllUsers: getAllUsers,
   deleteUser: deleteUser,
-
   getAllCodeService: getAllCodeService,
+  postVerifyAccount: postVerifyAccount,
 };

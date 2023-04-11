@@ -10,6 +10,7 @@ let initWebRoutes = (app) => {
   router.get("/api/get-all-users", userController.handleGetAllUsers);
   router.delete("/api/delete-user", userController.handleDelelteUser);
 
+  router.post('/api/verify-account', userController.postVerifyAccount);
 
   router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);
