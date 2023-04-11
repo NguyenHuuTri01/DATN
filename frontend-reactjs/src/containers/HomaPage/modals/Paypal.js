@@ -40,9 +40,9 @@ class Paypal extends Component {
     };
 
     render() {
-
+        console.log(this.props)
         return (
-            <div>
+            <div style={{ width: 100 }}>
                 <PayPalScriptProvider
                     options={this.paypalOptions}
                 >

@@ -456,18 +456,13 @@ class UserRedux extends Component {
 const mapStateToProps = (state) => {
   return {
     language: state.app.language,
-    genderRedux: state.admin.genders,
     roleRedux: state.admin.roles,
-    positionRedux: state.admin.positions,
-    isLoadingGender: state.admin.isLoadingGender,
     listUsers: state.admin.users,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getGenderStart: () => dispatch(actions.fetchGenderStart()),
-    getPositionStart: () => dispatch(actions.fetchPositionStart()),
     getRoleStart: () => dispatch(actions.fetchRoleStart()),
     createNewUser: (data) => dispatch(actions.createNewUser(data)),
     fetchUserRedux: () => dispatch(actions.fetchAllUsersStart()),

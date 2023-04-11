@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { push } from "connected-react-router";
 import * as actions from "../../store/actions";
 import "./Register.scss";
-import { handleLoginApi } from "../../services/userService";
+import { createNewUserService } from "../../services/userService";
 import Navbar from "./Navbar";
 
 class Register extends Component {
@@ -26,20 +26,26 @@ class Register extends Component {
         })
     }
 
-    handleLogin = async () => {
+    handleRegister = async () => {
         this.setState({
             errMessage: "",
         });
         try {
-            let data = await handleLoginApi(this.state.username, this.state.password);
-            if (data && data.errCode !== 0) {
-                this.setState({
-                    errMessage: data.message,
+            if (this.state.password === this.state.confirmPassword) {
+                let data = await createNewUserService({
+                    email: this.state.username,
+                    password: this.state.password
                 });
-            }
-            if (data && data.errCode === 0) {
-                this.props.userLoginSuccess(data.user);
-                console.log("loging success");
+                console.log(data)
+                // if (data && data.errCode !== 0) {
+                //     this.setState({
+                //         errMessage: data.message,
+                //     });
+                // }
+                // if (data && data.errCode === 0) {
+                //     this.props.userLoginSuccess(data.user);
+                //     console.log("loging success");
+                // }
             }
         } catch (e) {
             if (e.response) {
@@ -61,7 +67,7 @@ class Register extends Component {
 
     handleKeyDown = (event) => {
         if (event.key === 'Enter' || event.keyCode === 13) {
-            this.handleLogin();
+            this.handleRegister();
         }
     }
     render() {
@@ -123,7 +129,7 @@ class Register extends Component {
                                     ></i>
                                 </span>
                             </div>
-                            <button className="btn-register" onClick={() => this.handleLogin()}>
+                            <button className="btn-register" onClick={() => this.handleRegister()}>
                                 Register
                             </button>
                             <div className="err-message" style={{ color: "red" }}>

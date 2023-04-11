@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import './HomeHeader.scss';
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import * as actions from "../../store/actions";
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -15,7 +17,15 @@ import Shoping from "./products/Shoping";
 import data from "./products/data";
 import ModalStore from "./modals/ModalStore";
 
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+
+
 const GioHang = data[1];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 class HomeHeader extends Component {
 
@@ -24,7 +34,8 @@ class HomeHeader extends Component {
     this.state = {
       value: '1',
       store: [],
-      isOpenModal: false
+      isOpenModal: false,
+      openUserMenu: null
     }
   }
   async componentDidMount() {
@@ -84,9 +95,28 @@ class HomeHeader extends Component {
       store: [...copyStore]
     })
   }
+  handleLogin = () => {
+    if (this.props.history) {
+      this.props.history.push(`/login`);
+    }
+  }
+  handleLogOut = () => {
+    this.props.processLogout();
+  }
+  handleOpenUserMenu = (e) => {
+    this.setState({
+      openUserMenu: e.currentTarget
+    })
+  }
+  handleCloseUserMenu = () => {
+    this.setState({
+      openUserMenu: null
+    })
+  }
 
   render() {
-    let { value, store } = this.state;
+    let { value, store, openUserMenu } = this.state;
+    let { userInfo } = this.props;
     return (
       <>
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -112,7 +142,38 @@ class HomeHeader extends Component {
                   />
                 </Badge>
                 <Stack direction="row" spacing={2}>
-                  <Avatar src="/broken-image.jpg" />
+                  <Tooltip title="Open settings">
+                    <IconButton onClick={(e) => this.handleOpenUserMenu(e)} sx={{ p: 0 }}>
+                      <Avatar src="/broken-image.jpg" />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    sx={{ mt: '45px' }}
+                    id="menu-appbar"
+                    anchorEl={openUserMenu}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right', }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(openUserMenu)}
+                    onClose={() => this.handleCloseUserMenu()}
+                  >
+                    <MenuItem onClick={() => this.handleCloseUserMenu()}>
+                      {userInfo ?
+                        <Typography
+                          textAlign="center"
+                          onClick={() => this.handleLogOut()}
+                        >Logout</Typography>
+                        :
+                        <Typography
+                          textAlign="center"
+                          onClick={() => this.handleLogin()}
+                        >Login</Typography>
+                      }
+                    </MenuItem>
+                  </Menu>
                 </Stack>
               </div>
             </Box>
@@ -140,13 +201,14 @@ class HomeHeader extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    userInfo: state.user.userInfo,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    processLogout: () => dispatch(actions.processLogout()),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeHeader);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeHeader));

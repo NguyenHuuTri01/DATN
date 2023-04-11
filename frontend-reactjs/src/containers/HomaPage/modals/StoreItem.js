@@ -18,7 +18,6 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-
 class StoreItem extends Component {
 
     constructor(props) {
@@ -113,7 +112,11 @@ class StoreItem extends Component {
                     ></div>
                     <div className="infor-item">
                         <div className="name-product">{`${data.name}`}</div>
-                        <div>{`Số lượng hàng trong kho: ${data.quantity}`}</div>
+                        <div>Số lượng hàng trong kho:
+                            <span style={{ marginLeft: 5, color: "red" }}>
+                                {data.quantity}
+                            </span>
+                        </div>
                         <div>
                             Giá tiền: {
                                 <CurrencyFormat

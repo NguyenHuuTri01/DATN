@@ -5,7 +5,7 @@ import './ModalStore.scss';
 import StoreItem from "./StoreItem";
 import _ from "lodash";
 import CurrencyFormat from 'react-currency-format';
-import Paypal from "./Paypal";
+import ModalPayment from "./ModalPayment";
 
 class ModalStore extends Component {
     constructor(props) {
@@ -15,7 +15,6 @@ class ModalStore extends Component {
             calculateTotal: 0,
             listPainBucket: [],
             isUpdateCountItem: true,
-            setCheckOut: false
         }
     }
 
@@ -96,7 +95,7 @@ class ModalStore extends Component {
         })
     }
     render() {
-        let { listPainBucket, calculateTotal, setCheckOut } = this.state;
+        let { listPainBucket, calculateTotal } = this.state;
         console.log(listPainBucket)
         let { store } = this.props;
         return (
@@ -149,11 +148,10 @@ class ModalStore extends Component {
                         >
                             Thoát
                         </Button>
-                        {
-                            setCheckOut ? (<Paypal />) : (
-                                <button onClick={() => this.handleSetCheckOut()}>Checkout</button>
-                            )
-                        }
+                        <ModalPayment
+                            listPainBucket={listPainBucket}
+                            calculateTotal={calculateTotal}
+                        />
                     </ModalFooter>
                 </Modal>
             </div>
