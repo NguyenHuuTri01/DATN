@@ -28,6 +28,10 @@ const getAllCodeService = (inputType) => {
   return axios.get(`/api/allcode?type=${inputType}`);
 };
 
+const postVerifyAccount = (data) => {
+  return axios.post('/api/verify-account', data)
+}
+
 const postSendRemedy = (data) => {
   return axios.post('/api/send-remedy', data)
 }
@@ -39,5 +43,6 @@ export {
   deleteUserService,
   editUserService,
   getAllCodeService,
+  postVerifyAccount,
   postSendRemedy,
 };

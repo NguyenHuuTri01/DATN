@@ -22,10 +22,10 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { deepOrange } from '@mui/material/colors';
 
 
 const GioHang = data[1];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 class HomeHeader extends Component {
 
@@ -117,6 +117,7 @@ class HomeHeader extends Component {
   render() {
     let { value, store, openUserMenu } = this.state;
     let { userInfo } = this.props;
+    console.log(userInfo)
     return (
       <>
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -144,7 +145,9 @@ class HomeHeader extends Component {
                 <Stack direction="row" spacing={2}>
                   <Tooltip title="Open settings">
                     <IconButton onClick={(e) => this.handleOpenUserMenu(e)} sx={{ p: 0 }}>
-                      <Avatar src="/broken-image.jpg" />
+                      <Avatar
+                        sx={{ bgcolor: userInfo ? deepOrange[500] : "" }}
+                      ></Avatar>
                     </IconButton>
                   </Tooltip>
                   <Menu

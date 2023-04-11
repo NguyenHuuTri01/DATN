@@ -5,6 +5,7 @@ import * as actions from "../../store/actions";
 import "./Register.scss";
 import { createNewUserService } from "../../services/userService";
 import Navbar from "./Navbar";
+import { toast } from "react-toastify";
 
 class Register extends Component {
     constructor(props) {
@@ -36,16 +37,14 @@ class Register extends Component {
                     email: this.state.username,
                     password: this.state.password
                 });
-                console.log(data)
-                // if (data && data.errCode !== 0) {
-                //     this.setState({
-                //         errMessage: data.message,
-                //     });
-                // }
-                // if (data && data.errCode === 0) {
-                //     this.props.userLoginSuccess(data.user);
-                //     console.log("loging success");
-                // }
+                if (data && data.errCode === 0) {
+                    if (this.props.history) {
+                        toast.success('Đăng kí tài khoản thành công!');
+                        this.props.history.push(`/login`);
+                    }
+                } else {
+                    toast.error('Something Wrongs....');
+                }
             }
         } catch (e) {
             if (e.response) {
@@ -71,6 +70,7 @@ class Register extends Component {
         }
     }
     render() {
+
         return (
             <div className="register-background">
                 <Navbar />
@@ -86,7 +86,7 @@ class Register extends Component {
                                     value={this.state.username}
                                     onChange={(e) => this.handleOnChangeInput(e, "username")}
                                 />
-                                <label>Username</label>
+                                <label>Email</label>
                             </div>
                             <div className="group">
                                 <input

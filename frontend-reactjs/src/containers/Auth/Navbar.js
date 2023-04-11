@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import './Navbar.scss';
 
 class Navbar extends Component {
@@ -14,8 +14,8 @@ class Navbar extends Component {
         return (
             <div className="navbar">
                 <div className="links">
-                    <Link to="/login">Login</Link>
-                    <Link to="/register">Register</Link>
+                    <NavLink to="/login" activeClassName="active-link">Login</NavLink>
+                    <NavLink to="/register" activeClassName="active-link">Register</NavLink>
                 </div>
             </div>
         );
