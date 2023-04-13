@@ -2,9 +2,10 @@ import db from "../models/index";
 import bcrypt from "bcryptjs";
 import emailService from './emailService';
 const salt = bcrypt.genSaltSync(10);
+import { v4 as uuidv4 } from 'uuid';
 
-let buildUrlEmail = (email, password) => {
-  let result = `${process.env.REACT_URL}/verify-account?email=${email}&password=${password}`;
+let buildUrlEmail = (email, token) => {
+  let result = `${process.env.REACT_URL}/verify-account?email=${email}&token=${token}`;
   return result;
 }
 
@@ -48,7 +49,7 @@ let handleUserLogin = (email, password) => {
         }
       } else {
         userData.errCode = 1;
-        userData.errMessage = `Your's Email isn't exist in your system. Please try other email!`;
+        userData.errMessage = `Your Email doesn't exist in your system. Please try another email!`;
       }
       resolve(userData);
     } catch (e) {
@@ -111,20 +112,34 @@ let createNewUser = (data) => {
         });
       } else {
         let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+        let token = uuidv4();
 
         await emailService.sendSimpleEmail({
           reciverEmail: data.email,
-          redirectLink: buildUrlEmail(data.email, hashPasswordFromBcrypt)
+          redirectLink: buildUrlEmail(data.email, token)
         })
+        let reqregister = await db.UsersRegister.findOrCreate({
+          where: { email: data.email },
+          defaults: {
+            email: data.email,
+            password: hashPasswordFromBcrypt,
+            token: token,
+          }
+        });
+        if (!reqregister[1]) {
+          let updateregister = await db.UsersRegister.findOne({
+            where: {
+              email: reqregister[0].email
+            },
+            raw: false
+          });
+          if (updateregister) {
+            updateregister.password = hashPasswordFromBcrypt;
+            updateregister.token = token;
+            await updateregister.save();
+          }
+        }
 
-        // await db.User.create({
-        //   email: data.email,
-        //   password: hashPasswordFromBcrypt,
-        //   name: data.name,
-        //   address: data.address,
-        //   phonenumber: data.phonenumber,
-        //   roleId: 'R0',
-        // });
         resolve({
           errCode: 0,
           message: "OK",
@@ -138,20 +153,34 @@ let createNewUser = (data) => {
 let postVerifyAccount = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.email || !data.password) {
+      if (!data.email || !data.token) {
         resolve({
           errCode: 1,
           errMessage: 'Missing parameter'
         })
       } else {
-        await db.User.findOrCreate({
-          where: { email: data.email },
-          defaults: {
+        let userRegister = await db.UsersRegister.findOne({
+          where: {
             email: data.email,
-            password: data.password,
-            roleId: 'R2',
+            token: data.token,
+          },
+          raw: false
+        })
+        if (userRegister) {
+          let completeregister = await db.User.findOrCreate({
+            where: { email: data.email },
+            defaults: {
+              email: data.email,
+              password: userRegister.password,
+              roleId: 'R2',
+            }
+          });
+          if (!completeregister[1]) {
+            resolve({
+              errCode: 1,
+            })
           }
-        });
+        }
         resolve({
           errCode: 0,
           errMessage: "Create new user succeed!"
@@ -162,7 +191,37 @@ let postVerifyAccount = (data) => {
     }
   })
 }
+let handleGetUserById = (inputId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!inputId) {
+        resolve({
+          errCode: 1,
+          errMessage: 'Missing parameter'
+        })
+      } else {
+        let data = await db.User.findOne({
+          where: {
+            id: inputId
+          },
+          attributes: ['email', 'name', 'address', 'phonenumber'],
+        })
 
+        if (!data) {
+          data = {};
+        }
+
+        resolve({
+          errCode: 0,
+          errMessage: 'Ok',
+          data
+        })
+      }
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
 
 let deleteUser = (userId) => {
   return new Promise(async (resolve, reject) => {
@@ -185,7 +244,7 @@ let deleteUser = (userId) => {
   });
 };
 
-let updateUser = (data) => {
+let handleEditUser = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!data.id) {
@@ -194,20 +253,39 @@ let updateUser = (data) => {
           errMessage: "Missing require parameters",
         });
       }
+
       let user = await db.User.findOne({
-        where: { id: data.id },
+        where: { id: data.id, },
         raw: false,
       });
+
       if (user) {
-        user.name = data.name;
-        user.address = data.address;
-        user.roleId = data.roleId;
-        user.phonenumber = data.phonenumber;
-        await user.save();
-        resolve({
-          errCode: 0,
-          message: "Update the user succeeds!",
+
+        let checkpassword = await db.User.findOne({
+          where: { id: data.id, },
+          attributes: ['password'],
+          raw: false,
         });
+
+        let check = bcrypt.compareSync(data.password, checkpassword.password);
+
+        if (check) {
+          user.name = data.name;
+          user.address = data.address;
+          user.phonenumber = data.phonenumber;
+
+          await user.save();
+          resolve({
+            errCode: 0,
+            message: "Update the user succeeds!",
+          });
+        } else {
+          resolve({
+            errCode: -1,
+            errMessage: `Wrong password!`,
+          });
+        }
+
       } else {
         resolve({
           errCode: 1,
@@ -245,9 +323,10 @@ let getAllCodeService = (typeInput) => {
 module.exports = {
   createNewUser: createNewUser,
   handleUserLogin: handleUserLogin,
-  updateUser: updateUser,
+  handleEditUser: handleEditUser,
   getAllUsers: getAllUsers,
   deleteUser: deleteUser,
   getAllCodeService: getAllCodeService,
   postVerifyAccount: postVerifyAccount,
+  handleGetUserById: handleGetUserById,
 };

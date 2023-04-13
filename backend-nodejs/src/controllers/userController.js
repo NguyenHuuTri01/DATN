@@ -20,6 +20,19 @@ let handleLogin = async (req, res) => {
     user: userData.user ? userData.user : {},
   });
 };
+let handleGetUserById = async (req, res) => {
+  try {
+    let infor = await userService.handleGetUserById(req.query.id);
+    return res.status(200).json(infor)
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: 'Error from the server'
+    })
+  }
+}
+
 
 let handleGetAllUsers = async (req, res) => {
   let id = req.query.id;
@@ -71,9 +84,18 @@ let handleDelelteUser = async (req, res) => {
 };
 
 let handleEditUser = async (req, res) => {
-  let data = req.body;
-  let message = await userService.updateUser(data);
-  return res.status(200).json(message);
+  try {
+    let infor = await userService.handleEditUser(req.body);
+    return res.status(200).json(
+      infor
+    )
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: 'Error from the server'
+    })
+  }
 };
 
 let getAllCode = async (req, res) => {
@@ -95,6 +117,7 @@ module.exports = {
   handleCreateNewUser: handleCreateNewUser,
   handleEditUser: handleEditUser,
   handleDelelteUser: handleDelelteUser,
-  getAllCode,
+  getAllCode: getAllCode,
   postVerifyAccount: postVerifyAccount,
+  handleGetUserById: handleGetUserById,
 };

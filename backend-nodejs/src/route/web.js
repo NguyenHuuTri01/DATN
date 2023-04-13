@@ -7,8 +7,10 @@ let initWebRoutes = (app) => {
   router.post("/api/create-new-user", userController.handleCreateNewUser);
   router.post("/api/login", userController.handleLogin);
   router.put("/api/edit-user", userController.handleEditUser);
+  router.get("/api/get-user-by-id", userController.handleGetUserById);
   router.get("/api/get-all-users", userController.handleGetAllUsers);
   router.delete("/api/delete-user", userController.handleDelelteUser);
+
 
   router.post('/api/verify-account', userController.postVerifyAccount);
 
