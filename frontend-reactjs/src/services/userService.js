@@ -24,6 +24,11 @@ const deleteUserService = (userId) => {
 const editUserService = (inputData) => {
   return axios.put("/api/edit-user", inputData);
 };
+
+const getUserById = (id) => {
+  return axios.get(`/api/get-user-by-id?id=${id}`)
+}
+
 const getAllCodeService = (inputType) => {
   return axios.get(`/api/allcode?type=${inputType}`);
 };
@@ -45,4 +50,5 @@ export {
   getAllCodeService,
   postVerifyAccount,
   postSendRemedy,
+  getUserById
 };

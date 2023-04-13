@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { postVerifyAccount } from '../../services/userService';
+import './VerifyAccount.scss';
 
 class VerifyAccount extends Component {
 
@@ -15,10 +16,10 @@ class VerifyAccount extends Component {
         if (this.props.location && this.props.location.search) {
             let urlParams = new URLSearchParams(this.props.location.search);
             let email = urlParams.get('email');
-            let password = urlParams.get('password');
+            let token = urlParams.get('token');
             let res = await postVerifyAccount({
                 email: email,
-                password: password
+                token: token
             })
             if (res && res.errCode === 0) {
                 this.setState({
@@ -30,7 +31,6 @@ class VerifyAccount extends Component {
                     statusVerify: true,
                     errCode: res && res.errCode ? res.errCode : -1
                 })
-
             }
         }
     }
@@ -53,8 +53,8 @@ class VerifyAccount extends Component {
                         :
                         <div>
                             {+errCode === 0 ?
-                                <div className="infor-booking">Xác nhận lịch hẹn thành công!</div> :
-                                <div className="infor-booking">Lịch hẹn không tồn tại hoặc đã được xác nhận!</div>
+                                <div className="verify-account">Tài khoản đã được tạo thành công!</div> :
+                                <div className="verify-account">Liên kết đã được xác nhận, vui lòng không nhấn thêm!</div>
                             }
                         </div>
                     }

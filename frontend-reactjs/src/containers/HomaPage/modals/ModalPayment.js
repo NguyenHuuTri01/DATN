@@ -7,6 +7,7 @@ import Paypal from "./Paypal";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import _ from "lodash";
 
 const style = {
     position: 'absolute',
@@ -61,7 +62,13 @@ class ModalPayment extends Component {
 
         return (
             <>
-                <Button onClick={() => this.handleOpen()}>Thanh Toán</Button>
+                <Button
+                    onClick={() => this.handleOpen()}
+                    disabled={
+                        _.isEmpty(listPainBucket) || calculateTotal === 0 ?
+                            true : false
+                    }
+                >Thanh Toán</Button>
                 <Modal
                     open={isOpen}
                     onClose={() => this.handleClose()}

@@ -113,7 +113,11 @@ class HomeHeader extends Component {
       openUserMenu: null
     })
   }
-
+  handleAccountManagement = () => {
+    if (this.props.history) {
+      this.props.history.push(`/account-management`);
+    }
+  }
   render() {
     let { value, store, openUserMenu } = this.state;
     let { userInfo } = this.props;
@@ -163,6 +167,12 @@ class HomeHeader extends Component {
                     open={Boolean(openUserMenu)}
                     onClose={() => this.handleCloseUserMenu()}
                   >
+                    <MenuItem onClick={() => this.handleCloseUserMenu()}>
+                      <Typography
+                        textAlign="center"
+                        onClick={() => this.handleAccountManagement()}
+                      >Account Management</Typography>
+                    </MenuItem>
                     <MenuItem onClick={() => this.handleCloseUserMenu()}>
                       {userInfo ?
                         <Typography

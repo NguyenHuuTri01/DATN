@@ -1,0 +1,143 @@
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { getUserById } from '../../services/userService';
+import './Information.scss';
+
+class Information extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            name: '',
+            address: '',
+            phonenumber: '',
+            password: '',
+        }
+    }
+    async componentDidMount() {
+        let { userInfo } = this.props;
+        let getUser = await getUserById(userInfo && userInfo.id ? userInfo.id : 0);
+        if (getUser && getUser.errCode === 0) {
+            this.setState({
+                email: getUser.data.email,
+                name: getUser.data.name ? getUser.data.name : "",
+                address: getUser.data.address ? getUser.data.address : "",
+                phonenumber: getUser.data.phonenumber ? getUser.data.phonenumber : "",
+            })
+        }
+    }
+
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+
+    }
+    handleChange = (value) => {
+        this.setState({
+            value: value
+        })
+    }
+    handleOnChangeInput = (e, id) => {
+        let valueInput = e.target.value;
+        let stateCopy = { ...this.state };
+        stateCopy[id] = valueInput;
+        this.setState({
+            ...stateCopy
+        })
+    }
+    updateInformation = () => {
+
+    }
+    render() {
+        let { email, name, address, phonenumber, password } = this.state;
+        return (
+            <div className="information-customer-container">
+                <div className="information-customer-form">
+                    <div className="title-information">
+                        Quản Lý Thông Tin
+                    </div>
+                    <div>
+                        <div className="title-child">
+                            Email:
+                        </div>
+                        <input
+                            className="form-control"
+                            placeholder="Email..."
+                            defaultValue={email}
+                            type="text"
+                            onChange={(e) => this.handleOnChangeInput(e, "email")}
+                        />
+                    </div>
+                    <div>
+                        <div className="title-child">
+                            Tên:
+                        </div>
+                        <input
+                            className="form-control"
+                            placeholder="Tên..."
+                            defaultValue={name}
+                            type="text"
+                            onChange={(e) => this.handleOnChangeInput(e, "name")}
+                        />
+                    </div>
+                    <div>
+                        <div className="title-child">
+                            Địa Chỉ:
+                        </div>
+                        <input
+                            className="form-control"
+                            placeholder="Địa Chỉ..."
+                            defaultValue={address}
+                            type="text"
+                            onChange={(e) => this.handleOnChangeInput(e, "address")}
+                        />
+                    </div>
+                    <div>
+                        <div className="title-child">
+                            Số Điện Thoại:
+                        </div>
+                        <input
+                            className="form-control"
+                            placeholder="Số Điện Thoại..."
+                            defaultValue={phonenumber}
+                            type="number"
+                            onChange={(e) => this.handleOnChangeInput(e, "phonenumber")}
+                        />
+                    </div>
+                    <div>
+                        <div className="title-child">
+                            Xác Nhận Mật Khẩu:
+                        </div>
+                        <input
+                            className="form-control"
+                            placeholder="Mật Khẩu Hiện Tại..."
+                            defaultValue={password}
+                            type="password"
+                            onChange={(e) => this.handleOnChangeInput(e, "password")}
+                        />
+                    </div>
+                    <div>
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => this.updateInformation()}
+                        >
+                            Lưu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        userInfo: state.user.userInfo,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Information);
