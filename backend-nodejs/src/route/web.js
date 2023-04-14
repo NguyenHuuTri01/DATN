@@ -10,7 +10,7 @@ let initWebRoutes = (app) => {
   router.get("/api/get-user-by-id", userController.handleGetUserById);
   router.get("/api/get-all-users", userController.handleGetAllUsers);
   router.delete("/api/delete-user", userController.handleDelelteUser);
-
+  router.put("/api/change-password", userController.handleChangePassword);
 
   router.post('/api/verify-account', userController.postVerifyAccount);
 

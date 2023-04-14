@@ -297,6 +297,57 @@ let handleEditUser = (data) => {
     }
   });
 };
+let handleChangePassword = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.password || !data.newPassword || !data.confirmPassword) {
+        resolve({
+          errCode: 1,
+          errMessage: 'Missing required parameters'
+        })
+      } else {
+        let res = await db.User.findOne({
+          where: {
+            id: data.userId
+          },
+          raw: false
+        })
+
+        if (res) {
+          let check = bcrypt.compareSync(data.password, res.password);
+          if (check) {
+            if (data.newPassword === data.confirmPassword) {
+              let hashNewPassword = await hashUserPassword(data.newPassword);
+              res.password = hashNewPassword;
+              await res.save();
+              resolve({
+                errCode: 0,
+                errMessage: 'Change password success'
+              })
+            } else {
+              resolve({
+                errCode: -2,
+                errMessage: 'Confirm password failed'
+              })
+            }
+          } else {
+            resolve({
+              errCode: -1,
+              errMessage: 'Wrong password'
+            })
+          }
+        } else {
+          resolve({
+            errCode: 1,
+            errMessage: `User's not found!`,
+          })
+        }
+      }
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
 
 let getAllCodeService = (typeInput) => {
   return new Promise(async (resolve, reject) => {
@@ -329,4 +380,5 @@ module.exports = {
   getAllCodeService: getAllCodeService,
   postVerifyAccount: postVerifyAccount,
   handleGetUserById: handleGetUserById,
+  handleChangePassword: handleChangePassword,
 };
