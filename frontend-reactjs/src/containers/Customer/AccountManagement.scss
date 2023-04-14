@@ -1,0 +1,12 @@
+.icon-back-to-home {
+    font-size : 50px;
+    cursor    : pointer;
+    position  : absolute;
+    top       : 0;
+    left      : 50px;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: red;
+    }
+}

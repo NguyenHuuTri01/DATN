@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getUserById } from '../../services/userService';
+import { getUserById, editUserService } from '../../services/userService';
 import './Information.scss';
+import { toast } from "react-toastify";
 
 class Information extends Component {
 
@@ -44,8 +45,22 @@ class Information extends Component {
             ...stateCopy
         })
     }
-    updateInformation = () => {
-
+    updateInformation = async () => {
+        let { email, name, address, phonenumber, password } = this.state;
+        let resUpdate = await editUserService({
+            id: this.props.userInfo.id,
+            email: email,
+            name: name,
+            address: address,
+            phonenumber: phonenumber,
+            password: password
+        })
+        if (resUpdate && resUpdate.errCode === 0) {
+            toast.success('Cập Nhật Thông Tin Thành Công!');
+        } else
+            if (resUpdate && resUpdate.errCode === -1) {
+                toast.error('Sai Mật Khẩu!');
+            }
     }
     render() {
         let { email, name, address, phonenumber, password } = this.state;
@@ -64,6 +79,7 @@ class Information extends Component {
                             placeholder="Email..."
                             defaultValue={email}
                             type="text"
+                            disabled={true}
                             onChange={(e) => this.handleOnChangeInput(e, "email")}
                         />
                     </div>
