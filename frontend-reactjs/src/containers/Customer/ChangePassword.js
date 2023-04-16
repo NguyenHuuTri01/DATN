@@ -57,10 +57,11 @@ class ChangePassword extends Component {
     }
     handleChangePassword = async () => {
         let { password, newPassword, confirmPassword } = this.state;
-        let { userInfo } = this.props;
+        let urlParams = new URLSearchParams(window.location.search);
+        let userId = urlParams.get('userId')
         if (newPassword === confirmPassword) {
             let resChangePassword = await changePassword({
-                userId: userInfo.id,
+                userId: userId,
                 password: password,
                 newPassword: newPassword,
                 confirmPassword: confirmPassword,
@@ -99,7 +100,7 @@ class ChangePassword extends Component {
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
-                                        tabIndex="-1"
+                                        tabIndex={-1}
                                         aria-label="toggle password visibility"
                                         onClick={() => this.handleShowHidePassword()}
                                     >
@@ -120,7 +121,7 @@ class ChangePassword extends Component {
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
-                                        tabIndex="-1"
+                                        tabIndex={-1}
                                         aria-label="toggle new password visibility"
                                         onClick={() => this.handleShowHideNewPassword()}
                                     >
@@ -144,7 +145,7 @@ class ChangePassword extends Component {
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
-                                        tabIndex="-1"
+                                        tabIndex={-1}
                                         aria-label="toggle confirm password visibility"
                                         onClick={() => this.handleShowHideConfirmPassword()}
                                     >

@@ -34,9 +34,6 @@ class UserRedux extends Component {
     };
   }
   async componentDidMount() {
-    this.props.getGenderStart();
-    this.props.getPositionStart();
-    this.props.getRoleStart();
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.language !== this.props.language) {

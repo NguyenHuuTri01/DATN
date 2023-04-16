@@ -1,47 +1,35 @@
 export const adminMenu = [
   {//quản lý người dùng
-    name: "menu.admin.manage-user",
+    name: "menu.admin.manage-paint",
     menus: [
-      // {
-      //   name: "menu.admin.crud",
-      //   link: "/system/user-manage",
-      // },
       {
         name: "menu.admin.crud-redux",
         link: "/system/create-new-user",
-      },
-      // {
-      //   name: "menu.admin.manage-admin",
-      //   link: "/system/user-admin",
-      // },
-      { //Đổi mật khẩu
-        name: "menu.admin.change-password",
-        link: "/system/change-password",
       },
     ],
   },
 ];
 
-export const doctorMenu = [
+export const employeeMenu = [
   {
-    name: "menu.admin.manage-user",
+    name: "menu.admin.manage-paint",
     menus: [
-
-      {//quản lý kế hoạch khám bệnh của bác sĩ
-        name: "menu.doctor.manage-schedule",
-        link: "/doctor/manage-schedule",
+      {
+        name: "menu.employee.danh-muc-hang",
+        link: "/system/danh-muc-hang",
       },
-      {//Chỉnh sửa thông tin
-        name: "menu.doctor.manage-infomation",
-        link: "/system/manage-doctor",
+      {
+        name: "menu.employee.manage-paint",
+        link: "/system/manage-paint",
       },
-      {//quản lý bệnh nhân khám bệnh của bác sĩ
-        name: "menu.doctor.manage-patient",
-        link: "/doctor/manage-patient",
-      },
-      { //Đổi mật khẩu
-        name: "menu.admin.change-password",
-        link: "/system/change-password",
+    ]
+  },
+  {
+    name: "menu.admin.statistical",
+    menus: [
+      {
+        name: "menu.employee.statistical",
+        link: "/system/statistical",
       },
     ]
   }

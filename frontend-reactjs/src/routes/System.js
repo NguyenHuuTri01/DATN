@@ -1,23 +1,21 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
-import UserManage from "../containers/System/UserManage";
-import UserRedux from "../containers/System/Admin/UserRedux";
+import PaintManage from "../containers/System/PaintManage";
 import Header from "../containers/Header/Header";
-import ChangePassword from "../containers/System/Admin/ChangePassword";
+import DanhMucHang from "../containers/System/DanhMucHang";
 
 class System extends Component {
   render() {
     const { systemMenuPath, isLoggedIn } = this.props;
     return (
       <React.Fragment>
-        {/* {isLoggedIn && <Header />} */}
+        {isLoggedIn && <Header />}
         <div className="system-container">
           <div className="system-list">
             <Switch>
-              <Route path="/system/user-manage" component={UserManage} />
-              <Route path="/system/create-new-user" component={UserRedux} />
-              <Route path="/system/change-password" component={ChangePassword} />
+              <Route path="/system/danh-muc-hang" component={DanhMucHang} />
+              <Route path="/system/manage-paint" component={PaintManage} />
               <Route
                 component={() => { return <Redirect to={systemMenuPath} /> }}
               />

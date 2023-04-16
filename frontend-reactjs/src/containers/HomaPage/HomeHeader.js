@@ -113,10 +113,13 @@ class HomeHeader extends Component {
       openUserMenu: null
     })
   }
-  handleAccountManagement = () => {
+  handleAccountManagement = (userId) => {
     if (this.props.history) {
-      this.props.history.push(`/account-management`);
+      this.props.history.push(`/account-management/?userId=${userId}`);
     }
+  }
+  handlePaintManagement = () => {
+    window.open("http://localhost:3000/system/manage-paint", "_blank");
   }
   render() {
     let { value, store, openUserMenu } = this.state;
@@ -167,25 +170,41 @@ class HomeHeader extends Component {
                     open={Boolean(openUserMenu)}
                     onClose={() => this.handleCloseUserMenu()}
                   >
-                    <MenuItem onClick={() => this.handleCloseUserMenu()}>
-                      <Typography
-                        textAlign="center"
-                        onClick={() => this.handleAccountManagement()}
-                      >Account Management</Typography>
-                    </MenuItem>
-                    <MenuItem onClick={() => this.handleCloseUserMenu()}>
-                      {userInfo ?
-                        <Typography
-                          textAlign="center"
-                          onClick={() => this.handleLogOut()}
-                        >Logout</Typography>
+                    {
+                      !userInfo ?
+                        <MenuItem onClick={() => this.handleCloseUserMenu()}>
+                          <Typography
+                            textAlign="center"
+                            onClick={() => this.handleLogin()}
+                          >Login</Typography>
+                        </MenuItem>
                         :
-                        <Typography
-                          textAlign="center"
-                          onClick={() => this.handleLogin()}
-                        >Login</Typography>
-                      }
-                    </MenuItem>
+                        <>
+                          <MenuItem onClick={() => this.handleCloseUserMenu()}>
+                            <Typography
+                              textAlign="center"
+                              onClick={() => this.handleAccountManagement(userInfo.id)}
+                            >Account Management</Typography>
+                          </MenuItem>
+                          {
+                            this.props.userInfo &&
+                            (this.props.userInfo.roleId === 'R3' || this.props.userInfo.roleId === 'R1')
+                            &&
+                            <MenuItem onClick={() => this.handleCloseUserMenu()}>
+                              <Typography
+                                textAlign="center"
+                                onClick={() => this.handlePaintManagement()}
+                              >Paint Management</Typography>
+                            </MenuItem>
+                          }
+                          <MenuItem onClick={() => this.handleCloseUserMenu()}>
+                            <Typography
+                              textAlign="center"
+                              onClick={() => this.handleLogOut()}
+                            >Logout</Typography>
+                          </MenuItem>
+                        </>
+                    }
                   </Menu>
                 </Stack>
               </div>

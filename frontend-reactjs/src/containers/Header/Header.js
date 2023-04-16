@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import * as actions from "../../store/actions";
 import Navigator from "../../components/Navigator";
-import { adminMenu, doctorMenu } from "./menuApp";
+import { adminMenu, employeeMenu } from "./menuApp";
 import "./Header.scss";
 import { LANGUAGES, USER_ROLE } from "../../utils";
 import _ from "lodash";
@@ -26,8 +26,8 @@ class Header extends Component {
       if (role === USER_ROLE.ADMIN) {
         menu = adminMenu;
       }
-      if (role === USER_ROLE.DOCTOR) {
-        menu = doctorMenu;
+      if (role === USER_ROLE.EMPLOYEE) {
+        menu = employeeMenu;
       }
     }
     this.setState({
@@ -52,6 +52,7 @@ class Header extends Component {
           <Navigator menus={this.state.menuApp} />
         </div>
         <div className="languages">
+          {/*           
           <span className="welcome">
             <FormattedMessage id="homeheader.welcome" />
             {userInfo && userInfo.firstName ? userInfo.firstName : ""} !
@@ -71,7 +72,8 @@ class Header extends Component {
             onClick={() => this.handleChangeLanguage(LANGUAGES.EN)}
           >
             EN
-          </span>
+          </span> */}
+
           {/* nút logout */}
           <div
             className="btn btn-logout"

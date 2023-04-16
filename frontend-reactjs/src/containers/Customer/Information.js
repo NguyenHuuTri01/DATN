@@ -17,8 +17,9 @@ class Information extends Component {
         }
     }
     async componentDidMount() {
-        let { userInfo } = this.props;
-        let getUser = await getUserById(userInfo && userInfo.id ? userInfo.id : 0);
+        let urlParams = new URLSearchParams(window.location.search);
+        let userId = urlParams.get('userId')
+        let getUser = await getUserById(userId);
         if (getUser && getUser.errCode === 0) {
             this.setState({
                 email: getUser.data.email,
@@ -30,7 +31,9 @@ class Information extends Component {
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
-
+        if (prevProps.userInfo !== this.props.userInfo) {
+            console.log("did update: ")
+        }
     }
     handleChange = (value) => {
         this.setState({
@@ -62,6 +65,7 @@ class Information extends Component {
                 toast.error('Sai Mật Khẩu!');
             }
     }
+
     render() {
         let { email, name, address, phonenumber, password } = this.state;
         return (
