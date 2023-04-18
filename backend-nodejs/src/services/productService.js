@@ -55,11 +55,44 @@ let getAllLoaiSon = () => {
         }
     })
 }
-let delelteLoaiSon = (paintId) => {
+let editLoaiSon = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.name || !data.paintId) {
+                resolve({
+                    errCode: 2,
+                    errMessage: "Missing require parameters",
+                });
+                return;
+            }
+            let loaison = await db.LoaiSon.findOne({
+                where: { paintId: data.paintId },
+                raw: false,
+            });
+            if (loaison) {
+                loaison.name = data.name;
+                loaison.paintId = data.paintId;
+                await loaison.save();
+                resolve({
+                    errCode: 0,
+                    message: "Update the loaison succeeds!",
+                });
+            } else {
+                resolve({
+                    errCode: 1,
+                    errMessage: `Loaison's not found!`,
+                });
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+let delelteLoaiSon = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             let loaison = await db.LoaiSon.findOne({
-                where: { paintId: paintId },
+                where: { paintId: data.paintId },
             });
             if (!loaison) {
                 resolve({
@@ -68,7 +101,7 @@ let delelteLoaiSon = (paintId) => {
                 });
             }
             await db.LoaiSon.destroy({
-                where: { paintId: paintId },
+                where: { paintId: data.paintId },
             });
             resolve({
                 errCode: 0,
@@ -84,5 +117,6 @@ let delelteLoaiSon = (paintId) => {
 module.exports = {
     createLoaiSon: createLoaiSon,
     getAllLoaiSon: getAllLoaiSon,
+    editLoaiSon: editLoaiSon,
     delelteLoaiSon: delelteLoaiSon,
 };

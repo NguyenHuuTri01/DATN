@@ -16,6 +16,7 @@ let initWebRoutes = (app) => {
 
   router.post("/api/create-loai-son", productController.createLoaiSon);
   router.get("/api/get-all-loai-son", productController.getAllLoaiSon);
+  router.put("/api/edit-loai-son", productController.editLoaiSon);
   router.delete("/api/delete-loai-son", productController.delelteLoaiSon);
 
   router.get("/api/allcode", userController.getAllCode);
