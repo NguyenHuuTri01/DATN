@@ -15,9 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         {
             paintId: DataTypes.STRING,
             paintName: DataTypes.STRING,
-            paintPrice: DataTypes.STRING,
-            paintDiscount: DataTypes.STRING,
-            paintQuantity: DataTypes.STRING,
+            paintPrice: DataTypes.DOUBLE,
+            paintDiscount: DataTypes.INTEGER,
+            paintQuantity: DataTypes.INTEGER,
             paintCatelory: DataTypes.STRING,
             paintDescription: DataTypes.STRING,
             image: DataTypes.TEXT,

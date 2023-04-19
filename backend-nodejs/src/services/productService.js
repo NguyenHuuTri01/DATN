@@ -1,6 +1,5 @@
 import db from "../models/index";
 
-
 let createLoaiSon = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -114,9 +113,198 @@ let delelteLoaiSon = (data) => {
     })
 }
 
+let createPaintProduct = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.paintId
+                || !data.paintName
+                || !data.paintPrice
+                || !data.paintCatelory
+                || !data.paintDescription
+                || !data.imageBase64
+            ) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter'
+                })
+            } else {
+                let resCreate = await db.Product.findOrCreate({
+                    where: { paintId: data.paintId },
+                    defaults: {
+                        paintId: data.paintId,
+                        paintName: data.paintName,
+                        paintPrice: data.paintPrice,
+                        paintDiscount: data.paintDiscount,
+                        paintQuantity: data.paintQuantity,
+                        paintCatelory: data.paintCatelory,
+                        paintDescription: data.paintDescription,
+                        image: data.imageBase64
+                    }
+                })
+                if (resCreate && resCreate[1]) {
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'ok'
+                    })
+                } else {
+                    resolve({
+                        errCode: -2,
+                        errMessage: 'Item is exist'
+                    })
+                }
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+let getAllPaintProduct = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.Product.findAll(
+                {
+                    order: [["createdAt", "DESC"]],
+                }
+            );
+            if (data && data.length > 0) {
+                data.map(item => {
+                    item.image = new Buffer(item.image, "base64").toString("binary");
+                    return item;
+                })
+            }
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+                data
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+// let getPaintProductById = (inputId) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             if (!inputId) {
+//                 resolve({
+//                     errCode: 1,
+//                     errMessage: 'Missing parameter'
+//                 })
+//             } else {
+//                 let data = await db.Product.findOne({
+//                     where: {
+//                         paintId: inputId
+//                     },
+//                     attributes: ['paintId', 'paintName', 'paintPrice', 'paintDiscount',
+//                         'paintQuantity', 'paintCatelory', 'paintDescription', 'imageBase64'],
+//                 })
+//                 if (data) {
+//                     let doctorClinic = [];
+//                     doctorClinic = await db.Doctor_Infor.findAll({
+//                         where: { clinicId: inputId },
+//                         attributes: ['doctorId', 'provinceId'],
+//                     })
+
+//                     data.doctorClinic = doctorClinic;
+
+//                 } else data = {};
+
+//                 resolve({
+//                     errCode: 0,
+//                     errMessage: 'Ok',
+//                     data
+//                 })
+//             }
+//         } catch (e) {
+//             reject(e);
+//         }
+//     })
+// }
+
+let editPaintProduct = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.paintId
+                || !data.paintName
+                || !data.paintPrice
+                || !data.paintDiscount
+                || !data.paintQuantity
+                || !data.paintCatelory
+                || !data.paintDescription
+                || !data.imageBase64
+            ) {
+                resolve({
+                    errCode: 2,
+                    errMessage: "Missing require parameters",
+                });
+                return;
+            }
+            let paint = await db.Product.findOne({
+                where: { paintId: data.paintId },
+                raw: false,
+            });
+            if (paint) {
+                paint.paintId = data.paintId;
+                paint.paintName = data.paintName;
+                paint.paintPrice = data.paintPrice;
+                paint.paintDiscount = data.paintDiscount;
+                paint.paintQuantity = data.paintQuantity;
+                paint.paintCatelory = data.paintCatelory;
+                paint.paintDescription = data.paintDescription;
+                paint.image = data.imageBase64;
+                await paint.save();
+                resolve({
+                    errCode: 0,
+                    message: "Update the paint succeeds!",
+                });
+            } else {
+                resolve({
+                    errCode: 1,
+                    errMessage: `Paint's not found!`,
+                });
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let deleltePaintProduct = (inputId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let paint = await db.Product.findOne({
+                where: { paintId: inputId },
+            });
+            if (!paint) {
+                resolve({
+                    errCode: 2,
+                    errMessage: `The paint isn't exists`,
+                });
+                return
+            }
+            await db.Product.destroy({
+                where: { paintId: inputId },
+            });
+            resolve({
+                errCode: 0,
+                message: "The paint is deleted",
+            });
+
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     createLoaiSon: createLoaiSon,
     getAllLoaiSon: getAllLoaiSon,
     editLoaiSon: editLoaiSon,
     delelteLoaiSon: delelteLoaiSon,
+    createPaintProduct: createPaintProduct,
+    getAllPaintProduct: getAllPaintProduct,
+    // getPaintProductById: getPaintProductById,
+    editPaintProduct: editPaintProduct,
+    deleltePaintProduct: deleltePaintProduct,
 };

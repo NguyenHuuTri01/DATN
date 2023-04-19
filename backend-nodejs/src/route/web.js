@@ -19,6 +19,11 @@ let initWebRoutes = (app) => {
   router.put("/api/edit-loai-son", productController.editLoaiSon);
   router.delete("/api/delete-loai-son", productController.delelteLoaiSon);
 
+  router.post("/api/create-paint-product", productController.createPaintProduct);
+  router.get("/api/get-all-paint-product", productController.getAllPaintProduct);
+  router.put("/api/edit-paint-product", productController.editPaintProduct);
+  router.delete("/api/delete-paint-product", productController.deleltePaintProduct);
+
   router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);
 };

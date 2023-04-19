@@ -60,9 +60,80 @@ let delelteLoaiSon = async (req, res) => {
     }
 }
 
+let createPaintProduct = async (req, res) => {
+    try {
+        let infor = await productService.createPaintProduct(req.body);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+let getAllPaintProduct = async (req, res) => {
+    try {
+        let infor = await productService.getAllPaintProduct();
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+// let getPaintProductById = async (req, res) => {
+//     try {
+//         let infor = await productService.getPaintProductById(req.query.id);
+//         return res.status(200).json(
+//             infor
+//         )
+//     } catch (e) {
+//         console.log(e);
+//         return res.status(200).json({
+//             errCode: -1,
+//             errMessage: 'Error from the server'
+//         })
+//     }
+// }
+let editPaintProduct = async (req, res) => {
+    try {
+        let infor = await productService.editPaintProduct(req.body);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+let deleltePaintProduct = async (req, res) => {
+    if (!req.body.id) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: "Missing required parameters!",
+        });
+    }
+    let message = await productService.deleltePaintProduct(req.body.id);
+    return res.status(200).json(message);
+}
 module.exports = {
     createLoaiSon: createLoaiSon,
     getAllLoaiSon: getAllLoaiSon,
     editLoaiSon: editLoaiSon,
     delelteLoaiSon: delelteLoaiSon,
+    createPaintProduct: createPaintProduct,
+    getAllPaintProduct: getAllPaintProduct,
+    // getPaintProductById: getPaintProductById,
+    editPaintProduct: editPaintProduct,
+    deleltePaintProduct: deleltePaintProduct,
 };
