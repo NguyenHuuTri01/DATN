@@ -7,7 +7,11 @@ import "react-image-lightbox/style.css";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Select from 'react-select';
 import { toast } from "react-toastify";
-import { getAllLoaiSon, createPaintProduct } from '../../services/userService';
+import {
+  getAllLoaiSon, createPaintProduct, getAllPaintProduct,
+  editPaintProduct, deleltePaintProduct
+} from '../../services/userService';
+import ReactPaginate from 'react-paginate';
 
 class PaintManage extends Component {
   constructor(props) {
@@ -22,9 +26,14 @@ class PaintManage extends Component {
       discount: 0,
       quantity: 0,
       catelogy: [],
-      selectedCatelogy: '',
+      selectedCatelory: '',
       description: '',
-      action: 'CREATE'
+      action: 'CREATE',
+
+      allProduct: [], // Dữ liệu bảng
+      currentPage: 0, // Số trang hiện tại
+      perPage: 10, // Số phần tử trên một trang
+      disablePaintId: false,
     };
   }
 
@@ -33,6 +42,16 @@ class PaintManage extends Component {
     if (allCatelogy && allCatelogy.data.length > 0) {
       this.setState({
         catelogy: this.buildDataInputSelect(allCatelogy.data)
+      })
+    }
+    this.getListPaintProduct();
+  }
+
+  getListPaintProduct = async () => {
+    let data = await getAllPaintProduct();
+    if (data && data.errCode === 0) {
+      this.setState({
+        allProduct: [...data.data]
       })
     }
   }
@@ -86,18 +105,16 @@ class PaintManage extends Component {
 
   handleCreatePaintProduct = async () => {
     let {
-      paintId, name, price, discount, quantity, selectedCatelogy, description, imageBase64, action
+      paintId, name, price, discount, quantity, selectedCatelory, description, imageBase64, action
     } = this.state;
     if (
-      !paintId || !name || !selectedCatelogy || !description || !imageBase64
+      !paintId || !name || !selectedCatelory || !description || !imageBase64
     ) {
       alert('Vui Lòng Nhập Đầy Đủ Thông Tin')
       return
     }
 
-    if (
-      !price
-    ) {
+    if (!price) {
       alert('Vui Lòng Nhập Giá Tiền')
       return
     }
@@ -115,14 +132,15 @@ class PaintManage extends Component {
         paintPrice: price,
         paintDiscount: discount,
         paintQuantity: quantity,
-        paintCatelory: selectedCatelogy.value,
+        paintCatelory: selectedCatelory.value,
         paintDescription: description,
         imageBase64: imageBase64,
       })
-      console.log(resCreatePaint)
+
       if (resCreatePaint && resCreatePaint.errCode === -2) {
         toast.error('Sản Phẩm Đã Tồn Tại!');
       } else if (resCreatePaint && resCreatePaint.errCode === 0) {
+        this.getListPaintProduct();
         toast.success('Tạo Sản Phẩm Thành Công!');
         this.setState({
           imageBase64: '',
@@ -132,19 +150,93 @@ class PaintManage extends Component {
           price: 0,
           discount: 0,
           quantity: 0,
-          selectedCatelogy: '',
+          selectedCatelory: '',
           description: '',
         })
       }
     } else {
-      alert("update")
+      let resUpdatePaint = await editPaintProduct({
+        paintId: paintId,
+        paintName: name,
+        paintPrice: price,
+        paintDiscount: discount,
+        paintQuantity: quantity,
+        paintCatelory: selectedCatelory.value,
+        paintDescription: description,
+        imageBase64: imageBase64,
+      })
+      console.log(resUpdatePaint)
+      if (resUpdatePaint && resUpdatePaint.errCode === 0) {
+        this.getListPaintProduct();
+        toast.success('Cập Nhật Sản Phẩm Thành Công!');
+        this.setState({
+          imageBase64: '',
+          previewImgURL: '',
+          paintId: '',
+          name: '',
+          price: 0,
+          discount: 0,
+          quantity: 0,
+          selectedCatelory: '',
+          description: '',
+          action: 'CREATE',
+        })
+      }
+    }
+  }
+  handleUpdate = (itemData) => {
+    let { catelogy } = this.state;
+    let cateloryId = itemData.paintCatelory;
+    let selectedCatelory = catelogy.find(item => {
+      return item && item.value === cateloryId
+    })
+
+    this.setState({
+      imageBase64: itemData.image,
+      paintId: itemData.paintId,
+      name: itemData.paintName,
+      price: itemData.paintPrice,
+      discount: itemData.paintDiscount,
+      quantity: itemData.paintQuantity,
+      selectedCatelory: selectedCatelory,
+      description: itemData.paintDescription,
+      previewImgURL: itemData.image,
+      action: 'EDIT',
+      disablePaintId: true,
+    })
+  }
+
+  handleCancelChangeProduct = () => {
+    this.setState({
+      imageBase64: '',
+      paintId: '',
+      name: '',
+      price: 0,
+      discount: 0,
+      quantity: 0,
+      selectedCatelory: '',
+      description: '',
+      previewImgURL: '',
+      action: 'CREATE',
+      disablePaintId: false,
+    })
+  }
+
+  handleDelete = async (paintId) => {
+    let resDelete = await deleltePaintProduct(paintId);
+    if (resDelete && resDelete.errCode === 0) {
+      this.getListPaintProduct();
+      toast.success("Xóa Thành Công!")
     }
   }
 
   render() {
     let { paintId, name, price, discount, quantity, catelogy, description,
-      selectedCatelogy, action }
+      selectedCatelory, action, currentPage, perPage, allProduct, disablePaintId }
       = this.state;
+    let offset = currentPage * perPage;
+    let pageCount = Math.ceil(allProduct.length / perPage);
+    let currentPageData = allProduct.slice(offset, offset + perPage);
     return (
       <div className="paint-container">
         <div className="title-qlsp">Quản Lý Sản Phẩm</div>
@@ -156,6 +248,7 @@ class PaintManage extends Component {
                 className="form-control"
                 value={paintId}
                 onChange={(e) => this.onChangeInput(e, "paintId")}
+                disabled={disablePaintId}
               />
             </div>
           </div>
@@ -211,10 +304,10 @@ class PaintManage extends Component {
             <label>Loại:</label>
             <div>
               <Select
-                value={selectedCatelogy}
+                value={selectedCatelory}
                 onChange={this.handleChangeSelect}
                 options={catelogy}
-                name="selectedCatelogy"
+                name="selectedCatelory"
               />
             </div>
           </div>
@@ -258,11 +351,55 @@ class PaintManage extends Component {
                 onClick={() => this.handleCreatePaintProduct()}
               >Tạo</button>
               :
-              <button
-                className="btn btn-primary"
-                onClick={() => this.handleCreatePaintProduct()}
-              >Lưu</button>
+              <>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => this.handleCreatePaintProduct()}
+                >Lưu</button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => this.handleCancelChangeProduct()}
+                >Hủy</button>
+              </>
           }
+        </div>
+
+        <div className="table-danhmuchang">
+          <table>
+            <thead>
+              <tr>
+                <th>Paint ID</th>
+                <th>Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentPageData.map((item, index) => (
+                <tr key={index}>
+                  <td style={{ width: 200 }}>{item.paintId}</td>
+                  <td>{item.paintName}</td>
+                  <td className="action-btn">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={() => this.handleDelete(item.paintId)}
+                    >Delete</button>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => this.handleUpdate(item)}
+                    >Update</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <ReactPaginate
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={this.handlePageClick}
+            containerClassName={'pagination'}
+            activeClassName={'active'}
+          />
         </div>
         {this.state.isOpen === true && (
           <Lightbox

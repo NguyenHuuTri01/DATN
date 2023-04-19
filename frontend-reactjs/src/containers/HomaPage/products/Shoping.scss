@@ -12,6 +12,26 @@
         border      : 1px solid red;
         padding-top : 5%;
         padding-left: 5%;
+        position    : relative;
+
+        .search-paint {
+            position: absolute;
+            display : flex;
+            top     : 20px;
+            left    : 20px;
+
+            input {
+                width       : 200px;
+                padding-left: 10px;
+                margin-right: 10px;
+                outline     : none;
+            }
+
+            .select-color {
+                width  : 135px;
+                outline: none;
+            }
+        }
 
         .title-portfolio {
             font-size    : 25px;

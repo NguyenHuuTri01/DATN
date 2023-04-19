@@ -65,7 +65,7 @@ const getAllPaintProduct = () => {
   return axios.get(`/api/get-all-paint-product`);
 };
 const editPaintProduct = (data) => {
-  return axios.put("/api/edit-loai-son", data);
+  return axios.put("/api/edit-paint-product", data);
 };
 const deleltePaintProduct = (paintId) => {
   return axios.delete("/api/delete-paint-product", {

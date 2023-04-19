@@ -179,7 +179,7 @@ class HomeHeader extends Component {
                           >Login</Typography>
                         </MenuItem>
                         :
-                        <>
+                        <div>
                           <MenuItem onClick={() => this.handleCloseUserMenu()}>
                             <Typography
                               textAlign="center"
@@ -203,7 +203,7 @@ class HomeHeader extends Component {
                               onClick={() => this.handleLogOut()}
                             >Logout</Typography>
                           </MenuItem>
-                        </>
+                        </div>
                     }
                   </Menu>
                 </Stack>
