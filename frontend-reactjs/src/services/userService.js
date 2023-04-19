@@ -40,6 +40,41 @@ const postVerifyAccount = (data) => {
 const postSendRemedy = (data) => {
   return axios.post('/api/send-remedy', data)
 }
+
+const createLoaiSon = (data) => {
+  return axios.post('/api/create-loai-son', data)
+}
+const getAllLoaiSon = () => {
+  return axios.get(`/api/get-all-loai-son`);
+};
+const editLoaiSon = (data) => {
+  return axios.put("/api/edit-loai-son", data);
+};
+const delelteLoaiSon = (paintId) => {
+  return axios.delete("/api/delete-loai-son", {
+    data: {
+      paintId: paintId,
+    },
+  });
+};
+
+const createPaintProduct = (data) => {
+  return axios.post('/api/create-paint-product', data)
+}
+const getAllPaintProduct = () => {
+  return axios.get(`/api/get-all-paint-product`);
+};
+const editPaintProduct = (data) => {
+  return axios.put("/api/edit-loai-son", data);
+};
+const deleltePaintProduct = (paintId) => {
+  return axios.delete("/api/delete-paint-product", {
+    data: {
+      id: paintId,
+    },
+  });
+};
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -50,5 +85,13 @@ export {
   getAllCodeService,
   postVerifyAccount,
   postSendRemedy,
-  getUserById
+  getUserById,
+  createLoaiSon,
+  getAllLoaiSon,
+  editLoaiSon,
+  delelteLoaiSon,
+  createPaintProduct,
+  getAllPaintProduct,
+  editPaintProduct,
+  deleltePaintProduct,
 };
