@@ -228,8 +228,6 @@ let editPaintProduct = (data) => {
             if (!data.paintId
                 || !data.paintName
                 || !data.paintPrice
-                || !data.paintDiscount
-                || !data.paintQuantity
                 || !data.paintCatelory
                 || !data.paintDescription
                 || !data.imageBase64

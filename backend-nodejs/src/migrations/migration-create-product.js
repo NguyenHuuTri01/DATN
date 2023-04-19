@@ -15,13 +15,13 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             paintPrice: {
-                type: Sequelize.DOUBLE,
+                type: Sequelize.STRING,
             },
             paintDiscount: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
             },
             paintQuantity: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
             },
             paintCatelory: {
                 type: Sequelize.STRING,

@@ -15,12 +15,12 @@ module.exports = (sequelize, DataTypes) => {
         {
             paintId: DataTypes.STRING,
             paintName: DataTypes.STRING,
-            paintPrice: DataTypes.DOUBLE,
-            paintDiscount: DataTypes.INTEGER,
-            paintQuantity: DataTypes.INTEGER,
+            paintPrice: DataTypes.STRING,
+            paintDiscount: DataTypes.STRING,
+            paintQuantity: DataTypes.STRING,
             paintCatelory: DataTypes.STRING,
             paintDescription: DataTypes.STRING,
-            image: DataTypes.TEXT,
+            image: DataTypes.TEXT("long"),
         },
         {
             sequelize,
