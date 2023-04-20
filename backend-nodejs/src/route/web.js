@@ -1,6 +1,7 @@
 import express from "express";
 import userController from "../controllers/userController";
 import productController from "../controllers/productController";
+import cartController from '../controllers/cartController';
 
 let router = express.Router();
 
@@ -23,6 +24,9 @@ let initWebRoutes = (app) => {
   router.get("/api/get-all-paint-product", productController.getAllPaintProduct);
   router.put("/api/edit-paint-product", productController.editPaintProduct);
   router.delete("/api/delete-paint-product", productController.deleltePaintProduct);
+
+  router.post("/api/add-to-cart", cartController.addToCart);
+  router.get("/api/get-cart-by-id", cartController.getAllCartById);
 
   router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);
