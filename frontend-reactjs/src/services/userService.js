@@ -75,6 +75,14 @@ const deleltePaintProduct = (paintId) => {
   });
 };
 
+
+const addToCart = (data) => {
+  return axios.post('/api/add-to-cart', data)
+}
+const getAllCartById = (userId) => {
+  return axios.get(`/api/get-cart-by-id/?userId=${userId}`);
+};
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -94,4 +102,6 @@ export {
   getAllPaintProduct,
   editPaintProduct,
   deleltePaintProduct,
+  addToCart,
+  getAllCartById,
 };

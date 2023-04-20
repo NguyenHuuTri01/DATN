@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import './Shoping.scss';
-import data, { listColor } from "./data";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import CurrencyFormat from 'react-currency-format';
-import { getAllLoaiSon } from '../../../services/userService';
+import { getAllLoaiSon, getAllPaintProduct } from '../../../services/userService';
 
 class Shoping extends Component {
     constructor(props) {
@@ -18,24 +17,24 @@ class Shoping extends Component {
             portfolio: [],
             portfolioSearch: '',
             store: [],
-            listColor: [],
-            searchColor: '',
             searchName: '',
         }
     }
     async componentDidMount() {
-        let copydata = await data;
+        let copydata = await getAllPaintProduct();
+        if (copydata && copydata.errCode === 0) {
+            this.setState({
+                data: [...copydata.data],
+            })
+        }
+
+
         let copyPortfolio = await getAllLoaiSon();
         if (copyPortfolio && copyPortfolio.errCode === 0) {
             this.setState({
-                data: [...copydata],
                 portfolio: [...copyPortfolio.data],
             })
         }
-        let listcolor = await listColor;
-        this.setState({
-            listColor: [...listcolor]
-        })
     }
     handleClickPortfolio = (id) => {
         this.setState({
@@ -54,12 +53,6 @@ class Shoping extends Component {
     handleSeeDetail = () => {
         console.log("see detail")
     }
-    onChangeColor = (e) => {
-        console.log(e.target.value)
-        this.setState({
-            searchColor: e.target.value
-        })
-    }
     handleKeyDown = (event) => {
         if (event.key === 'Enter' || event.keyCode === 13) {
             this.setState({
@@ -69,7 +62,7 @@ class Shoping extends Component {
     }
 
     render() {
-        let { data, portfolio, portfolioSearch, listColor, searchColor, searchName } = this.state;
+        let { data, portfolio, portfolioSearch, searchName } = this.state;
         return (
             <div className="shoping-container">
                 <div className="content-left">
@@ -77,34 +70,10 @@ class Shoping extends Component {
                         className="search-paint"
                     >
                         <input
+                            className="form-control"
                             placeholder="Tìm theo tên"
                             onKeyDown={(event) => this.handleKeyDown(event)}
                         />
-                        <select
-                            style={{
-                                backgroundColor: `${searchColor}`,
-                            }}
-                            className="select-color"
-                            onChange={(e) => this.onChangeColor(e)}
-                            placeholder="Chọn màu"
-                        >
-                            <option
-                                value={"#fff"}
-                            >
-                                Tất cả
-                            </option>
-                            {
-                                listColor && listColor.length > 0 &&
-                                listColor.map((item, index) => (
-                                    <option
-                                        style={{ backgroundColor: `${item}` }}
-                                        value={item}
-                                        key={item}
-                                    >
-                                    </option>
-                                ))
-                            }
-                        </select>
                     </div>
                     <FormControl>
                         <FormLabel
@@ -141,12 +110,12 @@ class Shoping extends Component {
                         data.filter((item) => {
                             return searchName.toLowerCase() === '' ?
                                 item :
-                                item.name.toLowerCase().includes(searchName.toLowerCase());
+                                item.paintName.toLowerCase().includes(searchName.toLowerCase());
                         })
                             .filter((item) => {
                                 return portfolioSearch.toLowerCase() === '' ?
                                     item :
-                                    item.portfolio.toLowerCase().includes(portfolioSearch.toLowerCase());
+                                    item.paintCatelory.toLowerCase().includes(portfolioSearch.toLowerCase());
                             }
                             )
                             .map((item, index) => (
@@ -158,15 +127,15 @@ class Shoping extends Component {
                                 >
                                     <div className="name-sale">
                                         <div className="name-item">
-                                            {item.name}
+                                            {item.paintName}
                                         </div>
-                                        <div className={item.sale === '0' ? "no-sale" : "sale-off-item"} >
-                                            {`- ${item.sale} %`}
+                                        <div className={item.paintDiscount === '0' ? "no-sale" : "sale-off-item"} >
+                                            {`- ${item.paintDiscount} %`}
                                         </div>
                                         {
-                                            item.sale !== '0' ?
+                                            item.paintDiscount !== '0' ?
                                                 <CurrencyFormat
-                                                    value={item.price}
+                                                    value={item.paintPrice}
                                                     displayType={'text'}
                                                     thousandSeparator={true}
                                                     suffix={' đ'}
@@ -175,7 +144,7 @@ class Shoping extends Component {
                                                 : ""
                                         }
                                         <CurrencyFormat
-                                            value={(item.price * (100 - item.sale)) / 100}
+                                            value={(item.paintPrice * (100 - item.paintDiscount)) / 100}
                                             displayType={'text'}
                                             thousandSeparator={true}
                                             suffix={' đ'}

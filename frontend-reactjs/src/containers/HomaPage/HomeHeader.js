@@ -3,6 +3,7 @@ import './HomeHeader.scss';
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import * as actions from "../../store/actions";
+import { addToCart, getAllCartById } from '../../services/userService';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -14,7 +15,6 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Shoping from "./products/Shoping";
-import data from "./products/data";
 import ModalStore from "./modals/ModalStore";
 
 import IconButton from '@mui/material/IconButton';
@@ -23,9 +23,6 @@ import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { deepOrange } from '@mui/material/colors';
-
-
-const GioHang = data[1];
 
 class HomeHeader extends Component {
 
@@ -39,8 +36,11 @@ class HomeHeader extends Component {
     }
   }
   async componentDidMount() {
+    let urlParams = new URLSearchParams(window.location.search);
+    let userId = urlParams.get('userId')
+    let resData = await getAllCartById(userId);
     this.setState({
-      store: [GioHang]
+      store: [...resData.data]
     })
   }
 
@@ -54,12 +54,16 @@ class HomeHeader extends Component {
     })
   }
 
-  handleAddToCart = (item) => {
+  handleAddToCart = async (item) => {
     for (let i = 0; i < this.state.store.length; i++) {
       if (this.state.store[i].id === item.id) {
         return
       }
     }
+    let resAddCart = await addToCart({
+      userId: this.props.userInfo.id,
+      paintId: item.paintId
+    })
     let copyStore = [...this.state.store];
     copyStore.push(item);
     this.setState({
@@ -102,6 +106,9 @@ class HomeHeader extends Component {
   }
   handleLogOut = () => {
     this.props.processLogout();
+    if (this.props.history) {
+      this.props.history.push(`/login`);
+    }
   }
   handleOpenUserMenu = (e) => {
     this.setState({
@@ -124,7 +131,6 @@ class HomeHeader extends Component {
   render() {
     let { value, store, openUserMenu } = this.state;
     let { userInfo } = this.props;
-    console.log(userInfo)
     return (
       <>
         <Box sx={{ width: '100%', typography: 'body1' }}>

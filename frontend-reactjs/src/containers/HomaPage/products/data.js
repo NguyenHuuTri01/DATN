@@ -16,17 +16,17 @@ export default [
     },
     {
         id: "S02",
-        name: "Sơn Phủ Ngoại Thất",
-        description: "",
-        price: 378000,
+        paintName: "Sơn Phủ Ngoại Thất",
+        paintDescription: "",
+        paintPrice: 378000,
         image: "https://cdn.nanoweb.vn/mediacenter/media/images/3005/products/3005/3596/s1000_1000/k68pro-1658068615.jpg",
-        quantity: "5",
+        paintQuantity: "5",
         nsx: "",
-        portfolio: "SDA",
+        paintCatelogy: "SDA",
         condition: "Còn hàng",
         size: "5",
         color: "blue",
-        sale: "15",
+        paintDiscount: "15",
         sl: 1,
     },
     {
@@ -164,7 +164,4 @@ export const portfolio = [
         id: '003',
         name: 'Sơn nhũ'
     },
-]
-export const listColor = [
-    "#000000", "#FF0000", "#00FF00", "#0000FF"
 ]

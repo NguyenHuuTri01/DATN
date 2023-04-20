@@ -180,6 +180,7 @@ class PaintManage extends Component {
           selectedCatelory: '',
           description: '',
           action: 'CREATE',
+          disablePaintId: false,
         })
       }
     }
@@ -229,7 +230,11 @@ class PaintManage extends Component {
       toast.success("Xóa Thành Công!")
     }
   }
-
+  handlePageClick = ({ selected }) => {
+    this.setState({
+      currentPage: selected
+    });
+  };
   render() {
     let { paintId, name, price, discount, quantity, catelogy, description,
       selectedCatelory, action, currentPage, perPage, allProduct, disablePaintId }

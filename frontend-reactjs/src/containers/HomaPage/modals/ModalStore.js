@@ -40,15 +40,15 @@ class ModalStore extends Component {
         if (e.target.checked) {
             coppyState.push(item)
             this.setState({
-                calculateTotal: this.state.calculateTotal + item.price * item.sl,
+                calculateTotal: this.state.calculateTotal + item.productData.paintPrice * item.amount,
                 listPainBucket: [...coppyState],
                 isUpdateCountItem: false,
             })
         } else {
-            let removeIndex = coppyState.findIndex((itemList) => itemList.id === item.id);
+            let removeIndex = coppyState.findIndex((itemList) => itemList.productData.id === item.productData.id);
             coppyState.splice(removeIndex, 1)
             this.setState({
-                calculateTotal: this.state.calculateTotal - item.price * item.sl,
+                calculateTotal: this.state.calculateTotal - item.productData.paintPrice * item.amount,
                 listPainBucket: [...coppyState],
                 isUpdateCountItem: true,
             })
@@ -66,8 +66,8 @@ class ModalStore extends Component {
 
     onChangeQuantity = (e, item) => {
         let newValue = +e.target.value;
-        if (newValue > item.quantity) {
-            item.sl = item.quantity
+        if (newValue > item.paintQuantity) {
+            item.sl = item.paintQuantity
             this.setState()
         } else
             if (newValue < 1) {
@@ -96,7 +96,6 @@ class ModalStore extends Component {
     }
     render() {
         let { listPainBucket, calculateTotal } = this.state;
-        console.log(listPainBucket)
         let { store } = this.props;
         return (
             <div className="modal-store-container">
@@ -128,7 +127,7 @@ class ModalStore extends Component {
                             displayType={'text'}
                             thousandSeparator={true}
                             suffix={' đ'}
-                            className="price-sale"
+                            className="paintPrice-sale"
                         />
                         <Button
                             color="primary"

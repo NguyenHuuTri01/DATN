@@ -23,7 +23,7 @@ class StoreItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            countItem: 1,
+            countItem: 0,
             checked: false,
             dataChild: {},
             isOpenChildModal: false,
@@ -31,15 +31,19 @@ class StoreItem extends Component {
         }
     }
     async componentDidMount() {
+
+        let count = await this.props.data.amount;
         this.setState({
-            dataChild: { ...this.props.data }
+            dataChild: { ...this.props.data },
+            countItem: count
         })
+        console.log(count)
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.countItem !== this.state.countItem) {
             let copyData = { ...this.state.dataChild }
-            copyData.sl = this.state.countItem
+            copyData.amount = this.state.countItem
             this.setState({
                 dataChild: { ...copyData }
             })
@@ -54,6 +58,7 @@ class StoreItem extends Component {
     }
 
     handleOnChangeCount = (e) => {
+        console.log(e.target.value)
         this.setState({
             countItem: e.target.value,
         })
@@ -73,9 +78,9 @@ class StoreItem extends Component {
                 countItem: 1
             })
         }
-        if (countItem > data.quantity) {
+        if (countItem > (+data.paintQuantity)) {
             this.setState({
-                countItem: data.quantity
+                countItem: data.paintQuantity
             })
         }
         this.setState({
@@ -101,26 +106,26 @@ class StoreItem extends Component {
                     <input
                         className="checkbox-item"
                         type="checkbox"
-                        id={data.id}
-                        name={data.name}
-                        value={data.price}
+                        id={data.productData.id}
+                        name={data.productData.paintName}
+                        value={data.productData.paintPrice}
                         onChange={(e) => this.handleChecked(e, dataChild)}
                     />
                     <div
                         className="image-item"
-                        style={{ backgroundImage: `url(${data.image})` }}
+                        style={{ backgroundImage: `url(${data.productData.image})` }}
                     ></div>
                     <div className="infor-item">
-                        <div className="name-product">{`${data.name}`}</div>
+                        <div className="name-product">{`${data.productData.paintName}`}</div>
                         <div>Số lượng hàng trong kho:
                             <span style={{ marginLeft: 5, color: "red" }}>
-                                {data.quantity}
+                                {data.productData.paintQuantity}
                             </span>
                         </div>
                         <div>
                             Giá tiền: {
                                 <CurrencyFormat
-                                    value={(data.price * (100 - data.sale)) / 100}
+                                    value={(data.productData.paintPrice * (100 - data.productData.paintDiscount)) / 100}
                                     displayType={'text'}
                                     thousandSeparator={true}
                                     suffix={' đ'}

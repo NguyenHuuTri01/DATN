@@ -33,7 +33,7 @@ class AccountManagement extends Component {
     }
     backToHome = () => {
         if (this.props.history) {
-            this.props.history.push(`/home`);
+            this.props.history.push(`/home/?userId=${this.props.userInfo.id}`);
         }
     }
     render() {
