@@ -48,7 +48,7 @@ let updateCart = async (req, res) => {
 
 let delelteCart = async (req, res) => {
     try {
-        let infor = await cartServices.delelteCart(req.body.paintId);
+        let infor = await cartServices.delelteCart(req.body);
         return res.status(200).json(
             infor
         )
