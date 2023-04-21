@@ -82,6 +82,9 @@ const addToCart = (data) => {
 const getAllCartById = (userId) => {
   return axios.get(`/api/get-cart-by-id/?userId=${userId}`);
 };
+const delelteCart = (data) => {
+  return axios.post("/api/delete-cart-item", data);
+};
 
 export {
   handleLoginApi,
@@ -104,4 +107,5 @@ export {
   deleltePaintProduct,
   addToCart,
   getAllCartById,
+  delelteCart,
 };

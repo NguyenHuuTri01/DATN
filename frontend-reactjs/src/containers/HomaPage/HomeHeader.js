@@ -3,7 +3,7 @@ import './HomeHeader.scss';
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import * as actions from "../../store/actions";
-import { addToCart, getAllCartById } from '../../services/userService';
+import { addToCart, getAllCartById, delelteCart } from '../../services/userService';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -36,16 +36,21 @@ class HomeHeader extends Component {
     }
   }
   async componentDidMount() {
-    let urlParams = new URLSearchParams(window.location.search);
-    let userId = urlParams.get('userId')
-    let resData = await getAllCartById(userId);
-    this.setState({
-      store: [...resData.data]
-    })
+    if (this.props.userInfo && this.props.userInfo.id) {
+      this.getDataStore();
+    }
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-
+    if (prevProps.userInfo !== this.props.userInfo) {
+      this.getDataStore();
+    }
+  }
+  getDataStore = async () => {
+    let resData = await getAllCartById(this.props.userInfo.id);
+    this.setState({
+      store: [...resData.data]
+    })
   }
 
   handleChange = (value) => {
@@ -64,11 +69,9 @@ class HomeHeader extends Component {
       userId: this.props.userInfo.id,
       paintId: item.paintId
     })
-    let copyStore = [...this.state.store];
-    copyStore.push(item);
-    this.setState({
-      store: [...copyStore]
-    })
+    if (resAddCart && resAddCart.errCode === 0) {
+      this.getDataStore()
+    }
   }
 
   handleOpenModal = () => {
@@ -89,11 +92,15 @@ class HomeHeader extends Component {
     return list;
   }
 
-  handlePayPainBucket = (data, totalMoney) => {
-    console.log(totalMoney)
+  handlePayPainBucket = async (data, totalMoney) => {
     let copyStore = this.state.store;
-    data.forEach((item, index) => {
+    data.forEach(async (item, index) => {
       this.popItemArray(copyStore, item)
+      await delelteCart({
+        userId: item.userId,
+        paintId: item.paintId,
+      });
+      // this.getDataStore();
     })
     this.setState({
       store: [...copyStore]
@@ -122,7 +129,7 @@ class HomeHeader extends Component {
   }
   handleAccountManagement = (userId) => {
     if (this.props.history) {
-      this.props.history.push(`/account-management/?userId=${userId}`);
+      this.props.history.push(`/account-management`);
     }
   }
   handlePaintManagement = () => {
@@ -131,6 +138,7 @@ class HomeHeader extends Component {
   render() {
     let { value, store, openUserMenu } = this.state;
     let { userInfo } = this.props;
+    console.log("check render: ", userInfo)
     return (
       <>
         <Box sx={{ width: '100%', typography: 'body1' }}>

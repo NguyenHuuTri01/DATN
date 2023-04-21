@@ -17,22 +17,30 @@ class Information extends Component {
         }
     }
     async componentDidMount() {
-        let urlParams = new URLSearchParams(window.location.search);
-        let userId = urlParams.get('userId')
-        let getUser = await getUserById(userId);
-        if (getUser && getUser.errCode === 0) {
-            this.setState({
-                email: getUser.data.email,
-                name: getUser.data.name ? getUser.data.name : "",
-                address: getUser.data.address ? getUser.data.address : "",
-                phonenumber: getUser.data.phonenumber ? getUser.data.phonenumber : "",
-            })
+        if (this.props.userInfo && this.props.userInfo.id) {
+            let getUser = await getUserById(this.props.userInfo.id);
+            if (getUser && getUser.errCode === 0) {
+                this.setState({
+                    email: getUser.data.email,
+                    name: getUser.data.name ? getUser.data.name : "",
+                    address: getUser.data.address ? getUser.data.address : "",
+                    phonenumber: getUser.data.phonenumber ? getUser.data.phonenumber : "",
+                })
+            }
         }
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.userInfo !== this.props.userInfo) {
-            console.log("did update: ")
+            let getUser = await getUserById(this.props.userInfo.id);
+            if (getUser && getUser.errCode === 0) {
+                this.setState({
+                    email: getUser.data.email,
+                    name: getUser.data.name ? getUser.data.name : "",
+                    address: getUser.data.address ? getUser.data.address : "",
+                    phonenumber: getUser.data.phonenumber ? getUser.data.phonenumber : "",
+                })
+            }
         }
     }
     handleChange = (value) => {
@@ -60,6 +68,9 @@ class Information extends Component {
         })
         if (resUpdate && resUpdate.errCode === 0) {
             toast.success('Cập Nhật Thông Tin Thành Công!');
+            this.setState({
+                password: ''
+            })
         } else
             if (resUpdate && resUpdate.errCode === -1) {
                 toast.error('Sai Mật Khẩu!');
@@ -68,6 +79,7 @@ class Information extends Component {
 
     render() {
         let { email, name, address, phonenumber, password } = this.state;
+        console.log("check render", this.props.userInfo)
         return (
             <div className="information-customer-container">
                 <div className="information-customer-form">

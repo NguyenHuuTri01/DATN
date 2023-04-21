@@ -11,14 +11,27 @@ class ModalStore extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            checked: false,
             calculateTotal: 0,
             listPainBucket: [],
             isUpdateCountItem: true,
+            store: []
         }
     }
 
     async componentDidMount() {
+        if (this.props.store) {
+            this.setState({
+                store: [...this.props.store]
+            })
+        }
+    }
+
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.store !== this.props.store) {
+            this.setState({
+                store: [...this.props.store]
+            })
+        }
     }
 
     handleClose = () => {
@@ -60,7 +73,8 @@ class ModalStore extends Component {
         this.props.handleCloseModal();
         this.setState({
             listPainBucket: [],
-            isUpdateCountItem: true
+            isUpdateCountItem: true,
+            calculateTotal: 0
         })
     }
 
@@ -95,8 +109,7 @@ class ModalStore extends Component {
         })
     }
     render() {
-        let { listPainBucket, calculateTotal } = this.state;
-        let { store } = this.props;
+        let { listPainBucket, calculateTotal, store } = this.state;
         return (
             <div className="modal-store-container">
                 <Modal
@@ -134,11 +147,11 @@ class ModalStore extends Component {
                             className="px-3"
                             onClick={() => this.handlePayPainBucket()}
                             disabled={
-                                _.isEmpty(listPainBucket) || calculateTotal === 0 ?
+                                _.isEmpty(listPainBucket) ?
                                     true : false
                             }
                         >
-                            Thanh Toán
+                            Xóa khỏi giỏ hàng
                         </Button>
                         <Button
                             color="secondary"
@@ -161,6 +174,7 @@ class ModalStore extends Component {
 const mapStateToProps = (state) => {
     return {
         isLoggedIn: state.user.isLoggedIn,
+        userInfo: state.user.userInfo,
     };
 };
 

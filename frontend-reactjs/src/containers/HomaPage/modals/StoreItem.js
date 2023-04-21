@@ -35,9 +35,8 @@ class StoreItem extends Component {
         let count = await this.props.data.amount;
         this.setState({
             dataChild: { ...this.props.data },
-            countItem: count
+            countItem: count,
         })
-        console.log(count)
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -78,9 +77,9 @@ class StoreItem extends Component {
                 countItem: 1
             })
         }
-        if (countItem > (+data.paintQuantity)) {
+        if (countItem > (+data.productData.paintQuantity)) {
             this.setState({
-                countItem: data.paintQuantity
+                countItem: data.productData.paintQuantity
             })
         }
         this.setState({
@@ -93,7 +92,7 @@ class StoreItem extends Component {
     }
 
     render() {
-        let { countItem, dataChild, isOpenChildModal, isUpdateCountItem } = this.state;
+        let { countItem, dataChild, isOpenChildModal, isUpdateCountItem, } = this.state;
         let { data } = this.props;
         return (
             <>
@@ -106,26 +105,33 @@ class StoreItem extends Component {
                     <input
                         className="checkbox-item"
                         type="checkbox"
-                        id={data.productData.id}
-                        name={data.productData.paintName}
-                        value={data.productData.paintPrice}
+                        id={data ? data.paintId : ''}
+                        name={data && data.productData && data.productData.paintName}
+                        value={data && data.productData && data.productData.paintPrice}
                         onChange={(e) => this.handleChecked(e, dataChild)}
                     />
                     <div
                         className="image-item"
-                        style={{ backgroundImage: `url(${data.productData.image})` }}
+                        style={{
+                            backgroundImage: `url(${data && data.productData && data.productData.image})`
+                        }}
                     ></div>
                     <div className="infor-item">
-                        <div className="name-product">{`${data.productData.paintName}`}</div>
+                        <div className="name-product">
+                            {`${data && data.productData &&
+                                data.productData.paintName}`}
+                        </div>
                         <div>Số lượng hàng trong kho:
                             <span style={{ marginLeft: 5, color: "red" }}>
-                                {data.productData.paintQuantity}
+                                {data && data.productData && data.productData.paintQuantity}
                             </span>
                         </div>
                         <div>
                             Giá tiền: {
                                 <CurrencyFormat
-                                    value={(data.productData.paintPrice * (100 - data.productData.paintDiscount)) / 100}
+                                    value={(
+                                        (data && data.productData && data.productData.paintPrice) *
+                                        (100 - (data && data.productData && data.productData.paintDiscount))) / 100}
                                     displayType={'text'}
                                     thousandSeparator={true}
                                     suffix={' đ'}
@@ -176,12 +182,14 @@ class StoreItem extends Component {
                     </div>
                 </div>
             </>
+
         );
     }
 }
 
 const mapStateToProps = (state) => {
     return {
+        userInfo: state.user.userInfo,
     };
 };
 
