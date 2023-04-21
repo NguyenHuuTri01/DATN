@@ -28,7 +28,7 @@ let initWebRoutes = (app) => {
   router.post("/api/add-to-cart", cartController.addToCart);
   router.get("/api/get-cart-by-id", cartController.getAllCartById);
   router.put("/api/update-cart-item", cartController.updateCart);
-  router.delete("/api/delete-cart-item", cartController.delelteCart);
+  router.post("/api/delete-cart-item", cartController.delelteCart);
 
   router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);

@@ -126,6 +126,12 @@ let updateCart = (data) => {
 let delelteCart = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
+            if (!data.userId || !data.paintId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing require parameters",
+                });
+            }
             let cartItem = await db.Cart.findOne({
                 where: {
                     userId: data.userId,
