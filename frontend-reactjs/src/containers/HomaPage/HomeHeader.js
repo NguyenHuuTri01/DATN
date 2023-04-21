@@ -81,6 +81,7 @@ class HomeHeader extends Component {
   }
 
   handleCloseModal = () => {
+    this.getDataStore()
     this.setState({
       isOpenModal: false
     })
@@ -138,7 +139,6 @@ class HomeHeader extends Component {
   render() {
     let { value, store, openUserMenu } = this.state;
     let { userInfo } = this.props;
-    console.log("check render: ", userInfo)
     return (
       <>
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -161,6 +161,7 @@ class HomeHeader extends Component {
                     color="action"
                     fontSize="large"
                     onClick={() => this.handleOpenModal()}
+
                   />
                 </Badge>
                 <Stack direction="row" spacing={2}>
@@ -239,6 +240,7 @@ class HomeHeader extends Component {
           handleCloseModal={this.handleCloseModal}
           store={this.state.store}
           handlePayPainBucket={this.handlePayPainBucket}
+          getDataStore={this.getDataStore}
         />
       </>
     );

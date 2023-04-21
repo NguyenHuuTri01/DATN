@@ -82,8 +82,14 @@ const addToCart = (data) => {
 const getAllCartById = (userId) => {
   return axios.get(`/api/get-cart-by-id/?userId=${userId}`);
 };
+const updateCart = (data) => {
+  return axios.put("/api/update-cart-item", data);
+};
 const delelteCart = (data) => {
   return axios.post("/api/delete-cart-item", data);
+};
+const updateStatusCart = (data) => {
+  return axios.put("/api/update-status-cart", data);
 };
 
 export {
@@ -108,4 +114,6 @@ export {
   addToCart,
   getAllCartById,
   delelteCart,
+  updateCart,
+  updateStatusCart,
 };

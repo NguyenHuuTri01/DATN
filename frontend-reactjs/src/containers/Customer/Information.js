@@ -79,7 +79,6 @@ class Information extends Component {
 
     render() {
         let { email, name, address, phonenumber, password } = this.state;
-        console.log("check render", this.props.userInfo)
         return (
             <div className="information-customer-container">
                 <div className="information-customer-form">

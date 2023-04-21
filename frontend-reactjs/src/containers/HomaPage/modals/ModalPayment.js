@@ -7,6 +7,8 @@ import Paypal from "./Paypal";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { updateStatusCart } from '../../../services/userService';
+import './ModalPayment.scss';
 import _ from "lodash";
 
 const style = {
@@ -49,20 +51,41 @@ class ModalPayment extends Component {
             isOpen: false,
             methodPayment: "shipcod"
         })
+        this.props.handleClose();
     }
     handlePayment = (e) => {
         this.setState({
             methodPayment: e.target.value
         })
     }
+    getDataStore = () => {
+        this.props.getDataStore();
+    }
+    completeOrder = async () => {
+        let { listPainBucket } = this.props;
+        if (listPainBucket && listPainBucket.length > 0) {
+            listPainBucket.map(async (item) => (
+                await updateStatusCart({
+                    userId: item.userId,
+                    paintId: item.paintId,
+                    status: 'complete'
+                })
+            ))
+        }
+    }
+    saveHistory = (dataPaypal) => {
+        let { listPainBucket, calculateTotal } = this.props;
+        console.log('data with paypal');
+    }
 
     render() {
         let { isOpen, methodPayment } = this.state;
         let { listPainBucket, calculateTotal } = this.props;
-
+        console.log(listPainBucket)
         return (
             <>
                 <Button
+                    className="btn-payment"
                     onClick={() => this.handleOpen()}
                     disabled={
                         _.isEmpty(listPainBucket) || calculateTotal === 0 ?
@@ -92,9 +115,15 @@ class ModalPayment extends Component {
                         </RadioGroup>
                         {
                             methodPayment === "paypal" ?
-                                <Paypal amoutValue={calculateTotal} /> : ""
+                                <Paypal
+                                    amoutValue={calculateTotal}
+                                    getDataStore={this.getDataStore}
+                                    handleClose={this.handleClose}
+                                    completeOrder={this.completeOrder}
+                                    saveHistory={this.saveHistory}
+                                /> : ""
                         }
-                        <Button onClick={() => this.handleClose()}>Close Child Modal</Button>
+                        <Button onClick={() => this.handleClose()}>Thoát</Button>
                     </Box>
                 </Modal>
             </>

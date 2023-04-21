@@ -165,7 +165,6 @@ class PaintManage extends Component {
         paintDescription: description,
         imageBase64: imageBase64,
       })
-      console.log(resUpdatePaint)
       if (resUpdatePaint && resUpdatePaint.errCode === 0) {
         this.getListPaintProduct();
         toast.success('Cập Nhật Sản Phẩm Thành Công!');

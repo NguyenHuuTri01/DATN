@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import CurrencyFormat from 'react-currency-format';
+import { updateCart } from '../../../services/userService';
 import './StoreItem.scss';
 
 const style = {
@@ -57,7 +58,6 @@ class StoreItem extends Component {
     }
 
     handleOnChangeCount = (e) => {
-        console.log(e.target.value)
         this.setState({
             countItem: e.target.value,
         })
@@ -69,19 +69,36 @@ class StoreItem extends Component {
         })
     }
 
-    handleClose = () => {
+    handleClose = async () => {
         let { countItem } = this.state;
         let { data } = this.props;
+
         if (countItem === '' || + countItem <= 0) {
+            await updateCart({
+                userId: data.userId,
+                paintId: data.paintId,
+                amount: 1
+            });
             this.setState({
                 countItem: 1
             })
-        }
-        if (countItem > (+data.productData.paintQuantity)) {
-            this.setState({
-                countItem: data.productData.paintQuantity
-            })
-        }
+        } else
+            if (countItem > (+data.productData.paintQuantity)) {
+                await updateCart({
+                    userId: data.userId,
+                    paintId: data.paintId,
+                    amount: data.productData.paintQuantity
+                });
+                this.setState({
+                    countItem: data.productData.paintQuantity
+                })
+            } else {
+                await updateCart({
+                    userId: data.userId,
+                    paintId: data.paintId,
+                    amount: countItem
+                });
+            }
         this.setState({
             isOpenChildModal: false
         })
@@ -142,7 +159,7 @@ class StoreItem extends Component {
                         <div>Số lượng:
                             <label
                                 style={{ marginLeft: "5px", color: "blue", fontSize: "15px" }}
-                            >{countItem}</label>
+                            >{+countItem}</label>
                         </div>
                         <div>
                             {

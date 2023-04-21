@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 class Paypal extends Component {
     constructor(props) {
         super(props);
         this.state = {
             paidFor: false,
+            paymentAmount: 0
         }
     }
     paypalOptions = {
@@ -16,13 +18,27 @@ class Paypal extends Component {
     };
 
     async componentDidMount() {
+        if (this.props.amoutValue > 0) {
+            let valueUSD = parseFloat((this.props.amoutValue / 23000).toFixed(2));
+            this.setState({
+                paymentAmount: valueUSD
+            })
+        }
+    }
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.amoutValue !== this.props.amoutValue) {
+            let valueUSD = parseFloat((this.props.amoutValue / 23000).toFixed(2))
+            this.setState({
+                paymentAmount: valueUSD
+            })
+        }
     }
     createOrder = (data, actions) => {
         return actions.order.create({
             purchase_units: [
                 {
                     amount: {
-                        value: '0.01',
+                        value: this.state.paymentAmount,
                     },
                 },
             ],
@@ -36,11 +52,17 @@ class Paypal extends Component {
         // const response = await axios.post('/api/paypal/success', {
         //     orderID: order.id,
         // });
-        console.log(order);
+        // console.log('data paypal:', data);
+
+        // await this.props.completeOrder();
+        await this.props.saveHistory(order);
+        // await this.props.getDataStore();
+        // await this.props.handleClose();
+        // toast.success("Đặt Hàng Thành Công!")
+        // console.log(order);
     };
 
     render() {
-        console.log(this.props)
         return (
             <div style={{ width: 100 }}>
                 <PayPalScriptProvider

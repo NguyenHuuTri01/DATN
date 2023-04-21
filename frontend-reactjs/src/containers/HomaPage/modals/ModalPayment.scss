@@ -1,0 +1,10 @@
+.btn-payment {
+    margin-left     : 20px !important;
+    background-color: #C0B236 !important;
+    font-weight     : 600 !important;
+    width           : 200px;
+
+    &:disabled {
+        opacity: 0.5;
+    }
+}

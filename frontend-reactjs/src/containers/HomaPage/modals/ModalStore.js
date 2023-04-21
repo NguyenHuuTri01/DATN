@@ -108,6 +108,10 @@ class ModalStore extends Component {
             setCheckOut: true
         })
     }
+    getDataStore = () => {
+        this.props.getDataStore();
+    }
+
     render() {
         let { listPainBucket, calculateTotal, store } = this.state;
         return (
@@ -163,6 +167,8 @@ class ModalStore extends Component {
                         <ModalPayment
                             listPainBucket={listPainBucket}
                             calculateTotal={calculateTotal}
+                            getDataStore={this.getDataStore}
+                            handleClose={this.handleClose}
                         />
                     </ModalFooter>
                 </Modal>
