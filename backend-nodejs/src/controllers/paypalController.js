@@ -1,9 +1,9 @@
-import cartServices from '../services/cartServices';
+import paypalServices from '../services/paypalServices';
 
 
 let addToCart = async (req, res) => {
     try {
-        let infor = await cartServices.addToCart(req.body);
+        let infor = await paypalServices.addToCart(req.body);
         return res.status(200).json(
             infor
         )
@@ -77,8 +77,4 @@ let delelteCart = async (req, res) => {
 
 module.exports = {
     addToCart: addToCart,
-    getAllCartById: getAllCartById,
-    updateCart: updateCart,
-    delelteCart: delelteCart,
-    updateStatusCart: updateStatusCart,
 };

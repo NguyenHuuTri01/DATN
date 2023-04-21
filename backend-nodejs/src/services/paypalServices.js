@@ -1,6 +1,5 @@
 import db from "../models/index";
 
-
 let addToCart = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
