@@ -7,9 +7,13 @@ import Paypal from "./Paypal";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { updateStatusCart, createTransaction } from '../../../services/userService';
+import {
+    updateStatusCart, createPaypal, updatePaypal,
+    deletePaypal, saveInforOrder
+} from '../../../services/userService';
 import './ModalPayment.scss';
 import _ from "lodash";
+import { toast } from "react-toastify";
 
 const style = {
     position: 'absolute',
@@ -31,6 +35,11 @@ class ModalPayment extends Component {
         this.state = {
             isOpen: false,
             methodPayment: "shipcod",
+            name: '',
+            email: '',
+            address: '',
+            phonenumber: '',
+            isDisable: true
         }
     }
 
@@ -53,9 +62,17 @@ class ModalPayment extends Component {
         })
         this.props.handleClose();
     }
+    validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    validatePhoneNumber = (phoneNumber) => {
+        const phoneNumberRegex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
+        return phoneNumberRegex.test(phoneNumber);
+    }
     handlePayment = (e) => {
         this.setState({
-            methodPayment: e.target.value
+            methodPayment: e.target.value,
         })
     }
     getDataStore = () => {
@@ -73,8 +90,22 @@ class ModalPayment extends Component {
             ))
         }
     }
+    createDataFakePaypal = async () => {
+        let { listPainBucket } = this.props;
+        if (listPainBucket && listPainBucket.length > 0) {
+            let res = await createPaypal(listPainBucket)
+            return res;
+        }
+    }
+    deleteDataFakePaypal = async () => {
+        let { listPainBucket } = this.props;
+        if (listPainBucket && listPainBucket.length > 0) {
+            let res = await deletePaypal(listPainBucket)
+            return res;
+        }
+    }
     saveHistory = async (dataPaypal) => {
-        let { listPainBucket, calculateTotal } = this.props;
+        let { listPainBucket } = this.props;
         if (listPainBucket && listPainBucket.length > 0) {
             listPainBucket.map((item) => {
                 let date = new Date(dataPaypal.create_time)
@@ -87,11 +118,41 @@ class ModalPayment extends Component {
                 item['paymentDate'] = timestamp
                 return item
             })
-            let resdata = await createTransaction(listPainBucket)
-            console.log(resdata)
+            await updatePaypal(listPainBucket)
+            await saveInforOrder({
+                userId: this.props.userInfo.id,
+                userName: this.state.name,
+                transactionId: dataPaypal.id,
+                email: this.state.email,
+                address: this.state.address,
+                phonenumber: this.state.phonenumber,
+                typePayment: 'paypal'
+            })
         }
     }
 
+    onchangeInput = (e, id) => {
+        let valueinput = e.target.value;
+        let coppyState = { ...this.state };
+        coppyState[id] = valueinput;
+        this.setState({
+            ...coppyState
+        })
+    }
+    confirmInformation = () => {
+        let { name, address, email, phonenumber, isDisable } = this.state;
+        if (!name || !address || !email || !phonenumber) {
+            alert("Vui lòng nhập đầy đủ thông tin")
+        } else if (!this.validateEmail(email)) {
+            alert("Email không hợp lệ")
+        } else if (!this.validatePhoneNumber(phonenumber)) {
+            alert("Số điện thoại không hợp lệ")
+        } else {
+            this.setState({
+                isDisable: !isDisable
+            })
+        }
+    }
     render() {
         let { isOpen, methodPayment } = this.state;
         let { listPainBucket, calculateTotal } = this.props;
@@ -111,7 +172,48 @@ class ModalPayment extends Component {
                     aria-labelledby="child-modal-title"
                     aria-describedby="child-modal-description"
                 >
-                    <Box sx={{ ...style, width: 900, height: 500 }}>
+                    <Box sx={{ ...style, width: 900, height: 700 }}>
+                        <div>
+                            <label>Tên</label>
+                            <input
+                                className="form-control md-4"
+                                type="text"
+                                value={this.state.name}
+                                onChange={(e) => this.onchangeInput(e, 'name')}
+                                disabled={!this.state.isDisable}
+                            />
+                            <label>Email</label>
+                            <input
+                                className="form-control md-4"
+                                type="email"
+                                value={this.state.email}
+                                onChange={(e) => this.onchangeInput(e, 'email')}
+                                disabled={!this.state.isDisable}
+                            />
+                            <label>Địa Chỉ</label>
+                            <input
+                                className="form-control md-4"
+                                type="text"
+                                value={this.state.address}
+                                onChange={(e) => this.onchangeInput(e, 'address')}
+                                disabled={!this.state.isDisable}
+                            />
+                            <label>Số Điện Thoại</label>
+                            <input
+                                className="form-control md-4"
+                                type="number"
+                                value={this.state.phonenumber}
+                                onChange={(e) => this.onchangeInput(e, 'phonenumber')}
+                                disabled={!this.state.isDisable}
+                            />
+                            <button
+                                onClick={() => this.confirmInformation()}
+                                className="btn btn-primary"
+                                style={{ margin: "10px 0", width: 200 }}
+                            >
+                                {this.state.isDisable ? 'Lưu Thông Tin' : 'Chỉnh Sửa'}
+                            </button>
+                        </div>
                         <RadioGroup defaultValue={"shipcod"}
                             onChange={(e) => this.handlePayment(e)}
                         >
@@ -119,24 +221,39 @@ class ModalPayment extends Component {
                                 value="shipcod"
                                 control={<Radio />}
                                 label={"Thanh toán khi nhận hàng"}
+                                disabled={this.state.isDisable}
                             />
                             <FormControlLabel
                                 value="paypal"
                                 control={<Radio />}
                                 label={"Thanh toán qua cổng paypal"}
+                                disabled={this.state.isDisable}
                             />
                         </RadioGroup>
                         {
-                            methodPayment === "paypal" ?
+                            (methodPayment === "paypal" && !this.state.isDisable) ?
                                 <Paypal
                                     amoutValue={calculateTotal}
                                     getDataStore={this.getDataStore}
                                     handleClose={this.handleClose}
                                     completeOrder={this.completeOrder}
                                     saveHistory={this.saveHistory}
-                                /> : ""
+                                    createDataFakePaypal={this.createDataFakePaypal}
+                                    deleteDataFakePaypal={this.deleteDataFakePaypal}
+                                /> :
+                                <div style={{ height: 150 }}>
+                                    <button
+                                        className="btn btn-primary"
+                                        disabled={this.state.isDisable}
+                                    >
+                                        Thanh Toán
+                                    </button>
+                                </div>
                         }
-                        <Button onClick={() => this.handleClose()}>Thoát</Button>
+                        <Button
+                            className="btn-close-payment"
+                            onClick={() => this.handleClose()}
+                        >Thoát</Button>
                     </Box>
                 </Modal>
             </>
@@ -146,6 +263,7 @@ class ModalPayment extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        userInfo: state.user.userInfo,
     };
 };
 

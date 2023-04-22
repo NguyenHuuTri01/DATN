@@ -92,8 +92,18 @@ const updateStatusCart = (data) => {
   return axios.put("/api/update-status-cart", data);
 };
 
-const createTransaction = (data) => {
-  return axios.post('/api/create-transaction', data)
+const createPaypal = (data) => {
+  return axios.post('/api/create-paypal', data)
+}
+const updatePaypal = (data) => {
+  return axios.put("/api/update-paypal", data);
+};
+const deletePaypal = (data) => {
+  return axios.post("/api/delete-paypal", data);
+};
+
+const saveInforOrder = (data) => {
+  return axios.post('/api/save-infor-order', data)
 }
 
 export {
@@ -120,5 +130,8 @@ export {
   delelteCart,
   updateCart,
   updateStatusCart,
-  createTransaction,
+  createPaypal,
+  updatePaypal,
+  deletePaypal,
+  saveInforOrder
 };

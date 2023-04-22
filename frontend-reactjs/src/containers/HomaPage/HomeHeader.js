@@ -103,11 +103,11 @@ class HomeHeader extends Component {
         userId: item.userId,
         paintId: item.paintId,
       });
-      // this.getDataStore();
     })
-    this.setState({
-      store: [...copyStore]
-    })
+    await this.getDataStore();
+    // this.setState({
+    //   store: [...copyStore]
+    // })
   }
   handleLogin = () => {
     if (this.props.history) {
@@ -201,7 +201,7 @@ class HomeHeader extends Component {
                             <Typography
                               textAlign="center"
                               onClick={() => this.handleAccountManagement(userInfo.id)}
-                            >Account Management</Typography>
+                            >More</Typography>
                           </MenuItem>
                           {
                             this.props.userInfo &&

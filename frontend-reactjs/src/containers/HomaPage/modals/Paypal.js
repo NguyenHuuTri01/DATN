@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
-import axios from 'axios';
 import { toast } from "react-toastify";
 
 class Paypal extends Component {
@@ -9,7 +8,7 @@ class Paypal extends Component {
         super(props);
         this.state = {
             paidFor: false,
-            paymentAmount: 0
+            paymentAmount: 0,
         }
     }
     paypalOptions = {
@@ -33,16 +32,19 @@ class Paypal extends Component {
             })
         }
     }
-    createOrder = (data, actions) => {
-        return actions.order.create({
-            purchase_units: [
-                {
-                    amount: {
-                        value: this.state.paymentAmount,
+    createOrder = async (data, actions) => {
+        let res = await this.props.createDataFakePaypal();
+        if (res && res.errCode === 0) {
+            return actions.order.create({
+                purchase_units: [
+                    {
+                        amount: {
+                            value: this.state.paymentAmount,
+                        },
                     },
-                },
-            ],
-        });
+                ],
+            });
+        }
     };
     onApprove = async (data, actions) => {
         const order = await actions.order.capture();
@@ -64,12 +66,19 @@ class Paypal extends Component {
 
     render() {
         return (
-            <div style={{ width: 100 }}>
+            <div style={{ width: 250, height: 150 }}>
                 <PayPalScriptProvider
                     options={this.paypalOptions}
                 >
                     <PayPalButtons
-                        createOrder={this.createOrder} onApprove={this.onApprove}
+                        createOrder={this.createOrder}
+                        onApprove={this.onApprove}
+                        onError={(error) => {
+                            this.props.deleteDataFakePaypal();
+                            toast.error("Đặt hàng thất bại, ai đó đã nhanh tay hơn bạn!")
+                            this.props.getDataStore();
+                            this.props.handleClose();
+                        }}
                     />
                 </PayPalScriptProvider>
             </div>
