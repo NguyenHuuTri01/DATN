@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
+            PayPaypal.belongsTo(models.Product, {
+                foreignKey: "paintId", targetKey: "paintId", as: "productPaypal",
+            });
         }
     }
     PayPaypal.init(
@@ -20,6 +23,8 @@ module.exports = (sequelize, DataTypes) => {
             payerEmail: DataTypes.STRING,
             paymentStatus: DataTypes.STRING,
             paymentAmount: DataTypes.STRING,
+            currencyCode: DataTypes.STRING,
+            paymentDate: DataTypes.STRING,
         },
         {
             sequelize,

@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             Product.hasMany(models.Cart, { foreignKey: "paintId", as: "productData" });
+            Product.hasMany(models.PayPaypal, { foreignKey: "paintId", as: "productPaypal" });
         }
     }
     Product.init(
@@ -22,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
             paintCatelory: DataTypes.STRING,
             paintDescription: DataTypes.STRING,
             image: DataTypes.TEXT("long"),
+            numberSold: DataTypes.STRING,
         },
         {
             sequelize,

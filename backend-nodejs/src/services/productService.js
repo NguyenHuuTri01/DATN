@@ -138,7 +138,8 @@ let createPaintProduct = (data) => {
                         paintQuantity: data.paintQuantity,
                         paintCatelory: data.paintCatelory,
                         paintDescription: data.paintDescription,
-                        image: data.imageBase64
+                        image: data.imageBase64,
+                        numberSold: 0
                     }
                 })
                 if (resCreate && resCreate[1]) {

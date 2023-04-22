@@ -1,9 +1,9 @@
 import paypalServices from '../services/paypalServices';
 
 
-let addToCart = async (req, res) => {
+let createPaypal = async (req, res) => {
     try {
-        let infor = await paypalServices.addToCart(req.body);
+        let infor = await paypalServices.createPaypal(req.body);
         return res.status(200).json(
             infor
         )
@@ -16,9 +16,9 @@ let addToCart = async (req, res) => {
     }
 }
 
-let getAllCartById = async (req, res) => {
+let getHistoryPayment = async (req, res) => {
     try {
-        let infor = await cartServices.getAllCartById(req.query.userId);
+        let infor = await paypalServices.getHistoryPayment(req.query.userId);
         return res.status(200).json(
             infor
         )
@@ -76,5 +76,6 @@ let delelteCart = async (req, res) => {
 }
 
 module.exports = {
-    addToCart: addToCart,
+    createPaypal: createPaypal,
+    getHistoryPayment: getHistoryPayment,
 };

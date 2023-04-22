@@ -1,47 +1,65 @@
 import db from "../models/index";
 
-let addToCart = (data) => {
+let createPaypal = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!data.userId || !data.paintId) {
-                resolve({
-                    errCode: 1,
-                    errMessage: 'Missing parameter'
-                })
-            } else {
-                let resCreate = await db.Cart.findOrCreate({
-                    where: {
-                        userId: data.userId,
-                        paintId: data.paintId,
-                        status: 'pending'
-                    },
-                    defaults: {
-                        userId: data.userId,
-                        paintId: data.paintId,
-                        status: 'pending',
-                        amount: 1,
-                        color: data.color
+            if (data && data.length > 0) {
+                data.map((item) => {
+                    if (!item.userId || !item.paintId || !item.amount ||
+                        !item.transactionId || !item.payerEmail || !item.paymentStatus ||
+                        !item.paymentAmount || !item.currencyCode || !item.paymentDate
+                    ) {
+                        resolve({
+                            errCode: 1,
+                            errMessage: 'Missing parameter'
+                        })
+                        return
                     }
                 })
-                if (resCreate && resCreate[1]) {
-                    resolve({
-                        errCode: 0,
-                        errMessage: 'ok'
-                    })
-                } else {
-                    resolve({
-                        errCode: -2,
-                        errMessage: 'Item is exist'
-                    })
-                }
             }
+            data.map(async (item) => {
+                let findProduct = await db.Product.findOne({
+                    attributes: ["paintQuantity", "numberSold"],
+                    where: {
+                        paintId: item.paintId
+                    },
+                    raw: false,
+                });
+                if (findProduct && +findProduct.dataValues.paintQuantity >= +item.amount) {
+                    await db.PayPaypal.create({
+                        userId: item.userId,
+                        paintId: item.paintId,
+                        amount: item.amount,
+                        transactionId: item.transactionId,
+                        payerEmail: item.payerEmail,
+                        paymentStatus: item.paymentStatus,
+                        paymentAmount: item.paymentAmount,
+                        currencyCode: item.currencyCode,
+                        paymentDate: item.paymentDate
+                    })
+                    let updatNumberSold = await db.Product.findOne({
+                        where: {
+                            paintId: item.paintId
+                        },
+                        raw: false,
+                    });
+                    updatNumberSold.paintQuantity = +findProduct.dataValues.paintQuantity - (+item.amount)
+                    updatNumberSold.numberSold = +findProduct.dataValues.numberSold + (+item.amount);
+                    await updatNumberSold.save();
+                }
+            })
+            resolve({
+                errCode: 0,
+                errMessage: 'ok'
+            })
+
         } catch (e) {
             reject(e);
         }
     })
 }
 
-let getAllCartById = (userId) => {
+let getHistoryPayment = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!userId) {
@@ -50,19 +68,19 @@ let getAllCartById = (userId) => {
                     errMessage: 'Missing parameter'
                 })
             } else {
-                let data = await db.Cart.findAll({
+                let data = await db.PayPaypal.findAll({
                     where: {
                         userId: userId,
-                        status: 'pending'
                     },
-                    attributes: ['userId', 'paintId', 'amount', 'color', 'status'],
+                    attributes: ['paintId', 'amount', 'color', 'transactionId', 'payerEmail',
+                        'paymentStatus', 'paymentAmount', 'currencyCode', 'paymentDate'
+                    ],
                     include: [
                         {
                             model: db.Product,
-                            as: 'productData',
+                            as: 'productPaypal',
                             attributes: [
-                                'id', 'paintName', 'paintPrice', 'paintDiscount',
-                                'paintQuantity', 'paintCatelory', 'image'
+                                'paintName', 'image'
                             ]
                         }
                     ],
@@ -71,7 +89,7 @@ let getAllCartById = (userId) => {
                 })
                 if (data && data.length > 0) {
                     data.map(item => {
-                        item.productData.image = new Buffer.from(item.productData.image, "base64").toString("binary");
+                        item.productPaypal.image = new Buffer.from(item.productPaypal.image, "base64").toString("binary");
                         return item;
                     })
                 }
@@ -200,9 +218,6 @@ let delelteCart = (data) => {
 }
 
 module.exports = {
-    addToCart: addToCart,
-    getAllCartById: getAllCartById,
-    updateCart: updateCart,
-    delelteCart: delelteCart,
-    updateStatusCart: updateStatusCart,
+    createPaypal: createPaypal,
+    getHistoryPayment: getHistoryPayment,
 };
