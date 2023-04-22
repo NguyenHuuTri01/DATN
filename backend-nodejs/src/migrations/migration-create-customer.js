@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable("PayPaypals", {
+        await queryInterface.createTable("Customers", {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -11,37 +11,22 @@ module.exports = {
             userId: {
                 type: Sequelize.INTEGER,
             },
-            paintId: {
-                type: Sequelize.STRING,
-            },
-            amount: {
-                type: Sequelize.INTEGER,
-            },
-            color: {
-                type: Sequelize.STRING,
-            },
-            makePrice: {
-                type: Sequelize.STRING,
-            },
-            discount: {
+            userName: {
                 type: Sequelize.STRING,
             },
             transactionId: {
                 type: Sequelize.STRING,
             },
-            payerEmail: {
+            email: {
                 type: Sequelize.STRING,
             },
-            paymentStatus: {
+            address: {
                 type: Sequelize.STRING,
             },
-            paymentAmount: {
+            phonenumber: {
                 type: Sequelize.STRING,
             },
-            currencyCode: {
-                type: Sequelize.STRING,
-            },
-            paymentDate: {
+            typePayment: {
                 type: Sequelize.STRING,
             },
             createdAt: {
@@ -55,6 +40,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable("PayPaypals");
+        await queryInterface.dropTable("Customers");
     },
 };

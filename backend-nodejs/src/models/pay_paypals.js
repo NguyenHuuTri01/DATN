@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
             paintId: DataTypes.STRING,
             amount: DataTypes.INTEGER,
             color: DataTypes.STRING,
+            makePrice: DataTypes.STRING,
+            discount: DataTypes.STRING,
             transactionId: DataTypes.STRING,
             payerEmail: DataTypes.STRING,
             paymentStatus: DataTypes.STRING,

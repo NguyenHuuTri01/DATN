@@ -16,6 +16,38 @@ let createPaypal = async (req, res) => {
     }
 }
 
+
+let updatePaypal = async (req, res) => {
+    try {
+        let infor = await paypalServices.updatePaypal(req.body);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+
+let deletePaypal = async (req, res) => {
+    try {
+        let infor = await paypalServices.deletePaypal(req.body);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
 let getHistoryPayment = async (req, res) => {
     try {
         let infor = await paypalServices.getHistoryPayment(req.query.userId);
@@ -31,51 +63,9 @@ let getHistoryPayment = async (req, res) => {
     }
 }
 
-let updateCart = async (req, res) => {
-    try {
-        let infor = await cartServices.updateCart(req.body);
-        return res.status(200).json(
-            infor
-        )
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
-    }
-}
-let updateStatusCart = async (req, res) => {
-    try {
-        let infor = await cartServices.updateStatusCart(req.body);
-        return res.status(200).json(
-            infor
-        )
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
-    }
-}
-
-let delelteCart = async (req, res) => {
-    try {
-        let infor = await cartServices.delelteCart(req.body);
-        return res.status(200).json(
-            infor
-        )
-    } catch (e) {
-        console.log(e);
-        return res.status(200).json({
-            errCode: -1,
-            errMessage: 'Error from the server'
-        })
-    }
-}
-
 module.exports = {
     createPaypal: createPaypal,
+    updatePaypal: updatePaypal,
+    deletePaypal: deletePaypal,
     getHistoryPayment: getHistoryPayment,
 };

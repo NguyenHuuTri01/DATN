@@ -3,6 +3,7 @@ import userController from "../controllers/userController";
 import productController from "../controllers/productController";
 import cartController from '../controllers/cartController';
 import paypalController from '../controllers/paypalController';
+import customerController from '../controllers/customerController';
 
 let router = express.Router();
 
@@ -32,8 +33,12 @@ let initWebRoutes = (app) => {
   router.post("/api/delete-cart-item", cartController.delelteCart);
   router.put("/api/update-status-cart", cartController.updateStatusCart);
 
-  router.post("/api/create-transaction", paypalController.createPaypal);
+  router.post("/api/create-paypal", paypalController.createPaypal);
+  router.put("/api/update-paypal", paypalController.updatePaypal);
+  router.post("/api/delete-paypal", paypalController.deletePaypal);
   router.get("/api/get-history-by-id", paypalController.getHistoryPayment);
+
+  router.post("/api/save-infor-order", customerController.createOrder);
 
   router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);

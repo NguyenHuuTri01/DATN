@@ -1,6 +1,67 @@
 import db from "../models/index";
 
+
 let createPaypal = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (data && data.length > 0) {
+                data.map((item) => {
+                    if (!item.userId || !item.paintId || !item.amount) {
+                        resolve({
+                            errCode: 1,
+                            errMessage: 'Missing parameter'
+                        })
+                        return
+                    }
+                })
+            }
+            let lengthData = data.length
+            for (let i = 0; i < lengthData; i++) {
+                let quantity = await db.Product.findOne({
+                    attributes: ["paintQuantity", "numberSold"],
+                    where: {
+                        paintId: data[i].paintId
+                    },
+                    raw: false,
+                });
+                if (quantity.paintQuantity < data[i].amount) {
+                    resolve({
+                        errCode: 1,
+                        errMessage: 'quantity is not enough'
+                    })
+                    return;
+                } else {
+                    await db.PayPaypal.create({
+                        userId: data[i].userId,
+                        paintId: data[i].paintId,
+                        amount: data[i].amount,
+                        makePrice: data[i].productData.paintPrice,
+                        discount: data[i].productData.paintDiscount,
+                        paymentStatus: 'pendingpayment'
+                    })
+                    let updatNumberSold = await db.Product.findOne({
+                        where: {
+                            paintId: data[i].paintId
+                        },
+                        raw: false,
+                    });
+                    updatNumberSold.paintQuantity = +quantity.dataValues.paintQuantity - (+data[i].amount)
+                    updatNumberSold.numberSold = +quantity.dataValues.numberSold + (+data[i].amount);
+                    await updatNumberSold.save();
+                }
+            }
+            resolve({
+                errCode: 0,
+                errMessage: 'ok'
+            })
+
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let updatePaypal = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (data && data.length > 0) {
@@ -18,34 +79,22 @@ let createPaypal = (data) => {
                 })
             }
             data.map(async (item) => {
-                let findProduct = await db.Product.findOne({
-                    attributes: ["paintQuantity", "numberSold"],
+                let updatepaypal = await db.PayPaypal.findOne({
                     where: {
-                        paintId: item.paintId
+                        userId: item.userId,
+                        paintId: item.paintId,
+                        paymentStatus: 'pendingpayment'
                     },
                     raw: false,
                 });
-                if (findProduct && +findProduct.dataValues.paintQuantity >= +item.amount) {
-                    await db.PayPaypal.create({
-                        userId: item.userId,
-                        paintId: item.paintId,
-                        amount: item.amount,
-                        transactionId: item.transactionId,
-                        payerEmail: item.payerEmail,
-                        paymentStatus: item.paymentStatus,
-                        paymentAmount: item.paymentAmount,
-                        currencyCode: item.currencyCode,
-                        paymentDate: item.paymentDate
-                    })
-                    let updatNumberSold = await db.Product.findOne({
-                        where: {
-                            paintId: item.paintId
-                        },
-                        raw: false,
-                    });
-                    updatNumberSold.paintQuantity = +findProduct.dataValues.paintQuantity - (+item.amount)
-                    updatNumberSold.numberSold = +findProduct.dataValues.numberSold + (+item.amount);
-                    await updatNumberSold.save();
+                if (updatepaypal) {
+                    updatepaypal.transactionId = item.transactionId
+                    updatepaypal.payerEmail = item.payerEmail
+                    updatepaypal.paymentStatus = item.paymentStatus
+                    updatepaypal.paymentAmount = item.paymentAmount
+                    updatepaypal.currencyCode = item.currencyCode
+                    updatepaypal.paymentDate = item.paymentDate
+                    await updatepaypal.save()
                 }
             })
             resolve({
@@ -58,6 +107,72 @@ let createPaypal = (data) => {
         }
     })
 }
+
+let deletePaypal = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (data && data.length > 0) {
+                data.map((item) => {
+                    if (!item.userId || !item.paintId || !item.amount) {
+                        resolve({
+                            errCode: 1,
+                            errMessage: 'Missing parameter'
+                        })
+                        return
+                    }
+                })
+            }
+
+            data.map(async (item) => {
+                let getAmount = await db.PayPaypal.findOne({
+                    attributes: ["amount"],
+                    where: {
+                        userId: item.userId,
+                        paintId: item.paintId,
+                        amount: item.amount,
+                        paymentStatus: 'pendingpayment'
+                    },
+                    raw: false,
+                });
+                if (getAmount) {
+                    let resetamount = await db.Product.findOne({
+                        attributes: ["paintQuantity", "numberSold"],
+                        where: {
+                            paintId: item.paintId
+                        },
+                        raw: false,
+                    })
+                    let update = await db.Product.findOne({
+                        where: {
+                            paintId: item.paintId
+                        },
+                        raw: false,
+                    })
+                    update.paintQuantity = +resetamount.dataValues.paintQuantity + (+getAmount.amount)
+                    update.numberSold = +resetamount.dataValues.numberSold - (+getAmount.amount)
+                    await update.save();
+                }
+
+                await db.PayPaypal.destroy({
+                    where: {
+                        userId: item.userId,
+                        paintId: item.paintId,
+                        paymentStatus: 'pendingpayment'
+                    }
+                });
+            })
+            resolve({
+                errCode: 0,
+                errMessage: 'ok'
+            })
+
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+
 
 let getHistoryPayment = (userId) => {
     return new Promise(async (resolve, reject) => {
@@ -105,119 +220,11 @@ let getHistoryPayment = (userId) => {
         }
     })
 }
-let updateCart = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!data.userId || !data.paintId) {
-                resolve({
-                    errCode: 2,
-                    errMessage: "Missing require parameters",
-                });
-                return;
-            }
-            let cartItem = await db.Cart.findOne({
-                where: {
-                    userId: data.userId,
-                    paintId: data.paintId
-                },
-                raw: false,
-            });
-            if (cartItem) {
-                cartItem.amount = data.amount;
-                await cartItem.save();
-                resolve({
-                    errCode: 0,
-                    message: "Update succeeds!",
-                });
-            } else {
-                resolve({
-                    errCode: 1,
-                    errMessage: `Paint's not found!`,
-                });
-            }
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
-let updateStatusCart = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!data.userId || !data.paintId) {
-                resolve({
-                    errCode: 2,
-                    errMessage: "Missing require parameters",
-                });
-                return;
-            }
-            let cartItem = await db.Cart.findOne({
-                where: {
-                    userId: data.userId,
-                    paintId: data.paintId,
-                    status: 'pending'
-                },
-                raw: false,
-            });
-            if (cartItem) {
-                cartItem.status = 'complete';
-                await cartItem.save();
-                resolve({
-                    errCode: 0,
-                    message: "Update succeeds!",
-                });
-            } else {
-                resolve({
-                    errCode: 1,
-                    errMessage: `Paint's not found!`,
-                });
-            }
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
-let delelteCart = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!data.userId || !data.paintId) {
-                resolve({
-                    errCode: 1,
-                    errMessage: "Missing require parameters",
-                });
-            }
-            let cartItem = await db.Cart.findOne({
-                where: {
-                    userId: data.userId,
-                    paintId: data.paintId,
-                    status: 'pending'
-                },
-                raw: false,
-            });
-            if (!cartItem) {
-                resolve({
-                    errCode: 2,
-                    errMessage: `The paint isn't exists`,
-                });
-            }
-            await db.Cart.destroy({
-                where: {
-                    userId: data.userId,
-                    paintId: data.paintId,
-                    status: 'pending'
-                },
-            });
-            resolve({
-                errCode: 0,
-                message: "The paint is deleted",
-            });
 
-        } catch (e) {
-            reject(e);
-        }
-    })
-}
 
 module.exports = {
-    createPaypal: createPaypal,
+    updatePaypal: updatePaypal,
     getHistoryPayment: getHistoryPayment,
+    createPaypal: createPaypal,
+    deletePaypal: deletePaypal,
 };
