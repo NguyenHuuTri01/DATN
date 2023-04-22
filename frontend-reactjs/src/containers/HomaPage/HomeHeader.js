@@ -47,10 +47,12 @@ class HomeHeader extends Component {
     }
   }
   getDataStore = async () => {
-    let resData = await getAllCartById(this.props.userInfo.id);
-    this.setState({
-      store: [...resData.data]
-    })
+    if (this.props.isLoggedIn) {
+      let resData = await getAllCartById(this.props.userInfo.id);
+      this.setState({
+        store: [...resData.data]
+      })
+    }
   }
 
   handleChange = (value) => {
@@ -250,6 +252,7 @@ class HomeHeader extends Component {
 const mapStateToProps = (state) => {
   return {
     userInfo: state.user.userInfo,
+    isLoggedIn: state.user.isLoggedIn,
   };
 };
 

@@ -59,7 +59,7 @@ class StoreItem extends Component {
 
     handleOnChangeCount = (e) => {
         this.setState({
-            countItem: e.target.value,
+            countItem: Math.floor(e.target.value),
         })
     }
 

@@ -92,6 +92,10 @@ const updateStatusCart = (data) => {
   return axios.put("/api/update-status-cart", data);
 };
 
+const createTransaction = (data) => {
+  return axios.post('/api/create-transaction', data)
+}
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -116,4 +120,5 @@ export {
   delelteCart,
   updateCart,
   updateStatusCart,
+  createTransaction,
 };

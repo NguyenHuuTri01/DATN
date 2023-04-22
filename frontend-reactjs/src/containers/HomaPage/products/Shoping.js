@@ -47,8 +47,10 @@ class Shoping extends Component {
         })
     }
     handleAddToCart = (e, item) => {
-        e.stopPropagation()
-        this.props.handleAddToCart(item)
+        if (this.props.isLoggedIn) {
+            e.stopPropagation()
+            this.props.handleAddToCart(item)
+        }
     }
     handleSeeDetail = () => {
         console.log("see detail")

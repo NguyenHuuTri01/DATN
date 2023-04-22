@@ -7,7 +7,7 @@ import Paypal from "./Paypal";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { updateStatusCart } from '../../../services/userService';
+import { updateStatusCart, createTransaction } from '../../../services/userService';
 import './ModalPayment.scss';
 import _ from "lodash";
 
@@ -73,15 +73,28 @@ class ModalPayment extends Component {
             ))
         }
     }
-    saveHistory = (dataPaypal) => {
+    saveHistory = async (dataPaypal) => {
         let { listPainBucket, calculateTotal } = this.props;
-        console.log('data with paypal');
+        if (listPainBucket && listPainBucket.length > 0) {
+            listPainBucket.map((item) => {
+                let date = new Date(dataPaypal.create_time)
+                let timestamp = date.getTime() / 1000;
+                item['transactionId'] = dataPaypal.id
+                item['payerEmail'] = dataPaypal.payer.email_address
+                item['paymentStatus'] = dataPaypal.status
+                item['paymentAmount'] = dataPaypal.purchase_units[0].amount.value
+                item['currencyCode'] = dataPaypal.purchase_units[0].amount.currency_code
+                item['paymentDate'] = timestamp
+                return item
+            })
+            let resdata = await createTransaction(listPainBucket)
+            console.log(resdata)
+        }
     }
 
     render() {
         let { isOpen, methodPayment } = this.state;
         let { listPainBucket, calculateTotal } = this.props;
-        console.log(listPainBucket)
         return (
             <>
                 <Button

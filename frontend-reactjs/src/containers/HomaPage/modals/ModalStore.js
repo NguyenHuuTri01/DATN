@@ -37,7 +37,8 @@ class ModalStore extends Component {
     handleClose = () => {
         this.setState({
             calculateTotal: 0,
-            isUpdateCountItem: true
+            isUpdateCountItem: true,
+            listPainBucket: []
         })
         this.props.handleCloseModal()
     }

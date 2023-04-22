@@ -54,11 +54,11 @@ class Paypal extends Component {
         // });
         // console.log('data paypal:', data);
 
-        // await this.props.completeOrder();
+        await this.props.completeOrder();
         await this.props.saveHistory(order);
-        // await this.props.getDataStore();
-        // await this.props.handleClose();
-        // toast.success("Đặt Hàng Thành Công!")
+        await this.props.getDataStore();
+        await this.props.handleClose();
+        toast.success("Đặt Hàng Thành Công!")
         // console.log(order);
     };
 
