@@ -48,9 +48,9 @@ let deletePaypal = async (req, res) => {
     }
 }
 
-let getHistoryPayment = async (req, res) => {
+let getHistoryPaypal = async (req, res) => {
     try {
-        let infor = await paypalServices.getHistoryPayment(req.query.userId);
+        let infor = await paypalServices.getHistoryPaypal(req.query.userId);
         return res.status(200).json(
             infor
         )
@@ -67,5 +67,5 @@ module.exports = {
     createPaypal: createPaypal,
     updatePaypal: updatePaypal,
     deletePaypal: deletePaypal,
-    getHistoryPayment: getHistoryPayment,
+    getHistoryPaypal: getHistoryPaypal,
 };

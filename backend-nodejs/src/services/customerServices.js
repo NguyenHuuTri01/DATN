@@ -1,4 +1,5 @@
 import db from "../models/index";
+const { Op } = require("sequelize");
 
 let createOrder = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -18,7 +19,8 @@ let createOrder = (data) => {
                     email: data.email,
                     address: data.address,
                     phonenumber: data.phonenumber,
-                    typePayment: data.typePayment
+                    typePayment: data.typePayment,
+                    transportStatus: 'chua'
                 })
                 if (resCreate) {
                     resolve({
@@ -38,7 +40,50 @@ let createOrder = (data) => {
     })
 }
 
+let getHistoryById = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!userId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter'
+                })
+            } else {
+                let data = await db.Customer.findAll({
+                    where: {
+                        userId: userId,
+                        typePayment: {
+                            [Op.not]: 'pending'
+                        }
+                    },
+                    // attributes: ['userId', 'paintId', 'amount', 'color', 'status'],
+                    include: [
+                        {
+                            model: db.Product,
+                            as: 'productData',
+                            attributes: [
+                                'id', 'paintName', 'paintPrice', 'paintDiscount',
+                                'paintQuantity', 'paintCatelory', 'image'
+                            ]
+                        }
+                    ],
+                    raw: true,
+                    nest: true,
+                })
+                if (!data) data = {}
+                resolve({
+                    errCode: 0,
+                    errMessage: 'Ok',
+                    data
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
 module.exports = {
     createOrder: createOrder,
+    getHistoryById: getHistoryById,
 };

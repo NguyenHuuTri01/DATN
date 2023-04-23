@@ -1,30 +1,33 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class Customer extends Model {
+    class CashOnReceipt extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
+            CashOnReceipt.belongsTo(models.Product, {
+                foreignKey: "paintId", targetKey: "paintId", as: "cashProduct",
+            });
         }
     }
-    Customer.init(
+    CashOnReceipt.init(
         {
             userId: DataTypes.INTEGER,
-            userName: DataTypes.STRING,
+            paintId: DataTypes.STRING,
+            amount: DataTypes.INTEGER,
+            color: DataTypes.STRING,
+            makePrice: DataTypes.STRING,
+            discount: DataTypes.STRING,
             transactionId: DataTypes.STRING,
-            email: DataTypes.STRING,
-            address: DataTypes.STRING,
-            phonenumber: DataTypes.STRING,
-            typePayment: DataTypes.STRING,
-            transportStatus: DataTypes.STRING,
+            status: DataTypes.STRING,
         },
         {
             sequelize,
-            modelName: "Customer",
+            modelName: "CashOnReceipt",
         }
     );
-    return Customer;
+    return CashOnReceipt;
 };

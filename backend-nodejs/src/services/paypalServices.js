@@ -174,7 +174,7 @@ let deletePaypal = (data) => {
 
 
 
-let getHistoryPayment = (userId) => {
+let getHistoryPaypal = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!userId) {
@@ -224,7 +224,7 @@ let getHistoryPayment = (userId) => {
 
 module.exports = {
     updatePaypal: updatePaypal,
-    getHistoryPayment: getHistoryPayment,
+    getHistoryPaypal: getHistoryPaypal,
     createPaypal: createPaypal,
     deletePaypal: deletePaypal,
 };
