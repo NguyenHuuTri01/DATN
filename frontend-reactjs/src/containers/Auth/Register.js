@@ -6,6 +6,7 @@ import "./Register.scss";
 import { createNewUserService } from "../../services/userService";
 import Navbar from "./Navbar";
 import { toast } from "react-toastify";
+import LoadingOverlay from "react-loading-overlay";
 
 class Register extends Component {
     constructor(props) {
@@ -16,6 +17,7 @@ class Register extends Component {
             confirmPassword: "",
             showPassword: false,
             errMessage: "",
+            isShowLoading: false
         };
     }
     handleOnChangeInput = (e, id) => {
@@ -27,11 +29,22 @@ class Register extends Component {
         })
     }
 
+    validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
     handleRegister = async () => {
         this.setState({
             errMessage: "",
         });
+        if (!this.validateEmail(this.state.username)) {
+            alert("Vui lòng nhập email cho chính xác!")
+            return
+        }
         try {
+            this.setState({
+                isShowLoading: true
+            })
             if (this.state.password === this.state.confirmPassword) {
                 let data = await createNewUserService({
                     email: this.state.username,
@@ -46,6 +59,9 @@ class Register extends Component {
                     toast.error('Something Wrongs....');
                 }
             }
+            this.setState({
+                isShowLoading: false
+            })
         } catch (e) {
             if (e.response) {
                 if (e.response.data) {
@@ -74,75 +90,81 @@ class Register extends Component {
         return (
             <div className="register-background">
                 <Navbar />
-                <div className="register-container">
-                    <div className="register-content">
-                        <div className="register-form">
-                            <h1>Register</h1>
-                            <div className="group">
-                                <input
-                                    type="text"
-                                    className="inputText register-input"
-                                    placeholder=" "
-                                    value={this.state.username}
-                                    onChange={(e) => this.handleOnChangeInput(e, "username")}
-                                />
-                                <label>Email</label>
-                            </div>
-                            <div className="group">
-                                <input
-                                    type={this.state.showPassword ? "text" : "password"}
-                                    className="inputText register-input"
-                                    placeholder=" "
-                                    value={this.state.password}
-                                    onChange={(event) => this.handleOnChangeInput(event, "password")}
-                                // onKeyDown={(event) => this.handleKeyDown(event)}
-                                />
-                                <label>Password </label>
-                                <span onClick={() => this.handleShowHidePassword()}>
-                                    <i
-                                        className={
-                                            this.state.showPassword
-                                                ? "fas fa-eye show-password"
-                                                : "fas fa-eye-slash show-password"
-                                        }
-                                    ></i>
-                                </span>
-                            </div>
-                            <div className="group">
-                                <input
-                                    type={this.state.showPassword ? "text" : "password"}
-                                    className="inputText register-input"
-                                    placeholder=" "
-                                    value={this.state.confirmPassword}
-                                    onChange={(event) => this.handleOnChangeInput(event, "confirmPassword")}
-                                    onKeyDown={(event) => this.handleKeyDown(event)}
-                                />
-                                <label>Password </label>
+                <LoadingOverlay
+                    active={this.state.isShowLoading}
+                    spinner
+                    text='Loading...'
+                >
+                    <div className="register-container">
+                        <div className="register-content">
+                            <div className="register-form">
+                                <h1>Register</h1>
+                                <div className="group">
+                                    <input
+                                        type="text"
+                                        className="inputText register-input"
+                                        placeholder=" "
+                                        value={this.state.username}
+                                        onChange={(e) => this.handleOnChangeInput(e, "username")}
+                                    />
+                                    <label>Email</label>
+                                </div>
+                                <div className="group">
+                                    <input
+                                        type={this.state.showPassword ? "text" : "password"}
+                                        className="inputText register-input"
+                                        placeholder=" "
+                                        value={this.state.password}
+                                        onChange={(event) => this.handleOnChangeInput(event, "password")}
+                                    // onKeyDown={(event) => this.handleKeyDown(event)}
+                                    />
+                                    <label>Password </label>
+                                    <span onClick={() => this.handleShowHidePassword()}>
+                                        <i
+                                            className={
+                                                this.state.showPassword
+                                                    ? "fas fa-eye show-password"
+                                                    : "fas fa-eye-slash show-password"
+                                            }
+                                        ></i>
+                                    </span>
+                                </div>
+                                <div className="group">
+                                    <input
+                                        type={this.state.showPassword ? "text" : "password"}
+                                        className="inputText register-input"
+                                        placeholder=" "
+                                        value={this.state.confirmPassword}
+                                        onChange={(event) => this.handleOnChangeInput(event, "confirmPassword")}
+                                        onKeyDown={(event) => this.handleKeyDown(event)}
+                                    />
+                                    <label>Password </label>
 
-                                <span onClick={() => this.handleShowHidePassword()}>
-                                    <i
-                                        className={
-                                            this.state.showPassword
-                                                ? "fas fa-eye show-password"
-                                                : "fas fa-eye-slash show-password"
-                                        }
-                                    ></i>
-                                </span>
+                                    <span onClick={() => this.handleShowHidePassword()}>
+                                        <i
+                                            className={
+                                                this.state.showPassword
+                                                    ? "fas fa-eye show-password"
+                                                    : "fas fa-eye-slash show-password"
+                                            }
+                                        ></i>
+                                    </span>
+                                </div>
+                                <button className="btn-register" onClick={() => this.handleRegister()}>
+                                    Register
+                                </button>
+                                <div className="err-message" style={{ color: "red" }}>
+                                    {
+                                        this.state.password !== this.state.confirmPassword ?
+                                            "Mật khẩu không khớp" :
+                                            ""
+                                    }
+                                </div>
                             </div>
-                            <button className="btn-register" onClick={() => this.handleRegister()}>
-                                Register
-                            </button>
-                            <div className="err-message" style={{ color: "red" }}>
-                                {
-                                    this.state.password !== this.state.confirmPassword ?
-                                        "Mật khẩu không khớp" :
-                                        ""
-                                }
-                            </div>
+
                         </div>
-
                     </div>
-                </div>
+                </LoadingOverlay>
             </div>
         );
     }

@@ -75,7 +75,6 @@ const deleltePaintProduct = (paintId) => {
   });
 };
 
-
 const addToCart = (data) => {
   return axios.post('/api/add-to-cart', data)
 }
@@ -106,6 +105,21 @@ const saveInforOrder = (data) => {
   return axios.post('/api/save-infor-order', data)
 }
 
+const createCashOnReceipt = (data) => {
+  return axios.post('/api/create-cash-on-receipt', data)
+}
+const postVerifyOrder = (data) => {
+  return axios.post('/api/verify-order', data)
+}
+
+const getHistoryPaypal = (userId) => {
+  return axios.get(`/api/get-history-paypal/?userId=${userId}`);
+};
+const getHistoryCash = (userId) => {
+  return axios.get(`/api/get-history-cash/?userId=${userId}`);
+};
+
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -133,5 +147,9 @@ export {
   createPaypal,
   updatePaypal,
   deletePaypal,
-  saveInforOrder
+  saveInforOrder,
+  createCashOnReceipt,
+  postVerifyOrder,
+  getHistoryPaypal,
+  getHistoryCash
 };

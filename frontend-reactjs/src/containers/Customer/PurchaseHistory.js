@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import './PurchaseHistory.scss';
 
 class PurchaseHistory extends Component {
 

@@ -14,3 +14,11 @@
     background-color: #666666 !important;
     color           : #FFFFFF !important;
 }
+
+div._loading_overlay_wrapper {
+    position: unset;
+
+    ._loading_overlay_overlay {
+        z-index: 10000;
+    }
+}

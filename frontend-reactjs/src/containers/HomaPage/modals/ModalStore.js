@@ -115,6 +115,7 @@ class ModalStore extends Component {
 
     render() {
         let { listPainBucket, calculateTotal, store } = this.state;
+        console.log(listPainBucket)
         return (
             <div className="modal-store-container">
                 <Modal

@@ -9,11 +9,13 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {
     updateStatusCart, createPaypal, updatePaypal,
-    deletePaypal, saveInforOrder
+    deletePaypal, saveInforOrder, createCashOnReceipt,
+    getUserById
 } from '../../../services/userService';
 import './ModalPayment.scss';
 import _ from "lodash";
 import { toast } from "react-toastify";
+import LoadingOverlay from "react-loading-overlay";
 
 const style = {
     position: 'absolute',
@@ -39,16 +41,38 @@ class ModalPayment extends Component {
             email: '',
             address: '',
             phonenumber: '',
-            isDisable: true
+            isDisable: true,
+            isShowLoading: false
         }
     }
 
     async componentDidMount() {
+        if (this.props.userInfo && this.props.userInfo.id) {
+            let getUser = await getUserById(this.props.userInfo.id);
+            if (getUser && getUser.errCode === 0) {
+                this.setState({
+                    email: getUser.data.email,
+                    name: getUser.data.name ? getUser.data.name : "",
+                    address: getUser.data.address ? getUser.data.address : "",
+                    phonenumber: getUser.data.phonenumber ? getUser.data.phonenumber : "",
+                })
+            }
+        }
 
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
-
+        if (prevProps.userInfo !== this.props.userInfo) {
+            let getUser = await getUserById(this.props.userInfo.id);
+            if (getUser && getUser.errCode === 0) {
+                this.setState({
+                    email: getUser.data.email,
+                    name: getUser.data.name ? getUser.data.name : "",
+                    address: getUser.data.address ? getUser.data.address : "",
+                    phonenumber: getUser.data.phonenumber ? getUser.data.phonenumber : "",
+                })
+            }
+        }
     }
     handleOpen = () => {
         this.setState({
@@ -58,7 +82,8 @@ class ModalPayment extends Component {
     handleClose = () => {
         this.setState({
             isOpen: false,
-            methodPayment: "shipcod"
+            methodPayment: "shipcod",
+            isUpdateInfor: false,
         })
         this.props.handleClose();
     }
@@ -136,7 +161,7 @@ class ModalPayment extends Component {
         let coppyState = { ...this.state };
         coppyState[id] = valueinput;
         this.setState({
-            ...coppyState
+            ...coppyState,
         })
     }
     confirmInformation = () => {
@@ -149,113 +174,162 @@ class ModalPayment extends Component {
             alert("Số điện thoại không hợp lệ")
         } else {
             this.setState({
-                isDisable: !isDisable
+                isDisable: !isDisable,
             })
         }
     }
+
+    paymentCashOnReceipt = async () => {
+        let { listPainBucket } = this.props;
+        this.setState({
+            isOpen: false,
+            isShowLoading: true
+        })
+        if (listPainBucket && listPainBucket.length > 0) {
+            listPainBucket.map((item) => {
+                item['email'] = this.state.email
+                item['address'] = this.state.address
+                item['phonenumber'] = this.state.phonenumber
+                item['userName'] = this.state.name
+                return item
+            })
+        }
+        let resOrder = await createCashOnReceipt(listPainBucket);
+        if (resOrder && resOrder.errCode === 0) {
+            listPainBucket.map(async (item) => (
+                await updateStatusCart({
+                    userId: item.userId,
+                    paintId: item.paintId,
+                    status: 'complete'
+                })
+            ))
+            await this.props.getDataStore();
+            await this.handleClose();
+            toast.success("Đặt Hàng Thành Công, Vui Lòng Xác Nhận Email Để Hoàn Tất")
+        } else if (resOrder && resOrder.errCode === -1) {
+            await this.props.getDataStore();
+            this.handleClose();
+            toast.error(
+                "Đặt Hàng Thất Bại, Có Lẻ Số Lượng Không Đủ Đáp Ứng Cho Nhu Cầu Của Bạn"
+            )
+        }
+        this.setState({
+            isOpen: false,
+            isShowLoading: false
+        })
+    }
+
     render() {
-        let { isOpen, methodPayment } = this.state;
+        let { isOpen, methodPayment, isShowLoading } = this.state;
         let { listPainBucket, calculateTotal } = this.props;
         return (
             <>
-                <Button
-                    className="btn-payment"
-                    onClick={() => this.handleOpen()}
-                    disabled={
-                        _.isEmpty(listPainBucket) || calculateTotal === 0 ?
-                            true : false
-                    }
-                >Thanh Toán</Button>
-                <Modal
-                    open={isOpen}
-                    onClose={() => this.handleClose()}
-                    aria-labelledby="child-modal-title"
-                    aria-describedby="child-modal-description"
+                <LoadingOverlay
+                    active={isShowLoading}
+                    spinner
+                    text='Loading...'
                 >
-                    <Box sx={{ ...style, width: 900, height: 700 }}>
-                        <div>
-                            <label>Tên</label>
-                            <input
-                                className="form-control md-4"
-                                type="text"
-                                value={this.state.name}
-                                onChange={(e) => this.onchangeInput(e, 'name')}
-                                disabled={!this.state.isDisable}
-                            />
-                            <label>Email</label>
-                            <input
-                                className="form-control md-4"
-                                type="email"
-                                value={this.state.email}
-                                onChange={(e) => this.onchangeInput(e, 'email')}
-                                disabled={!this.state.isDisable}
-                            />
-                            <label>Địa Chỉ</label>
-                            <input
-                                className="form-control md-4"
-                                type="text"
-                                value={this.state.address}
-                                onChange={(e) => this.onchangeInput(e, 'address')}
-                                disabled={!this.state.isDisable}
-                            />
-                            <label>Số Điện Thoại</label>
-                            <input
-                                className="form-control md-4"
-                                type="number"
-                                value={this.state.phonenumber}
-                                onChange={(e) => this.onchangeInput(e, 'phonenumber')}
-                                disabled={!this.state.isDisable}
-                            />
-                            <button
-                                onClick={() => this.confirmInformation()}
-                                className="btn btn-primary"
-                                style={{ margin: "10px 0", width: 200 }}
-                            >
-                                {this.state.isDisable ? 'Lưu Thông Tin' : 'Chỉnh Sửa'}
-                            </button>
-                        </div>
-                        <RadioGroup defaultValue={"shipcod"}
-                            onChange={(e) => this.handlePayment(e)}
-                        >
-                            <FormControlLabel
-                                value="shipcod"
-                                control={<Radio />}
-                                label={"Thanh toán khi nhận hàng"}
-                                disabled={this.state.isDisable}
-                            />
-                            <FormControlLabel
-                                value="paypal"
-                                control={<Radio />}
-                                label={"Thanh toán qua cổng paypal"}
-                                disabled={this.state.isDisable}
-                            />
-                        </RadioGroup>
-                        {
-                            (methodPayment === "paypal" && !this.state.isDisable) ?
-                                <Paypal
-                                    amoutValue={calculateTotal}
-                                    getDataStore={this.getDataStore}
-                                    handleClose={this.handleClose}
-                                    completeOrder={this.completeOrder}
-                                    saveHistory={this.saveHistory}
-                                    createDataFakePaypal={this.createDataFakePaypal}
-                                    deleteDataFakePaypal={this.deleteDataFakePaypal}
-                                /> :
-                                <div style={{ height: 150 }}>
-                                    <button
-                                        className="btn btn-primary"
-                                        disabled={this.state.isDisable}
-                                    >
-                                        Thanh Toán
-                                    </button>
-                                </div>
+                    <Button
+                        className="btn-payment"
+                        onClick={() => this.handleOpen()}
+                        disabled={
+                            _.isEmpty(listPainBucket) || calculateTotal === 0 ?
+                                true : false
                         }
-                        <Button
-                            className="btn-close-payment"
-                            onClick={() => this.handleClose()}
-                        >Thoát</Button>
-                    </Box>
-                </Modal>
+                    >Thanh Toán</Button>
+
+                    <Modal
+                        open={isOpen}
+                        onClose={() => this.handleClose()}
+                        aria-labelledby="child-modal-title"
+                        aria-describedby="child-modal-description"
+                    >
+                        <Box sx={{ ...style, width: 900, height: 700 }}>
+                            <div>
+                                <label>Tên</label>
+                                <input
+                                    className="form-control md-4"
+                                    type="text"
+                                    value={this.state.name}
+                                    onChange={(e) => this.onchangeInput(e, 'name')}
+                                    disabled={!this.state.isDisable}
+                                />
+                                <label>Email</label>
+                                <input
+                                    className="form-control md-4"
+                                    type="email"
+                                    value={this.state.email}
+                                    onChange={(e) => this.onchangeInput(e, 'email')}
+                                    disabled={!this.state.isDisable}
+                                />
+                                <label>Địa Chỉ</label>
+                                <input
+                                    className="form-control md-4"
+                                    type="text"
+                                    value={this.state.address}
+                                    onChange={(e) => this.onchangeInput(e, 'address')}
+                                    disabled={!this.state.isDisable}
+                                />
+                                <label>Số Điện Thoại</label>
+                                <input
+                                    className="form-control md-4"
+                                    type="number"
+                                    value={this.state.phonenumber}
+                                    onChange={(e) => this.onchangeInput(e, 'phonenumber')}
+                                    disabled={!this.state.isDisable}
+                                />
+                                <button
+                                    onClick={() => this.confirmInformation()}
+                                    className="btn btn-primary"
+                                    style={{ margin: "10px 0", width: 200 }}
+                                >
+                                    {this.state.isDisable ? 'Lưu Thông Tin' : 'Chỉnh Sửa'}
+                                </button>
+                            </div>
+                            <RadioGroup defaultValue={"shipcod"}
+                                onChange={(e) => this.handlePayment(e)}
+                            >
+                                <FormControlLabel
+                                    value="shipcod"
+                                    control={<Radio />}
+                                    label={"Thanh toán khi nhận hàng"}
+                                    disabled={this.state.isDisable}
+                                />
+                                <FormControlLabel
+                                    value="paypal"
+                                    control={<Radio />}
+                                    label={"Thanh toán qua cổng paypal"}
+                                    disabled={this.state.isDisable}
+                                />
+                            </RadioGroup>
+                            {
+                                (methodPayment === "paypal" && !this.state.isDisable) ?
+                                    <Paypal
+                                        amoutValue={calculateTotal}
+                                        getDataStore={this.getDataStore}
+                                        handleClose={this.handleClose}
+                                        completeOrder={this.completeOrder}
+                                        saveHistory={this.saveHistory}
+                                        createDataFakePaypal={this.createDataFakePaypal}
+                                        deleteDataFakePaypal={this.deleteDataFakePaypal}
+                                    /> :
+                                    <div style={{ height: 150 }}>
+                                        <button
+                                            className="btn btn-primary"
+                                            disabled={this.state.isDisable}
+                                            onClick={() => this.paymentCashOnReceipt()}
+                                        >
+                                            Thanh Toán
+                                        </button>
+                                    </div>
+                            }
+                            <Button
+                                className="btn-close-payment"
+                                onClick={() => this.handleClose()}
+                            >Thoát</Button>
+                        </Box>
+                    </Modal>
+                </LoadingOverlay>
             </>
         );
     }

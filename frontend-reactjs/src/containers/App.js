@@ -17,6 +17,7 @@ import Register from "./Auth/Register";
 import CustomScrollbars from "../components/CustomScrollbars";
 import VerifyAccount from "./Auth/VerifyAccount";
 import AccountManagement from "./Customer/AccountManagement";
+import VerifyOrder from "./Auth/VerifyOrder";
 
 class App extends Component {
   handlePersistorState = () => {
@@ -52,6 +53,7 @@ class App extends Component {
                   <Route path={'/register'} component={Register} />
                   <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
                   <Route path={'/verify-account'} component={VerifyAccount} />
+                  <Route path={'/verify-order'} component={VerifyOrder} />
                   <Route path={'/account-management'} component={AccountManagement} />
                 </Switch>
               </CustomScrollbars>
