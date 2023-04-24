@@ -119,6 +119,10 @@ const getHistoryCash = (userId) => {
   return axios.get(`/api/get-history-cash/?userId=${userId}`);
 };
 
+const getTransactionById = (userId) => {
+  return axios.get(`/api/get-transaction-by-id/?userId=${userId}`);
+};
+
 
 export {
   handleLoginApi,
@@ -151,5 +155,6 @@ export {
   createCashOnReceipt,
   postVerifyOrder,
   getHistoryPaypal,
-  getHistoryCash
+  getHistoryCash,
+  getTransactionById
 };

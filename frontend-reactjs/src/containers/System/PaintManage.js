@@ -223,10 +223,14 @@ class PaintManage extends Component {
   }
 
   handleDelete = async (paintId) => {
-    let resDelete = await deleltePaintProduct(paintId);
-    if (resDelete && resDelete.errCode === 0) {
-      this.getListPaintProduct();
-      toast.success("Xóa Thành Công!")
+    if (window.confirm('Bạn muốn xóa mặt hàng này?')) {
+      let resDelete = await deleltePaintProduct(paintId);
+      if (resDelete && resDelete.errCode === 0) {
+        this.getListPaintProduct();
+        toast.success("Xóa Thành Công!")
+      }
+    } else {
+      // xử lý khi chọn No
     }
   }
   handlePageClick = ({ selected }) => {

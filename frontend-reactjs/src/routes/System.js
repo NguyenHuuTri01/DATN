@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import PaintManage from "../containers/System/PaintManage";
 import Header from "../containers/Header/Header";
 import DanhMucHang from "../containers/System/DanhMucHang";
+import ManageUser from '../containers/System/Admin/ManageUser';
 
 class System extends Component {
   render() {
@@ -16,6 +17,7 @@ class System extends Component {
             <Switch>
               <Route path="/system/danh-muc-hang" component={DanhMucHang} />
               <Route path="/system/manage-paint" component={PaintManage} />
+              <Route path="/system/manage-user" component={ManageUser} />
               <Route
                 component={() => { return <Redirect to={systemMenuPath} /> }}
               />

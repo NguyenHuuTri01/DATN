@@ -4,15 +4,20 @@
 
 .shoping-container {
     display   : flex;
-    height    : calc(100vh - 48px - 30px);
-    margin-top: 30px;
+    height    : calc(100vh - 48px - 20px);
+    margin-top: 20px;
 
     .content-left {
-        width       : 25%;
-        border      : 1px solid red;
-        padding-top : 5%;
-        padding-left: 5%;
-        position    : relative;
+        width           : 25%;
+        padding-top     : 5%;
+        padding-left    : 3%;
+        margin-left     : 15px;
+        margin-right    : 10px;
+        position        : relative;
+        background-color: whitesmoke;
+        box-shadow      : rgba(0, 0, 0, 0.4) 0px 2px 4px,
+            rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+            rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
         .search-paint {
             position: absolute;
@@ -47,13 +52,13 @@
     }
 
     .content-right {
-        width     : 75%;
-        height    : 100%;
-        border    : 1px solid blue;
-        overflow  : scroll;
-        display   : flex;
-        flex-wrap : wrap;
-        overflow-x: hidden;
+        width           : 75%;
+        height          : 100%;
+        overflow        : auto;
+        display         : flex;
+        flex-wrap       : wrap;
+        background-color: whitesmoke;
+        overflow-x      : hidden;
 
         .content-child {
             width              : 30%;

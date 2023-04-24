@@ -214,7 +214,6 @@ class ModalPayment extends Component {
             )
         }
         this.setState({
-            isOpen: false,
             isShowLoading: false
         })
     }
@@ -283,7 +282,7 @@ class ModalPayment extends Component {
                                     className="btn btn-primary"
                                     style={{ margin: "10px 0", width: 200 }}
                                 >
-                                    {this.state.isDisable ? 'Lưu Thông Tin' : 'Chỉnh Sửa'}
+                                    {this.state.isDisable ? 'Xác Nhận Thông Tin' : 'Chỉnh Sửa'}
                                 </button>
                             </div>
                             <RadioGroup defaultValue={"shipcod"}

@@ -92,13 +92,25 @@ class DanhMucHang extends Component {
     })
   }
   handleDelete = async (paintId) => {
-    let resDelete = await delelteLoaiSon({
-      paintId: paintId
-    })
-    if (resDelete && resDelete.errCode === 0) {
-      toast.success('Xóa Thành Công!');
-      this.getAllLoaiSon();
+    if (window.confirm('Bạn muốn xóa danh mục này?')) {
+      let resDelete = await delelteLoaiSon({
+        paintId: paintId
+      })
+      if (resDelete && resDelete.errCode === 0) {
+        toast.success('Xóa Thành Công!');
+        this.getAllLoaiSon();
+      }
+    } else {
+      // xử lý khi chọn No
     }
+  }
+  CancelUpdate = () => {
+
+    this.setState({
+      paintId: '',
+      name: '',
+      action: "CREATE"
+    })
   }
   render() {
     let { tableData, currentPage, perPage, name, paintId, action } = this.state;
@@ -118,6 +130,7 @@ class DanhMucHang extends Component {
                     className="form-control"
                     value={paintId}
                     onChange={(e) => this.handleOnChangeInput(e, "paintId")}
+                    disabled={action === "CREATE" ? false : true}
                   />
                   <label>Tên Danh Mục</label>
                   <input
@@ -131,6 +144,15 @@ class DanhMucHang extends Component {
                   >
                     {action === "CREATE" ? "Tạo" : "Lưu"}
                   </button>
+                  {
+                    action === "CREATE" ? '' :
+                      <button
+                        className="btn btn-secondary btn-huy"
+                        onClick={() => this.CancelUpdate()}
+                      >
+                        Hủy
+                      </button>
+                  }
                 </div>
               </div>
               <div className="table-danhmuchang">

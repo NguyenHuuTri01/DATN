@@ -1,10 +1,10 @@
 export const adminMenu = [
   {//quản lý người dùng
-    name: "menu.admin.manage-paint",
+    name: "menu.admin.manage-user",
     menus: [
       {
-        name: "menu.admin.crud-redux",
-        link: "/system/create-new-user",
+        name: "menu.admin.manage-user",
+        link: "/system/manage-user",
       },
     ],
   },

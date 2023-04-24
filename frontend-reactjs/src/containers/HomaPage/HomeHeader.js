@@ -138,6 +138,9 @@ class HomeHeader extends Component {
   handlePaintManagement = () => {
     window.open("http://localhost:3000/system/manage-paint", "_blank");
   }
+  handleManageUser = () => {
+    window.open("http://localhost:3000/system/manage-user", "_blank");
+  }
   render() {
     let { value, store, openUserMenu } = this.state;
     let { userInfo } = this.props;
@@ -145,7 +148,10 @@ class HomeHeader extends Component {
       <>
         <Box sx={{ width: '100%', typography: 'body1' }}>
           <TabContext value={value} >
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{
+              borderBottom: 2, borderColor: 'divider', display: 'flex',
+              justifyContent: 'center', background: '#D6E4E5'
+            }}>
               <div className="left-header">Logo</div>
               <TabList
                 aria-label="lab API tabs example"
@@ -205,13 +211,24 @@ class HomeHeader extends Component {
                           </MenuItem>
                           {
                             this.props.userInfo &&
-                            (this.props.userInfo.roleId === 'R3' || this.props.userInfo.roleId === 'R1')
+                            (this.props.userInfo.roleId === 'R3')
                             &&
                             <MenuItem onClick={() => this.handleCloseUserMenu()}>
                               <Typography
                                 textAlign="center"
                                 onClick={() => this.handlePaintManagement()}
                               >Paint Management</Typography>
+                            </MenuItem>
+                          }
+                          {
+                            this.props.userInfo &&
+                            (this.props.userInfo.roleId === 'R1')
+                            &&
+                            <MenuItem onClick={() => this.handleCloseUserMenu()}>
+                              <Typography
+                                textAlign="center"
+                                onClick={() => this.handlePaintManagement()}
+                              >Manage User</Typography>
                             </MenuItem>
                           }
                           <MenuItem onClick={() => this.handleCloseUserMenu()}>

@@ -12,7 +12,7 @@ class Paypal extends Component {
         }
     }
     paypalOptions = {
-        "client-id": 'AfybGPrgJ0RoXorQ2pRv0Iym0Km37YfPnJVbHBTrwU7vgeJjZFEA0a2IwvbwRoHClMfJnPwbtFrjlzoh',
+        "client-id": process.env.REACT_APP_CLIENT_ID,
         currency: 'USD',
     };
 
@@ -61,7 +61,7 @@ class Paypal extends Component {
         await this.props.getDataStore();
         await this.props.handleClose();
         toast.success("Đặt Hàng Thành Công!")
-        // console.log(order);
+        console.log(order);
     };
 
     render() {

@@ -43,7 +43,10 @@ class AccountManagement extends Component {
             <>
                 <Box sx={{ width: '100%', typography: 'body1' }}>
                     <TabContext value={value}>
-                        <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
+                        <Box sx={{
+                            borderBottom: 1, borderColor: 'divider', display: 'flex',
+                            justifyContent: 'center', background: '#D6E4E5'
+                        }}>
                             <HomeIcon
                                 className="icon-back-to-home"
                                 onClick={() => this.backToHome()}
