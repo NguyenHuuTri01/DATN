@@ -1,5 +1,5 @@
 import db from "../models/index";
-
+const { Op } = require("sequelize");
 
 let createPaypal = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -186,8 +186,12 @@ let getHistoryPaypal = (userId) => {
                 let data = await db.PayPaypal.findAll({
                     where: {
                         userId: userId,
+                        paymentStatus: {
+                            [Op.not]: 'pendingpayment'
+                        }
                     },
-                    attributes: ['paintId', 'amount', 'color', 'transactionId', 'payerEmail',
+                    attributes: ['paintId', 'amount', 'color', 'makePrice', 'discount',
+                        'transactionId', 'payerEmail',
                         'paymentStatus', 'paymentAmount', 'currencyCode', 'paymentDate'
                     ],
                     include: [
@@ -196,6 +200,13 @@ let getHistoryPaypal = (userId) => {
                             as: 'productPaypal',
                             attributes: [
                                 'paintName', 'image'
+                            ]
+                        },
+                        {
+                            model: db.Customer,
+                            as: 'customerPaypal',
+                            attributes: [
+                                'typePayment', 'transportStatus'
                             ]
                         }
                     ],

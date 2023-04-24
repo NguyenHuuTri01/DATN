@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
             CashOnReceipt.belongsTo(models.Product, {
                 foreignKey: "paintId", targetKey: "paintId", as: "cashProduct",
             });
+            CashOnReceipt.belongsTo(models.Customer, {
+                foreignKey: "transactionId", targetKey: "transactionId", as: "customerCash",
+            });
         }
     }
     CashOnReceipt.init(

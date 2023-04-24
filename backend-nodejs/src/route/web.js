@@ -40,6 +40,7 @@ let initWebRoutes = (app) => {
   router.get("/api/get-history-paypal", paypalController.getHistoryPaypal);
 
   router.post("/api/save-infor-order", customerController.createOrder);
+  router.get("/api/get-transaction-by-id", customerController.getTransactionById);
 
   router.post("/api/create-cash-on-receipt", cashController.createCashOnReceipt);
   router.post('/api/verify-order', cashController.postVerifyOrder);

@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
             PayPaypal.belongsTo(models.Product, {
                 foreignKey: "paintId", targetKey: "paintId", as: "productPaypal",
             });
+            PayPaypal.belongsTo(models.Customer, {
+                foreignKey: "transactionId", targetKey: "transactionId", as: "customerPaypal",
+            });
         }
     }
     PayPaypal.init(

@@ -16,9 +16,9 @@ let createOrder = async (req, res) => {
     }
 }
 
-let getHistoryById = async (req, res) => {
+let getTransactionById = async (req, res) => {
     try {
-        let infor = await customerServices.getHistoryById(req.query.userId);
+        let infor = await customerServices.getTransactionById(req.query.userId);
         return res.status(200).json(
             infor
         )
@@ -33,5 +33,5 @@ let getHistoryById = async (req, res) => {
 
 module.exports = {
     createOrder: createOrder,
-    getHistoryById: getHistoryById,
+    getTransactionById: getTransactionById,
 };

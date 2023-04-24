@@ -205,6 +205,13 @@ let getHistoryCash = (userId) => {
                             attributes: [
                                 'paintName', 'image'
                             ]
+                        },
+                        {
+                            model: db.Customer,
+                            as: 'customerCash',
+                            attributes: [
+                                'typePayment', 'transportStatus'
+                            ]
                         }
                     ],
                     raw: true,

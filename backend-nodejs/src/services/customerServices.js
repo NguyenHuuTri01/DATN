@@ -40,7 +40,7 @@ let createOrder = (data) => {
     })
 }
 
-let getHistoryById = (userId) => {
+let getTransactionById = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!userId) {
@@ -56,19 +56,8 @@ let getHistoryById = (userId) => {
                             [Op.not]: 'pending'
                         }
                     },
-                    // attributes: ['userId', 'paintId', 'amount', 'color', 'status'],
-                    include: [
-                        {
-                            model: db.Product,
-                            as: 'productData',
-                            attributes: [
-                                'id', 'paintName', 'paintPrice', 'paintDiscount',
-                                'paintQuantity', 'paintCatelory', 'image'
-                            ]
-                        }
-                    ],
+                    attributes: ['transactionId', 'typePayment', 'transportStatus'],
                     raw: true,
-                    nest: true,
                 })
                 if (!data) data = {}
                 resolve({
@@ -85,5 +74,5 @@ let getHistoryById = (userId) => {
 
 module.exports = {
     createOrder: createOrder,
-    getHistoryById: getHistoryById,
+    getTransactionById: getTransactionById,
 };
