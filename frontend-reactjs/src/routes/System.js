@@ -5,9 +5,7 @@ import PaintManage from "../containers/System/PaintManage";
 import Header from "../containers/Header/Header";
 import DanhMucHang from "../containers/System/DanhMucHang";
 import ManageUser from '../containers/System/Admin/ManageUser';
-import ListOrderCash from "../containers/System/Statistical/ListOrderCash";
-import ListOrderPaypal from "../containers/System/Statistical/ListOrderPaypal";
-import ListCancelOrder from '../containers/System/Statistical/ListCancelOrder';
+import ListOrder from "../containers/System/Statistical/ListOrder";
 
 class System extends Component {
   render() {
@@ -21,9 +19,7 @@ class System extends Component {
               <Route path="/system/danh-muc-hang" component={DanhMucHang} />
               <Route path="/system/manage-paint" component={PaintManage} />
               <Route path="/system/manage-user" component={ManageUser} />
-              <Route path="/system/list-order-cash" component={ListOrderCash} />
-              <Route path="/system/list-order-paypal" component={ListOrderPaypal} />
-              <Route path="/system/list-cancel-order" component={ListCancelOrder} />
+              <Route path="/system/list-order" component={ListOrder} />
               <Route
                 component={() => { return <Redirect to={systemMenuPath} /> }}
               />

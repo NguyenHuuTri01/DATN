@@ -134,6 +134,18 @@ const cancelOrderPaypal = (transactionId) => {
 const cancelOrderCash = (transactionId) => {
   return axios.post('/api/cancel-order-cash', transactionId)
 }
+const getAllTransaction = () => {
+  return axios.get(`/api/get-all-transaction`);
+};
+const getAllOrderCash = () => {
+  return axios.get(`/api/get-all-order-cash`);
+};
+const getOrderByTransactionCash = (transactionId) => {
+  return axios.post('/api/transaction-cash', transactionId)
+}
+const getOrderByTransactionPaypal = (transactionId) => {
+  return axios.post('/api/transaction-paypal', transactionId)
+}
 
 export {
   handleLoginApi,
@@ -171,5 +183,9 @@ export {
   createNewUserByAdmin,
   editUserByAdmin,
   cancelOrderPaypal,
-  cancelOrderCash
+  cancelOrderCash,
+  getAllOrderCash,
+  getAllTransaction,
+  getOrderByTransactionCash,
+  getOrderByTransactionPaypal
 };

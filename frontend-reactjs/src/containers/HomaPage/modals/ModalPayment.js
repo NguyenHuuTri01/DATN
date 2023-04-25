@@ -205,7 +205,7 @@ class ModalPayment extends Component {
             ))
             await this.props.getDataStore();
             await this.handleClose();
-            toast.success("Đặt Hàng Thành Công, Vui Lòng Xác Nhận Email Để Hoàn Tất")
+            toast.success("Vui Lòng Xác Nhận Email Để Hoàn Tất Quá Trình Đặt Hàng")
         } else if (resOrder && resOrder.errCode === -1) {
             await this.props.getDataStore();
             this.handleClose();

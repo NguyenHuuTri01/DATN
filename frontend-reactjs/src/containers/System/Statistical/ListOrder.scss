@@ -49,46 +49,28 @@ table th {
     text-decoration : none;
 }
 
-.danhmuchang-top-container {
-    display        : grid;
-    justify-content: center;
-    gap            : 20px;
+.danh-sach-don-hang {
 
-    .title-qldmh {
+    .title-danh-sach-don-hang {
         text-align : center;
         font-size  : 20px;
         font-weight: 600;
         margin     : 20px 0;
     }
 
-    .danhmuchang-top-content {
-        margin-top   : 50px;
-        width        : 900px;
-        margin-bottom: 50px;
+    .table-danh-sach-don-hang {
+        padding      : 0 50px;
+        margin-bottom: 15px;
 
-        .btn-save {
-            margin-top: 10px;
-            width     : 200px;
-        }
+        .action-btn {
+            width     : 150px;
+            text-align: center;
 
-        .btn-huy {
-            margin-top : 10px;
-            width      : 200px;
-            margin-left: 50px;
-        }
-    }
-}
-
-.table-danhmuchang {
-    padding      : 0 100px;
-    margin-bottom: 20px;
-
-    .action-btn {
-        width     : 300px;
-        text-align: center;
-
-        button {
-            margin: 0 10px;
+            button {
+                margin   : 0 10px;
+                height   : 30px;
+                font-size: 12px;
+            }
         }
     }
 }

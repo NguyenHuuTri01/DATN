@@ -124,6 +124,7 @@ class DanhMucHang extends Component {
           this.props.userInfo.roleId === 'R3' || this.props.userInfo.roleId === "R1" ?
             <>
               <div className="danhmuchang-top-container">
+                <div className="title-qldmh">Quản Lý Danh Mục Hàng</div>
                 <div className="danhmuchang-top-content">
                   <label>Mã Danh Mục</label>
                   <input
