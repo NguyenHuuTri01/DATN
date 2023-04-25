@@ -74,26 +74,23 @@ let checkUserEmail = (userEmail) => {
     }
   });
 };
-let getAllUsers = (userId) => {
+let getAllUsers = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let users = "";
-      if (userId === "ALL") {
-        users = await db.User.findAll({
-          attributes: {
-            exclude: ["password"],
-          },
-        });
+      let users = await db.User.findAll({
+        order: [["createdAt", "DESC"]],
+        attributes: {
+          exclude: ["password", "createdAt", "updatedAt"],
+        },
+      });
+      if (!users) {
+        users = {};
       }
-      if (userId && userId !== "ALL") {
-        users = await db.User.findOne({
-          where: { id: userId },
-          attributes: {
-            exclude: ["password"],
-          },
-        });
-      }
-      resolve(users);
+      resolve({
+        errCode: 0,
+        errMessage: 'Ok',
+        users
+      })
     } catch (e) {
       reject(e);
     }
@@ -297,6 +294,73 @@ let handleEditUser = (data) => {
     }
   });
 };
+let editUserByAdmin = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.id) {
+        resolve({
+          errCode: 2,
+          errMessage: "Missing require parameters",
+        });
+      }
+      let user = await db.User.findOne({
+        where: { id: data.id, },
+        raw: false,
+      });
+
+      if (user) {
+        user.name = data.name;
+        user.address = data.address;
+        user.phonenumber = data.phonenumber;
+        user.roleId = data.roleId
+        await user.save();
+        resolve({
+          errCode: 0,
+          message: "Update the user succeeds!",
+        });
+      } else {
+        resolve({
+          errCode: 1,
+          errMessage: `User's not found!`,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+let createNewUserByAdmin = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // check email is exist???
+      let check = await checkUserEmail(data.email);
+      if (check === true) {
+        resolve({
+          errCode: 1,
+          errMessage:
+            "Your email is already in use, please try another email !!!",
+        });
+      } else {
+        let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+        let res = await db.User.create({
+          email: data.email,
+          password: hashPasswordFromBcrypt,
+          name: data.name,
+          address: data.address,
+          roleId: data.roleId,
+          phonenumber: data.phonenumber,
+        });
+        console.log(res)
+        resolve({
+          errCode: 0,
+          message: "OK",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 let handleChangePassword = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -381,4 +445,6 @@ module.exports = {
   postVerifyAccount: postVerifyAccount,
   handleGetUserById: handleGetUserById,
   handleChangePassword: handleChangePassword,
+  editUserByAdmin: editUserByAdmin,
+  createNewUserByAdmin: createNewUserByAdmin,
 };

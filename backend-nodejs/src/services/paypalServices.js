@@ -171,9 +171,6 @@ let deletePaypal = (data) => {
         }
     })
 }
-
-
-
 let getHistoryPaypal = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -232,10 +229,127 @@ let getHistoryPaypal = (userId) => {
     })
 }
 
+let getAllOrderPaypal = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.PayPaypal.findAll({
+                where: {
+                    paymentStatus: {
+                        [Op.not]: 'pendingpayment'
+                    }
+                },
+                include: [
+                    {
+                        model: db.Product,
+                        as: 'productPaypal',
+                        attributes: [
+                            'paintName', 'image'
+                        ]
+                    },
+                    {
+                        model: db.Customer,
+                        as: 'customerPaypal',
+                        attributes: [
+                            'userName', 'typePayment', 'transportStatus', 'email',
+                            'address', 'phonenumber'
+                        ]
+                    }
+                ],
+                raw: true,
+                nest: true,
+            })
+            if (data && data.length > 0) {
+                data.map(item => {
+                    item.productPaypal.image = new Buffer.from(item.productPaypal.image, "base64").toString("binary");
+                    return item;
+                })
+            }
+            if (!data) data = {}
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+                data
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let cancelOrderPaypal = (transactionId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let getPaypal = await db.PayPaypal.findAll({
+                where: {
+                    transactionId: transactionId,
+                    paymentStatus: 'COMPLETED'
+                },
+                raw: false
+            })
+            if (getPaypal && getPaypal.length > 0) {
+                getPaypal.map(async (item) => {
+                    let product = await db.Product.findOne({
+                        where: {
+                            paintId: item.paintId
+                        },
+                        attributes: ['paintQuantity', 'numberSold'],
+                        raw: false
+                    })
+                    if (product) {
+                        let updateProduct = await db.Product.findOne({
+                            where: {
+                                paintId: item.paintId
+                            },
+                            raw: false
+                        })
+                        updateProduct.paintQuantity = +product.dataValues.paintQuantity + (+item.amount)
+                        updateProduct.numberSold = +product.dataValues.numberSold - (+item.amount)
+                        await updateProduct.save();
+
+                        let updatePaypal = await db.PayPaypal.findOne({
+                            where: {
+                                paintId: item.paintId,
+                                transactionId: transactionId
+                            },
+                            raw: false
+                        })
+                        updatePaypal.paymentStatus = 'cancel'
+                        await updatePaypal.save();
+
+                        let updateCustomer = await db.Customer.findOne({
+                            where: {
+                                transactionId: transactionId
+                            },
+                            raw: false
+                        })
+                        updateCustomer.transportStatus = 'cancel'
+                        await updateCustomer.save();
+                    }
+
+                })
+                resolve({
+                    errCode: 0,
+                    errMessage: 'ok'
+                })
+            } else {
+                resolve({
+                    errCode: -1,
+                    errMessage: 'Đã Hủy Ở Lần Trước'
+                })
+            }
+
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 
 module.exports = {
     updatePaypal: updatePaypal,
     getHistoryPaypal: getHistoryPaypal,
     createPaypal: createPaypal,
     deletePaypal: deletePaypal,
+    getAllOrderPaypal: getAllOrderPaypal,
+    cancelOrderPaypal: cancelOrderPaypal,
 };

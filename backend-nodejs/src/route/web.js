@@ -10,10 +10,12 @@ let router = express.Router();
 
 let initWebRoutes = (app) => {
   router.post("/api/create-new-user", userController.handleCreateNewUser);
+  router.post("/api/create-new-user-by-admin", userController.createNewUserByAdmin);
   router.post("/api/login", userController.handleLogin);
   router.put("/api/edit-user", userController.handleEditUser);
+  router.put("/api/edit-user-by-admin", userController.editUserByAdmin);
   router.get("/api/get-user-by-id", userController.handleGetUserById);
-  router.get("/api/get-all-users", userController.handleGetAllUsers);
+  router.get("/api/get-all-users", userController.getAllUsers);
   router.delete("/api/delete-user", userController.handleDelelteUser);
   router.put("/api/change-password", userController.handleChangePassword);
   router.post('/api/verify-account', userController.postVerifyAccount);
@@ -38,13 +40,18 @@ let initWebRoutes = (app) => {
   router.put("/api/update-paypal", paypalController.updatePaypal);
   router.post("/api/delete-paypal", paypalController.deletePaypal);
   router.get("/api/get-history-paypal", paypalController.getHistoryPaypal);
+  router.get("/api/get-all-order-paypal", paypalController.getAllOrderPaypal);
+  router.post("/api/cancel-order-paypal", paypalController.cancelOrderPaypal);
 
   router.post("/api/save-infor-order", customerController.createOrder);
   router.get("/api/get-transaction-by-id", customerController.getTransactionById);
+  router.get("/api/get-all-transaction", customerController.getAllTransaction);
 
   router.post("/api/create-cash-on-receipt", cashController.createCashOnReceipt);
   router.post('/api/verify-order', cashController.postVerifyOrder);
   router.get("/api/get-history-cash", cashController.getHistoryCash);
+  router.get("/api/get-all-order-cash", cashController.getAllOrderCash);
+  router.post("/api/cancel-order-cash", cashController.cancelOrderCash);
 
   router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);

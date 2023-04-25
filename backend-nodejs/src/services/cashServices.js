@@ -1,6 +1,7 @@
 import db from "../models/index";
 import emailService from './emailService';
 import { v4 as uuidv4 } from 'uuid';
+const { Op } = require("sequelize");
 
 let buildUrlEmail = (transactionId, userId) => {
     let result = `${process.env.REACT_URL}/verify-order?transactionId=${transactionId}&userId=${userId}`;
@@ -196,7 +197,7 @@ let getHistoryCash = (userId) => {
                 let data = await db.CashOnReceipt.findAll({
                     where: {
                         userId: userId,
-                        status: 'complete'
+                        status: ['complete', 'cancel'],
                     },
                     include: [
                         {
@@ -236,8 +237,122 @@ let getHistoryCash = (userId) => {
     })
 }
 
+let getAllOrderCash = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.CashOnReceipt.findAll({
+                where: {
+                    status: 'complete'
+                },
+                include: [
+                    {
+                        model: db.Product,
+                        as: 'cashProduct',
+                        attributes: [
+                            'paintName', 'image'
+                        ]
+                    },
+                    {
+                        model: db.Customer,
+                        as: 'customerCash',
+                        attributes: [
+                            'userName', 'typePayment', 'transportStatus', 'email',
+                            'address', 'phonenumber'
+                        ]
+                    }
+                ],
+                raw: true,
+                nest: true,
+            })
+            if (data && data.length > 0) {
+                data.map(item => {
+                    item.cashProduct.image = new Buffer.from(item.cashProduct.image, "base64").toString("binary");
+                    return item;
+                })
+            }
+            if (!data) data = {}
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+                data
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+let cancelOrderCash = (transactionId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let getCash = await db.CashOnReceipt.findAll({
+                where: {
+                    transactionId: transactionId,
+                    status: 'complete'
+                },
+                raw: false
+            })
+            if (getCash && getCash.length > 0) {
+                getCash.map(async (item) => {
+                    let product = await db.Product.findOne({
+                        where: {
+                            paintId: item.paintId
+                        },
+                        attributes: ['paintQuantity', 'numberSold'],
+                        raw: false
+                    })
+                    if (product) {
+                        let updateProduct = await db.Product.findOne({
+                            where: {
+                                paintId: item.paintId
+                            },
+                            raw: false
+                        })
+                        updateProduct.paintQuantity = +product.dataValues.paintQuantity + (+item.amount)
+                        updateProduct.numberSold = +product.dataValues.numberSold - (+item.amount)
+                        await updateProduct.save();
+
+                        let updateCash = await db.CashOnReceipt.findOne({
+                            where: {
+                                paintId: item.paintId,
+                                transactionId: transactionId
+                            },
+                            raw: false
+                        })
+                        updateCash.status = 'cancel'
+                        await updateCash.save();
+
+                        let updateCustomer = await db.Customer.findOne({
+                            where: {
+                                transactionId: transactionId
+                            },
+                            raw: false
+                        })
+                        updateCustomer.transportStatus = 'cancel'
+                        await updateCustomer.save();
+                    }
+                })
+                resolve({
+                    errCode: 0,
+                    errMessage: 'ok'
+                })
+            } else {
+                resolve({
+                    errCode: -1,
+                    errMessage: 'Đã Hủy Ở Lần Trước'
+                })
+            }
+
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     createCashOnReceipt: createCashOnReceipt,
     postVerifyOrder: postVerifyOrder,
     getHistoryCash: getHistoryCash,
+    getAllOrderCash: getAllOrderCash,
+    cancelOrderCash: cancelOrderCash,
 };

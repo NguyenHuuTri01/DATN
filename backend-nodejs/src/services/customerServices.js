@@ -71,8 +71,34 @@ let getTransactionById = (userId) => {
         }
     })
 }
+let getAllTransaction = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.Customer.findAll({
+                where: {
+                    typePayment: {
+                        [Op.not]: 'pending'
+                    },
+                    typePayment: {
+                        [Op.not]: 'cancel'
+                    }
+                },
+                raw: true,
+            })
+            if (!data) data = {}
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+                data
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
 module.exports = {
     createOrder: createOrder,
     getTransactionById: getTransactionById,
+    getAllTransaction: getAllTransaction,
 };

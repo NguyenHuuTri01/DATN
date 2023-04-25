@@ -43,9 +43,40 @@ let getHistoryCash = async (req, res) => {
         })
     }
 }
+let getAllOrderCash = async (req, res) => {
+    try {
+        let infor = await cashServices.getAllOrderCash();
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+
+let cancelOrderCash = async (req, res) => {
+    try {
+        let infor = await cashServices.cancelOrderCash(req.body.transactionId);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
 
 module.exports = {
     createCashOnReceipt: createCashOnReceipt,
     postVerifyOrder: postVerifyOrder,
     getHistoryCash: getHistoryCash,
+    getAllOrderCash: getAllOrderCash,
+    cancelOrderCash: cancelOrderCash,
 };
