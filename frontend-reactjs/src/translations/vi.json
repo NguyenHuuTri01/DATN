@@ -8,7 +8,10 @@
         "employee": {
             "manage-paint": "Quản lý sản phẩm",
             "statistical":"Thống kê",
-            "danh-muc-hang":"Danh mục hàng"
+            "danh-muc-hang":"Danh mục hàng",
+            "order-paypal":"Thanh Toán Bằng Papal",
+            "order-cash":"Thanh Toán Khi Nhận Hàng",
+            "cancel-order":"Đơn Bị Hủy"
         }
     }
 }

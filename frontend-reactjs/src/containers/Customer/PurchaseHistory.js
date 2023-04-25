@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import './PurchaseHistory.scss';
-import { getHistoryPaypal, getHistoryCash, getTransactionById } from '../../services/userService';
+import {
+    getHistoryPaypal, getHistoryCash, getTransactionById,
+    cancelOrderPaypal, cancelOrderCash
+}
+    from '../../services/userService';
+import CurrencyFormat from 'react-currency-format';
+import moment from 'moment';
 
 class PurchaseHistory extends Component {
 
@@ -38,27 +44,46 @@ class PurchaseHistory extends Component {
                 listOrder: listOrder.data
             })
         }
-        // if (prevState.historyPaypal !== this.state.historyPaypal ||
-        //     prevState.historyCash !== this.state.historyCash)
-        //     this.getListTransaction();
     }
-    getListTransaction = () => {
-        let transactionPaypal = this.state.historyPaypal.map(history => history.transactionId);
-        let uniqueTransactionPaypal = transactionPaypal.filter((value, index, self) => {
-            return self.indexOf(value) === index;
-        });
-        let transactionCash = this.state.historyCash.map(history => history.transactionId);
-        let uniqueTransactionCash = transactionCash.filter((value, index, self) => {
-            return self.indexOf(value) === index;
-        });
-        this.setState({
-            listTransactionId: [...uniqueTransactionPaypal, ...uniqueTransactionCash]
-        })
+    handleCancelOrder = async (typePayment, transactionId) => {
+        if (window.confirm('Bạn muốn xóa mặt hàng này?')) {
+            if (typePayment === 'cashonreceipt') {
+                let res = await cancelOrderCash({
+                    transactionId: transactionId
+                });
+                if (res && res.errCode === 0) {
+                    let listHistoryPaypal = await getHistoryPaypal(this.props.userInfo.id);
+                    let listHistoryCash = await getHistoryCash(this.props.userInfo.id);
+                    let listOrder = await getTransactionById(this.props.userInfo.id);
+                    this.setState({
+                        historyPaypal: listHistoryPaypal.data,
+                        historyCash: listHistoryCash.data,
+                        listOrder: listOrder.data
+                    })
+                }
+            } else if (typePayment === "paypal") {
+                let res = await cancelOrderPaypal({
+                    transactionId: transactionId
+                })
+                if (res && res.errCode === 0) {
+                    let listHistoryPaypal = await getHistoryPaypal(this.props.userInfo.id);
+                    let listHistoryCash = await getHistoryCash(this.props.userInfo.id);
+                    let listOrder = await getTransactionById(this.props.userInfo.id);
+                    this.setState({
+                        historyPaypal: listHistoryPaypal.data,
+                        historyCash: listHistoryCash.data,
+                        listOrder: listOrder.data
+                    })
+                }
+            }
+        } else {
+            // xử lý khi chọn No
+        }
+
     }
+
     render() {
         let { historyPaypal, historyCash, listOrder } = this.state;
-        console.log(historyPaypal)
-        console.log(listOrder)
         return (
             <div className="history-container">
                 <div className="history-title">
@@ -101,13 +126,19 @@ class PurchaseHistory extends Component {
                                                     {paypalItem.amount}
                                                 </div>
                                                 <div className="history-price history-td">
-                                                    {paypalItem.makePrice}
+                                                    <CurrencyFormat
+                                                        value={paypalItem.makePrice}
+                                                        displayType={'text'}
+                                                        thousandSeparator={true}
+                                                        suffix={' đ'}
+                                                        className="price-origin"
+                                                    />
                                                 </div>
                                                 <div className="history-discount history-td">
                                                     {paypalItem.discount}
                                                 </div>
                                                 <div className="history-payment-date history-td">
-                                                    {paypalItem.paymentDate}
+                                                    {moment.unix(paypalItem.paymentDate).format('DD/MM/YYYY')}
                                                 </div>
                                             </div>
                                         ))
@@ -133,13 +164,19 @@ class PurchaseHistory extends Component {
                                                     {cashItem.amount}
                                                 </div>
                                                 <div className="history-price history-td">
-                                                    {cashItem.makePrice}
+                                                    <CurrencyFormat
+                                                        value={cashItem.makePrice}
+                                                        displayType={'text'}
+                                                        thousandSeparator={true}
+                                                        suffix={' đ'}
+                                                        className="price-origin"
+                                                    />
                                                 </div>
                                                 <div className="history-discount history-td">
                                                     {cashItem.discount}
                                                 </div>
                                                 <div className="history-payment-date history-td">
-                                                    {cashItem.updatedAt}
+                                                    {moment(cashItem.updatedAt).format('DD/MM/YYYY')}
                                                 </div>
                                             </div>
                                         ))
@@ -155,10 +192,13 @@ class PurchaseHistory extends Component {
                                 <div className="transport">
                                     {
                                         item.transportStatus === 'chua' ?
-                                            <button className="btn btn-primary">
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={() => this.handleCancelOrder(item.typePayment, item.transactionId)}
+                                            >
                                                 Hủy
                                             </button> :
-                                            item.transportStatus
+                                            (item.transportStatus === 'cancel' ? 'Đã Hủy' : '')
                                     }
                                 </div>
                             </div>

@@ -28,8 +28,16 @@ export const employeeMenu = [
     name: "menu.admin.statistical",
     menus: [
       {
-        name: "menu.employee.statistical",
-        link: "/system/statistical",
+        name: "menu.employee.order-cash",
+        link: "/system/list-order-cash",
+      },
+      {
+        name: "menu.employee.order-paypal",
+        link: "/system/list-order-paypal",
+      },
+      {
+        name: "menu.employee.cancel-order",
+        link: "/system/list-cancel-order",
       },
     ]
   }

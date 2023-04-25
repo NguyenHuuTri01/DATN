@@ -3,11 +3,17 @@ import axios from "../axios";
 const handleLoginApi = (email, password) => {
   return axios.post("api/login", { email, password });
 };
-const getAllUsers = (inputId) => {
-  return axios.get(`/api/get-all-users?id=${inputId}`);
+const getUserById = (id) => {
+  return axios.get(`/api/get-user-by-id?id=${id}`)
+}
+const getAllUsers = () => {
+  return axios.get(`/api/get-all-users`);
 };
 const createNewUserService = (data) => {
   return axios.post("/api/create-new-user", data);
+};
+const createNewUserByAdmin = (data) => {
+  return axios.post("/api/create-new-user-by-admin", data);
 };
 
 const changePassword = (data) => {
@@ -24,10 +30,9 @@ const deleteUserService = (userId) => {
 const editUserService = (inputData) => {
   return axios.put("/api/edit-user", inputData);
 };
-
-const getUserById = (id) => {
-  return axios.get(`/api/get-user-by-id?id=${id}`)
-}
+const editUserByAdmin = (inputData) => {
+  return axios.put("/api/edit-user-by-admin", inputData);
+};
 
 const getAllCodeService = (inputType) => {
   return axios.get(`/api/allcode?type=${inputType}`);
@@ -123,6 +128,12 @@ const getTransactionById = (userId) => {
   return axios.get(`/api/get-transaction-by-id/?userId=${userId}`);
 };
 
+const cancelOrderPaypal = (transactionId) => {
+  return axios.post('/api/cancel-order-paypal', transactionId)
+}
+const cancelOrderCash = (transactionId) => {
+  return axios.post('/api/cancel-order-cash', transactionId)
+}
 
 export {
   handleLoginApi,
@@ -156,5 +167,9 @@ export {
   postVerifyOrder,
   getHistoryPaypal,
   getHistoryCash,
-  getTransactionById
+  getTransactionById,
+  createNewUserByAdmin,
+  editUserByAdmin,
+  cancelOrderPaypal,
+  cancelOrderCash
 };

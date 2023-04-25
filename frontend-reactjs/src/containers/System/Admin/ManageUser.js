@@ -1,79 +1,65 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import "./ManageUser.scss";
-import { CommonUtils } from "../../../utils";
-import Lightbox from "react-image-lightbox";
-import "react-image-lightbox/style.css";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Select from 'react-select';
 import { toast } from "react-toastify";
 import {
-    getAllLoaiSon, createPaintProduct, getAllPaintProduct,
-    editPaintProduct, deleltePaintProduct
+    getAllUsers, createNewUserByAdmin, editUserByAdmin, deleteUserService
 } from '../../../services/userService';
 import ReactPaginate from 'react-paginate';
 
+const listRole = [{
+    name: 'Admin',
+    roleId: 'R1'
+},
+{
+    name: 'Khách Hàng',
+    roleId: 'R2'
+},
+{
+    name: 'Nhân Viên Quản Lý',
+    roleId: 'R3'
+},
+{
+    name: 'Chủ Thầu',
+    roleId: 'R4'
+}
+]
 class ManageUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            imageBase64: '',
-            previewImgURL: '',
-            isOpen: false,
-            paintId: '',
+            email: '',
             name: '',
-            price: 0,
-            discount: 0,
-            quantity: 0,
-            catelogy: [],
-            selectedCatelory: '',
-            description: '',
+            address: '',
+            phonenumber: '',
+            password: '',
+            roleList: [],
+            selectedRole: '',
             action: 'CREATE',
-
-            allProduct: [], // Dữ liệu bảng
+            userId: '',
+            allUsers: [], // Dữ liệu bảng
             currentPage: 0, // Số trang hiện tại
             perPage: 10, // Số phần tử trên một trang
-            disablePaintId: false,
+            disableEmail: false,
         };
     }
 
     async componentDidMount() {
-        let allCatelogy = await getAllLoaiSon();
-        if (allCatelogy && allCatelogy.data.length > 0) {
-            this.setState({
-                catelogy: this.buildDataInputSelect(allCatelogy.data)
-            })
-        }
-        this.getListPaintProduct();
+        this.setState({
+            roleList: this.buildDataInputSelect(listRole)
+        })
+        this.getListUsers();
     }
 
-    getListPaintProduct = async () => {
-        let data = await getAllPaintProduct();
+    getListUsers = async () => {
+        let data = await getAllUsers();
         if (data && data.errCode === 0) {
             this.setState({
-                allProduct: [...data.data]
+                allUsers: [...data.users]
             })
         }
     }
-
-    openPreviewImage = () => {
-        if (!this.state.previewImgURL) return;
-        this.setState({
-            isOpen: true,
-        });
-    };
-    handleOnChangeImage = async (event) => {
-        let data = event.target.files;
-        let file = data[0];
-        if (file) {
-            let base64 = await CommonUtils.getBase64(file);
-            let objectUrl = URL.createObjectURL(file);
-            this.setState({
-                imageBase64: base64,
-                previewImgURL: objectUrl
-            });
-        }
-    };
     onChangeInput = (event, id) => {
         let valueInput = event.target.value;
         let stateCopy = { ...this.state }
@@ -88,7 +74,7 @@ class ManageUser extends Component {
             inputData.map((item, index) => {
                 let object = {};
                 object.label = item.name;
-                object.value = item.paintId;
+                object.value = item.roleId;
                 result.push(object);
             })
         }
@@ -103,130 +89,118 @@ class ManageUser extends Component {
         })
     }
 
-    handleCreatePaintProduct = async () => {
+    validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    validatePhoneNumber = (phoneNumber) => {
+        const phoneNumberRegex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
+        return phoneNumberRegex.test(phoneNumber);
+    }
+    handleCreateNewUser = async () => {
         let {
-            paintId, name, price, discount, quantity, selectedCatelory, description, imageBase64, action
+            email, name, address, phonenumber, password, selectedRole, action, userId
         } = this.state;
-        if (
-            !paintId || !name || !selectedCatelory || !description || !imageBase64
-        ) {
+        if (!email || !selectedRole || !password) {
             alert('Vui Lòng Nhập Đầy Đủ Thông Tin')
             return
         }
-
-        if (!price) {
-            alert('Vui Lòng Nhập Giá Tiền')
+        if (!this.validateEmail(email)) {
+            alert("Email Không Chính Xác!")
             return
         }
-
-        if (quantity !== 0) {
-            if (Number.isInteger(quantity)) {
-                alert('Số lượng phải là số nguyên!')
+        if (phonenumber !== '') {
+            if (!this.validatePhoneNumber(phonenumber)) {
+                alert("Số Điện Thoại Không Tồn Tại!")
                 return
             }
         }
         if (action === 'CREATE') {
-            let resCreatePaint = await createPaintProduct({
-                paintId: paintId,
-                paintName: name,
-                paintPrice: price,
-                paintDiscount: discount,
-                paintQuantity: quantity,
-                paintCatelory: selectedCatelory.value,
-                paintDescription: description,
-                imageBase64: imageBase64,
+            let resCreateUser = await createNewUserByAdmin({
+                email: email,
+                name: name,
+                address: address,
+                phonenumber: phonenumber,
+                password: password,
+                roleId: selectedRole.value,
             })
 
-            if (resCreatePaint && resCreatePaint.errCode === -2) {
-                toast.error('Sản Phẩm Đã Tồn Tại!');
-            } else if (resCreatePaint && resCreatePaint.errCode === 0) {
-                this.getListPaintProduct();
-                toast.success('Tạo Sản Phẩm Thành Công!');
-                this.setState({
-                    imageBase64: '',
-                    previewImgURL: '',
-                    paintId: '',
-                    name: '',
-                    price: 0,
-                    discount: 0,
-                    quantity: 0,
-                    selectedCatelory: '',
-                    description: '',
-                })
-            }
+            if (resCreateUser && resCreateUser.errCode === 1) {
+                toast.error('Tài Khoản Đã Tồn Tại!');
+            } else
+                if (resCreateUser && resCreateUser.errCode === 0) {
+                    this.getListUsers();
+                    toast.success('Tạo Tài Khoản Thành Công!');
+                    this.setState({
+                        email: '',
+                        name: '',
+                        address: '',
+                        phonenumber: '',
+                        password: '',
+                        selectedRole: '',
+                    })
+                }
         } else {
-            let resUpdatePaint = await editPaintProduct({
-                paintId: paintId,
-                paintName: name,
-                paintPrice: price,
-                paintDiscount: discount,
-                paintQuantity: quantity,
-                paintCatelory: selectedCatelory.value,
-                paintDescription: description,
-                imageBase64: imageBase64,
+            let resUpdatePaint = await editUserByAdmin({
+                email: email,
+                name: name,
+                address: address,
+                phonenumber: phonenumber,
+                password: password,
+                roleId: selectedRole.value,
+                id: userId,
             })
             if (resUpdatePaint && resUpdatePaint.errCode === 0) {
-                this.getListPaintProduct();
+                this.getListUsers();
                 toast.success('Cập Nhật Sản Phẩm Thành Công!');
                 this.setState({
-                    imageBase64: '',
-                    previewImgURL: '',
-                    paintId: '',
+                    email: '',
                     name: '',
-                    price: 0,
-                    discount: 0,
-                    quantity: 0,
-                    selectedCatelory: '',
-                    description: '',
+                    address: '',
+                    phonenumber: '',
+                    password: '',
+                    selectedRole: '',
                     action: 'CREATE',
-                    disablePaintId: false,
+                    userId: ''
                 })
             }
         }
     }
     handleUpdate = (itemData) => {
-        let { catelogy } = this.state;
-        let cateloryId = itemData.paintCatelory;
-        let selectedCatelory = catelogy.find(item => {
-            return item && item.value === cateloryId
+        let { roleList } = this.state;
+        let roleId = itemData.roleId;
+        let selectedRole = roleList.find(item => {
+            return item && item.value === roleId
         })
-
         this.setState({
-            imageBase64: itemData.image,
-            paintId: itemData.paintId,
-            name: itemData.paintName,
-            price: itemData.paintPrice,
-            discount: itemData.paintDiscount,
-            quantity: itemData.paintQuantity,
-            selectedCatelory: selectedCatelory,
-            description: itemData.paintDescription,
-            previewImgURL: itemData.image,
+            email: itemData.email,
+            name: itemData.name !== null ? itemData.name : '',
+            address: itemData.address !== null ? itemData.address : '',
+            phonenumber: itemData.phonenumber !== null ? itemData.phonenumber : '',
+            selectedRole: selectedRole,
             action: 'EDIT',
-            disablePaintId: true,
+            password: 'password',
+            userId: itemData.id,
         })
     }
 
-    handleCancelChangeProduct = () => {
+    handleCancelChangeUser = () => {
         this.setState({
-            imageBase64: '',
-            paintId: '',
+            email: '',
             name: '',
-            price: 0,
-            discount: 0,
-            quantity: 0,
-            selectedCatelory: '',
-            description: '',
-            previewImgURL: '',
+            password: '',
+            phonenumber: '',
+            address: '',
+            selectedRole: '',
             action: 'CREATE',
-            disablePaintId: false,
         })
     }
 
-    handleDelete = async (paintId) => {
-        if (window.confirm('Bạn muốn xóa mặt hàng này?')) {
-            let resDelete = await deleltePaintProduct(paintId);
+    handleDelete = async (userId) => {
+        if (window.confirm('Bạn muốn xóa tài khoản này này?')) {
+            let resDelete = await deleteUserService(userId);
             if (resDelete && resDelete.errCode === 0) {
-                this.getListPaintProduct();
+                this.getListUsers();
                 toast.success("Xóa Thành Công!")
             }
         } else {
@@ -239,116 +213,86 @@ class ManageUser extends Component {
         });
     };
     render() {
-        let { paintId, name, price, discount, quantity, catelogy, description,
-            selectedCatelory, action, currentPage, perPage, allProduct, disablePaintId }
+        let { email, name, address, phonenumber, roleList,
+            selectedRole, action, currentPage, perPage, allUsers, password }
             = this.state;
         let offset = currentPage * perPage;
-        let pageCount = Math.ceil(allProduct.length / perPage);
-        let currentPageData = allProduct.slice(offset, offset + perPage);
+        let pageCount = Math.ceil(allUsers.length / perPage);
+        let currentPageData = allUsers.slice(offset, offset + perPage);
         return (
             <div className="paint-container">
-                <div className="title-qlsp">Quản Lý Sản Phẩm</div>
+                <div className="title-qlsp">Quản Lý Tài Khoản</div>
                 <div className="form-group">
-                    <div className="col-3">
-                        <label>Mã Sơn:</label>
+                    <div className="col-4">
+                        <label>Email:</label>
                         <div>
                             <input
                                 className="form-control"
-                                value={paintId}
-                                onChange={(e) => this.onChangeInput(e, "paintId")}
-                                disabled={disablePaintId}
+                                value={email}
+                                onChange={(e) => this.onChangeInput(e, "email")}
+                                disabled={action === 'EDIT' ? true : false}
+                                type="text"
                             />
                         </div>
                     </div>
-                    <div className="col-3">
-                        <label>Tên Sơn:</label>
+                    <div className="col-4">
+                        <label>Password:</label>
+                        <div>
+                            <input
+                                className="form-control"
+                                value={password}
+                                onChange={(e) => this.onChangeInput(e, "password")}
+                                disabled={action === 'EDIT' ? true : false}
+                                type="password"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-4">
+                        <label>Name:</label>
                         <div>
                             <input
                                 className="form-control"
                                 value={name}
+                                min={0}
+                                type="text"
                                 onChange={(e) => this.onChangeInput(e, "name")}
-                            />
-                        </div>
-                    </div>
-                    <div className="col-3">
-                        <label>Giá Tiền:</label>
-                        <div>
-                            <input
-                                className="form-control"
-                                value={price}
-                                min={0}
-                                type="number"
-                                onChange={(e) => this.onChangeInput(e, "price")}
-                            />
-                        </div>
-                    </div>
-                    <div className="col-3">
-                        <label>{`Khuyến Mãi(%):`}</label>
-                        <div>
-                            <input
-                                className="form-control"
-                                type="number"
-                                min={0}
-                                value={discount}
-                                onChange={(e) => this.onChangeInput(e, "discount")}
                             />
                         </div>
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-3">
-                        <label>Số Lượng:</label>
+                    <div className="col-4">
+                        <label>Address: </label>
                         <div>
                             <input
                                 className="form-control"
-                                value={quantity}
-                                type="number"
-                                min={0}
-                                onChange={(e) => this.onChangeInput(e, "quantity")}
+                                type="text"
+                                value={address}
+                                onChange={(e) => this.onChangeInput(e, "address")}
                             />
                         </div>
                     </div>
-                    <div className="col-3">
-                        <label>Loại:</label>
+                    <div className="col-4">
+                        <label>Phonenumber:</label>
+                        <div>
+                            <input
+                                className="form-control"
+                                value={phonenumber}
+                                type="number"
+                                onChange={(e) => this.onChangeInput(e, "phonenumber")}
+                            />
+                        </div>
+                    </div>
+                    <div className="col-4">
+                        <label>Role:</label>
                         <div>
                             <Select
-                                value={selectedCatelory}
+                                value={selectedRole}
                                 onChange={this.handleChangeSelect}
-                                options={catelogy}
-                                name="selectedCatelory"
+                                options={roleList}
+                                name="selectedRole"
                             />
                         </div>
-                    </div>
-                    <div className="col-6">
-                        <label>Ảnh:</label>
-                        <div className="preview-img-container">
-                            <input
-                                id="previewImg"
-                                type="file"
-                                hidden
-                                onChange={(event) => this.handleOnChangeImage(event)}
-                            />
-                            <label className="label-upload" htmlFor="previewImg">
-                                Tải ảnh <i className="fas fa-upload"></i>
-                            </label>
-                            <div
-                                className="preview-image"
-                                style={{
-                                    backgroundImage: `url(${this.state.previewImgURL})`,
-                                }}
-                                onClick={() => this.openPreviewImage()}
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-12">
-                    <label>Mô Tả:</label>
-                    <div>
-                        <TextareaAutosize
-                            className="form-control"
-                            value={description}
-                            onChange={(e) => this.onChangeInput(e, "description")}
-                            minRows={5} />
                     </div>
                 </div>
                 <div className="btn-create-product">
@@ -356,17 +300,17 @@ class ManageUser extends Component {
                         action === "CREATE" ?
                             <button
                                 className="btn btn-primary"
-                                onClick={() => this.handleCreatePaintProduct()}
+                                onClick={() => this.handleCreateNewUser()}
                             >Tạo</button>
                             :
                             <>
                                 <button
                                     className="btn btn-primary"
-                                    onClick={() => this.handleCreatePaintProduct()}
+                                    onClick={() => this.handleCreateNewUser()}
                                 >Lưu</button>
                                 <button
                                     className="btn btn-secondary"
-                                    onClick={() => this.handleCancelChangeProduct()}
+                                    onClick={() => this.handleCancelChangeUser()}
                                 >Hủy</button>
                             </>
                     }
@@ -376,7 +320,7 @@ class ManageUser extends Component {
                     <table>
                         <thead>
                             <tr>
-                                <th>Paint ID</th>
+                                <th>Email</th>
                                 <th>Name</th>
                                 <th>Action</th>
                             </tr>
@@ -384,12 +328,12 @@ class ManageUser extends Component {
                         <tbody>
                             {currentPageData.map((item, index) => (
                                 <tr key={index}>
-                                    <td style={{ width: 200 }}>{item.paintId}</td>
-                                    <td>{item.paintName}</td>
+                                    <td style={{ width: 200 }}>{item.email}</td>
+                                    <td>{item.name}</td>
                                     <td className="action-btn">
                                         <button
                                             className="btn btn-secondary"
-                                            onClick={() => this.handleDelete(item.paintId)}
+                                            onClick={() => this.handleDelete(item.id)}
                                         >Delete</button>
                                         <button
                                             className="btn btn-primary"
@@ -409,12 +353,6 @@ class ManageUser extends Component {
                         activeClassName={'active'}
                     />
                 </div>
-                {this.state.isOpen === true && (
-                    <Lightbox
-                        mainSrc={this.state.previewImgURL}
-                        onCloseRequest={() => this.setState({ isOpen: false })}
-                    />
-                )}
             </div >
         );
     }

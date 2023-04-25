@@ -227,7 +227,7 @@ class HomeHeader extends Component {
                             <MenuItem onClick={() => this.handleCloseUserMenu()}>
                               <Typography
                                 textAlign="center"
-                                onClick={() => this.handlePaintManagement()}
+                                onClick={() => this.handleManageUser()}
                               >Manage User</Typography>
                             </MenuItem>
                           }

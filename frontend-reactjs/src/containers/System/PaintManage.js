@@ -376,8 +376,10 @@ class PaintManage extends Component {
           <table>
             <thead>
               <tr>
-                <th>Paint ID</th>
-                <th>Name</th>
+                <th>Mã Mặt Hàng</th>
+                <th>Tên</th>
+                <th>Số Lượng</th>
+                <th>Khuyến Mãi(%)</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -386,6 +388,8 @@ class PaintManage extends Component {
                 <tr key={index}>
                   <td style={{ width: 200 }}>{item.paintId}</td>
                   <td>{item.paintName}</td>
+                  <td>{item.paintQuantity}</td>
+                  <td>{item.paintDiscount}</td>
                   <td className="action-btn">
                     <button
                       className="btn btn-secondary"
