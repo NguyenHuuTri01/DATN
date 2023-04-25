@@ -77,10 +77,7 @@ let getAllTransaction = (userId) => {
             let data = await db.Customer.findAll({
                 where: {
                     typePayment: {
-                        [Op.not]: 'pending'
-                    },
-                    typePayment: {
-                        [Op.not]: 'cancel'
+                        [Op.not]: ['pending', 'cancel']
                     }
                 },
                 raw: true,

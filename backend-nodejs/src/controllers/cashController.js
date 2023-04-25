@@ -43,6 +43,20 @@ let getHistoryCash = async (req, res) => {
         })
     }
 }
+let getOrderByTransaction = async (req, res) => {
+    try {
+        let infor = await cashServices.getOrderByTransaction(req.body.transactionId);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
 let getAllOrderCash = async (req, res) => {
     try {
         let infor = await cashServices.getAllOrderCash();
@@ -79,4 +93,5 @@ module.exports = {
     getHistoryCash: getHistoryCash,
     getAllOrderCash: getAllOrderCash,
     cancelOrderCash: cancelOrderCash,
+    getOrderByTransaction: getOrderByTransaction
 };

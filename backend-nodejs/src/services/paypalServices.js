@@ -228,6 +228,52 @@ let getHistoryPaypal = (userId) => {
         }
     })
 }
+let getOrderByTransaction = (transactionId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!transactionId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter'
+                })
+            } else {
+                let data = await db.PayPaypal.findAll({
+                    where: {
+                        transactionId: transactionId,
+                        paymentStatus: {
+                            [Op.not]: 'pendingpayment'
+                        }
+                    },
+                    include: [
+                        {
+                            model: db.Product,
+                            as: 'productPaypal',
+                            attributes: [
+                                'paintName', 'image'
+                            ]
+                        }
+                    ],
+                    raw: true,
+                    nest: true,
+                })
+                if (data && data.length > 0) {
+                    data.map(item => {
+                        item.productPaypal.image = new Buffer.from(item.productPaypal.image, "base64").toString("binary");
+                        return item;
+                    })
+                }
+                if (!data) data = {}
+                resolve({
+                    errCode: 0,
+                    errMessage: 'Ok',
+                    data
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
 let getAllOrderPaypal = (userId) => {
     return new Promise(async (resolve, reject) => {
@@ -352,4 +398,5 @@ module.exports = {
     deletePaypal: deletePaypal,
     getAllOrderPaypal: getAllOrderPaypal,
     cancelOrderPaypal: cancelOrderPaypal,
+    getOrderByTransaction: getOrderByTransaction,
 };

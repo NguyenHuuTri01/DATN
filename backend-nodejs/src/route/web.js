@@ -42,6 +42,7 @@ let initWebRoutes = (app) => {
   router.get("/api/get-history-paypal", paypalController.getHistoryPaypal);
   router.get("/api/get-all-order-paypal", paypalController.getAllOrderPaypal);
   router.post("/api/cancel-order-paypal", paypalController.cancelOrderPaypal);
+  router.post("/api/transaction-paypal", paypalController.getOrderByTransaction);
 
   router.post("/api/save-infor-order", customerController.createOrder);
   router.get("/api/get-transaction-by-id", customerController.getTransactionById);
@@ -52,6 +53,7 @@ let initWebRoutes = (app) => {
   router.get("/api/get-history-cash", cashController.getHistoryCash);
   router.get("/api/get-all-order-cash", cashController.getAllOrderCash);
   router.post("/api/cancel-order-cash", cashController.cancelOrderCash);
+  router.post("/api/transaction-cash", cashController.getOrderByTransaction);
 
   router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);

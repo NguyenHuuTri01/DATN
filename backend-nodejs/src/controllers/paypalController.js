@@ -62,6 +62,20 @@ let getHistoryPaypal = async (req, res) => {
         })
     }
 }
+let getOrderByTransaction = async (req, res) => {
+    try {
+        let infor = await paypalServices.getOrderByTransaction(req.body.transactionId);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
 
 let getAllOrderPaypal = async (req, res) => {
     try {
@@ -99,4 +113,5 @@ module.exports = {
     getHistoryPaypal: getHistoryPaypal,
     getAllOrderPaypal: getAllOrderPaypal,
     cancelOrderPaypal: cancelOrderPaypal,
+    getOrderByTransaction: getOrderByTransaction,
 };

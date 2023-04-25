@@ -236,6 +236,50 @@ let getHistoryCash = (userId) => {
         }
     })
 }
+let getOrderByTransaction = (transactionId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!transactionId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter'
+                })
+            } else {
+                let data = await db.CashOnReceipt.findAll({
+                    where: {
+                        transactionId: transactionId,
+                        status: ['complete'],
+                    },
+                    include: [
+                        {
+                            model: db.Product,
+                            as: 'cashProduct',
+                            attributes: [
+                                'paintName', 'image'
+                            ]
+                        }
+                    ],
+                    raw: true,
+                    nest: true,
+                })
+                if (data && data.length > 0) {
+                    data.map(item => {
+                        item.cashProduct.image = new Buffer.from(item.cashProduct.image, "base64").toString("binary");
+                        return item;
+                    })
+                }
+                if (!data) data = {}
+                resolve({
+                    errCode: 0,
+                    errMessage: 'Ok',
+                    data
+                })
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
 let getAllOrderCash = () => {
     return new Promise(async (resolve, reject) => {
@@ -355,4 +399,5 @@ module.exports = {
     getHistoryCash: getHistoryCash,
     getAllOrderCash: getAllOrderCash,
     cancelOrderCash: cancelOrderCash,
+    getOrderByTransaction: getOrderByTransaction,
 };
