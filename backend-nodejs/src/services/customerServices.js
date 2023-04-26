@@ -50,6 +50,7 @@ let getTransactionById = (userId) => {
                 })
             } else {
                 let data = await db.Customer.findAll({
+                    order: [["createdAt", "DESC"]],
                     where: {
                         userId: userId,
                         typePayment: {
@@ -71,10 +72,11 @@ let getTransactionById = (userId) => {
         }
     })
 }
-let getAllTransaction = (userId) => {
+let getAllTransaction = () => {
     return new Promise(async (resolve, reject) => {
         try {
             let data = await db.Customer.findAll({
+                order: [["createdAt", "DESC"]],
                 where: {
                     typePayment: {
                         [Op.not]: ['pending', 'cancel']
@@ -93,9 +95,45 @@ let getAllTransaction = (userId) => {
         }
     })
 }
+let updateTransport = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.transactionId || !data.transportStatus) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter',
+                })
+            } else {
+                let customer = await db.Customer.findOne({
+                    where: {
+                        transactionId: data.transactionId,
+                    },
+                    raw: false
+                })
+                if (customer) {
+                    customer.transportStatus = data.transportStatus
+                    await customer.save();
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'Ok',
+                    })
+                } else {
+                    resolve({
+                        errCode: -1,
+                        errMessage: 'Order not found',
+                    })
+                }
+            }
+
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
 module.exports = {
     createOrder: createOrder,
     getTransactionById: getTransactionById,
     getAllTransaction: getAllTransaction,
+    updateTransport: updateTransport,
 };

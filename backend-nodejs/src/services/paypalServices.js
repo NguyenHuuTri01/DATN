@@ -238,6 +238,7 @@ let getOrderByTransaction = (transactionId) => {
                 })
             } else {
                 let data = await db.PayPaypal.findAll({
+                    order: [["createdAt", "DESC"]],
                     where: {
                         transactionId: transactionId,
                         paymentStatus: {

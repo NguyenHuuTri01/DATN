@@ -246,6 +246,7 @@ let getOrderByTransaction = (transactionId) => {
                 })
             } else {
                 let data = await db.CashOnReceipt.findAll({
+                    order: [["createdAt", "DESC"]],
                     where: {
                         transactionId: transactionId,
                         status: ['complete'],

@@ -5,6 +5,7 @@ import cartController from '../controllers/cartController';
 import paypalController from '../controllers/paypalController';
 import customerController from '../controllers/customerController';
 import cashController from '../controllers/cashController';
+import giaCongColtroller from '../controllers/giaCongController';
 
 let router = express.Router();
 
@@ -47,6 +48,7 @@ let initWebRoutes = (app) => {
   router.post("/api/save-infor-order", customerController.createOrder);
   router.get("/api/get-transaction-by-id", customerController.getTransactionById);
   router.get("/api/get-all-transaction", customerController.getAllTransaction);
+  router.put("/api/update-transport", customerController.updateTransport);
 
   router.post("/api/create-cash-on-receipt", cashController.createCashOnReceipt);
   router.post('/api/verify-order', cashController.postVerifyOrder);
@@ -54,6 +56,9 @@ let initWebRoutes = (app) => {
   router.get("/api/get-all-order-cash", cashController.getAllOrderCash);
   router.post("/api/cancel-order-cash", cashController.cancelOrderCash);
   router.post("/api/transaction-cash", cashController.getOrderByTransaction);
+
+  router.post("/api/submit-gia-cong", giaCongColtroller.submitForm);
+  router.get("/api/get-gia-cong", giaCongColtroller.getGiaCong);
 
   router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);
