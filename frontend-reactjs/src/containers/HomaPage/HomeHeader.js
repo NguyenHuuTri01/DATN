@@ -15,7 +15,9 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Shoping from "./products/Shoping";
+import Machining from "./machining/Machining";
 import ModalStore from "./modals/ModalStore";
+import ListMachining from "./machining/ListMachining";
 
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -160,7 +162,7 @@ class HomeHeader extends Component {
               >
                 <Tab label="Giới thiệu" value="1" onClick={() => this.handleChange('1')} />
                 <Tab label="Các sản phẩm" value="2" onClick={() => this.handleChange('2')} />
-                <Tab label="Item Three" value="3" onClick={() => this.handleChange('3')} />
+                <Tab label="Thuê Gia Công" value="3" onClick={() => this.handleChange('3')} />
               </TabList>
               <div className="right-header">
                 <Badge badgeContent={store && store.length} color="primary">
@@ -250,7 +252,12 @@ class HomeHeader extends Component {
                 handleAddToCart={this.handleAddToCart}
               />
             </TabPanel>
-            <TabPanel value="3">Item Three</TabPanel>
+            <TabPanel value="3">
+              {this.props.userInfo && this.props.userInfo.roleId === 'R4' ?
+                <ListMachining /> :
+                <Machining />
+              }
+            </TabPanel>
           </TabContext>
         </Box>
 

@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { getOrderByTransactionCash, getOrderByTransactionPaypal }
     from '../../../services/userService';
+import './ModalViewOrder.scss';
+import CurrencyFormat from 'react-currency-format';
 
 const style = {
     position: 'absolute',
@@ -75,18 +76,18 @@ class ModalViewOrder extends Component {
         let { dataOrder } = this.state;
         console.log(dataOrder)
         return (
-            <div className="modal-store-container">
+            <div className="modal-danh-sach-don-hang">
                 <Modal
                     open={this.props.isOpenModal}
                     onClose={() => this.handleClose()}
                     aria-labelledby="child-modal-title"
                     aria-describedby="child-modal-description"
                 >
-                    <Box sx={{ ...style, width: 900, height: 700 }}>
-                        <div>
+                    <Box sx={{ ...style, width: 1200, height: 700 }}>
+                        <div className="title-chi-tiet-don-hang">
                             Chi Tiết Đơn Hàng
                         </div>
-                        <div className="table-danh-sach-don-hang">
+                        <div className="chi-tiet-don-hang">
                             <table>
                                 <thead>
                                     <tr>
@@ -95,6 +96,7 @@ class ModalViewOrder extends Component {
                                         <th>Số Lượng</th>
                                         <th>Giá</th>
                                         <th>Khuyến Mãi(%)</th>
+                                        <th>Số Tiền Cần Thanh Toán</th>
                                         <th>Số Tiền Đã Thanh Toán</th>
                                     </tr>
                                 </thead>
@@ -103,13 +105,13 @@ class ModalViewOrder extends Component {
                                         dataOrder.map((item, index) => (
                                             <tr key={index}>
                                                 <td>
-                                                    <div>
-                                                        Ảnh
-                                                        {/* {
-                                                            this.props.typePayment === "cashonreceipt" ?
-                                                                item.cashProduct.image :
-                                                                item.productPaypal.image
-                                                        } */}
+                                                    <div
+                                                        className="image-order"
+                                                        style={{
+                                                            backgroundImage: `url(
+                                                            ${(item.cashProduct && item.cashProduct.image) || (item.productPaypal && item.productPaypal.image)}
+                                                            )`
+                                                        }}>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -117,9 +119,27 @@ class ModalViewOrder extends Component {
                                                     {item.productPaypal && item.productPaypal.paintName}
                                                 </td>
                                                 <td>{item.amount}</td>
-                                                <td>{item.makePrice}</td>
+                                                <td>
+                                                    <CurrencyFormat
+                                                        value={item.makePrice}
+                                                        displayType={'text'}
+                                                        thousandSeparator={true}
+                                                        suffix={' đ'}
+                                                        className="price-origin"
+                                                    />
+                                                </td>
                                                 <td>{item.discount}</td>
-                                                <td>{item.paymentAmount}</td>
+                                                <td>
+                                                    <CurrencyFormat
+                                                        value={(item.amount * item.makePrice) * (100 - item.discount) / 100}
+                                                        displayType={'text'}
+                                                        thousandSeparator={true}
+                                                        suffix={' đ'}
+                                                        className="price-origin"
+                                                    />
+                                                </td>
+                                                <td>{item.paymentAmount ? `${item.paymentAmount} $` :
+                                                    "Thanh Toán Khi Nhận Hàng"}</td>
                                             </tr>
                                         ))}
                                 </tbody>

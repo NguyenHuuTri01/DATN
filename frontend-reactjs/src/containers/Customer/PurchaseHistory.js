@@ -198,13 +198,17 @@ class PurchaseHistory extends Component {
                                             >
                                                 Hủy
                                             </button> :
-                                            (item.transportStatus === 'cancel' ? 'Đã Hủy' : '')
+                                            (item.transportStatus === 'cancel' ? 'Đã Hủy' :
+                                                (item.transportStatus === 'dang van chuyen' ?
+                                                    'Đang Vận Chuyển' : 'Đã Nhận Hàng')
+                                            )
                                     }
                                 </div>
                             </div>
                         )
                     })
                 }
+                <div style={{ height: 20 }}></div>
             </div>
         );
     }

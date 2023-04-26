@@ -146,7 +146,16 @@ const getOrderByTransactionCash = (transactionId) => {
 const getOrderByTransactionPaypal = (transactionId) => {
   return axios.post('/api/transaction-paypal', transactionId)
 }
+const updateTransport = (data) => {
+  return axios.put("/api/update-transport", data);
+};
 
+const submitForm = (data) => {
+  return axios.post('/api/submit-gia-cong', data)
+}
+const getGiaCong = () => {
+  return axios.get('/api/get-gia-cong')
+}
 export {
   handleLoginApi,
   getAllUsers,
@@ -187,5 +196,8 @@ export {
   getAllOrderCash,
   getAllTransaction,
   getOrderByTransactionCash,
-  getOrderByTransactionPaypal
+  getOrderByTransactionPaypal,
+  updateTransport,
+  submitForm,
+  getGiaCong
 };

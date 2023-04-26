@@ -1,19 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getAllTransaction, updateTransport } from '../../../services/userService';
+import { getAllTransaction, updateTransport } from '../../services/userService';
 import ReactPaginate from 'react-paginate';
-import './ListOrder.scss';
 import moment from 'moment';
-import SearchIcon from '@mui/icons-material/Search';
-import ModalViewOrder from "./ModalViewOrder";
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 
-class ListOrder extends Component {
+class ListGiaCong extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listOrder: [],
+            listGiaCong: [],
             currentPage: 0, // Số trang hiện tại
             perPage: 10, // Số phần tử trên một trang
             isOpenView: false,
@@ -24,7 +19,7 @@ class ListOrder extends Component {
         let datalist = await getAllTransaction();
         if (datalist && datalist.errCode === 0) {
             this.setState({
-                listOrder: datalist.data
+                listGiaCong: datalist.data
             })
         }
     }
@@ -55,7 +50,7 @@ class ListOrder extends Component {
                 let datalist = await getAllTransaction();
                 if (datalist && datalist.errCode === 0) {
                     this.setState({
-                        listOrder: datalist.data
+                        listGiaCong: datalist.data
                     })
                 }
             }
@@ -73,7 +68,7 @@ class ListOrder extends Component {
                 let datalist = await getAllTransaction();
                 if (datalist && datalist.errCode === 0) {
                     this.setState({
-                        listOrder: datalist.data
+                        listGiaCong: datalist.data
                     })
                 }
             }
@@ -81,31 +76,31 @@ class ListOrder extends Component {
             // xử lý khi chọn No
         }
     }
-
     render() {
-        let { currentPage, perPage, listOrder } = this.state;
+
+        let { currentPage, perPage, listGiaCong } = this.state;
         let offset = currentPage * perPage;
-        let pageCount = Math.ceil(listOrder.length / perPage);
-        let currentPageData = listOrder.slice(offset, offset + perPage);
+        let pageCount = Math.ceil(listGiaCong.length / perPage);
+        let currentPageData = listGiaCong.slice(offset, offset + perPage);
+
         return (
-            <div className="danh-sach-don-hang">
-                <div className="title-danh-sach-don-hang">
-                    Danh Sách Đơn Hàng
+            <div className="danh-sach-don-thue-gia-cong">
+                <div className="title-gia-cong">
+                    Danh Sách Đơn Thuê Gia Công
                 </div>
                 <div>
                     <input placeholder="Tìm Kiếm" />
                 </div>
-                <div className="table-danh-sach-don-hang">
+                <div className="table-gia-cong">
                     <table>
                         <thead>
                             <tr>
-                                <th>Mã Đơn Hàng</th>
-                                <th>Email</th>
+                                <th>Tên Khách Hàng</th>
                                 <th>Số Điện Thoại</th>
-                                <th>Ngày Đặt</th>
-                                <th>PTTT</th>
-                                <th>Tình Trạng Giao Hàng</th>
-                                <th>Action</th>
+                                <th>Email</th>
+                                <th>Loại Công Trình</th>
+                                <th>Diện Tích</th>
+                                <th>Màu Mong Muốn</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -119,30 +114,6 @@ class ListOrder extends Component {
                                     </td>
                                     <td>{item.typePayment}</td>
                                     <td>{item.transportStatus}</td>
-                                    <td className="action-btn">
-                                        <button
-                                            className="btn btn-secondary"
-                                            onClick={() => this.handleOpenView(item)}
-                                        ><SearchIcon /></button>
-                                        {
-                                            item.transportStatus === 'chua' ?
-                                                <button
-                                                    className="btn btn-primary"
-                                                    onClick={() => this.handleUpdateTransport(item.transactionId)}
-                                                ><LocalShippingIcon /></button>
-                                                : (
-                                                    item.transportStatus === 'dang van chuyen' ?
-                                                        <button
-                                                            className="btn btn-success"
-                                                            onClick={() => this.succeedTransport(item.transactionId)}
-                                                        >
-                                                            <CardGiftcardIcon />
-                                                        </button>
-                                                        : ""
-                                                )
-                                        }
-
-                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -156,11 +127,6 @@ class ListOrder extends Component {
                         activeClassName={'active'}
                     />
                 </div>
-                <ModalViewOrder
-                    handleCloseView={this.handleCloseView}
-                    isOpenModal={this.state.isOpenView}
-                    data={this.state.dataTransaction}
-                />
             </div>
         );
     }
@@ -173,7 +139,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {};
+    return {
+    };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListOrder);
+export default connect(mapStateToProps, mapDispatchToProps)(ListGiaCong);

@@ -10,6 +10,7 @@ import Information from "./Information";
 import ChangePassword from "./ChangePassword";
 import PurchaseHistory from "./PurchaseHistory";
 import HomeIcon from '@mui/icons-material/Home';
+import ListGiaCong from "./ListGiaCong";
 
 class AccountManagement extends Component {
 
@@ -38,7 +39,7 @@ class AccountManagement extends Component {
     }
     render() {
         let { value } = this.state;
-
+        console.log(this.props.userInfo)
         return (
             <>
                 <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -59,6 +60,10 @@ class AccountManagement extends Component {
                                 <Tab label="Quản lý thông tin" value="1" onClick={() => this.handleChange('1')} />
                                 <Tab label="Đổi mật khẩu" value="2" onClick={() => this.handleChange('2')} />
                                 <Tab label="Lịch sử mua hàng" value="3" onClick={() => this.handleChange('3')} />
+                                <Tab label="Danh sách thuê gia công"
+                                    hidden={this.props.userInfo && this.props.userInfo.roleId === 'R4' ?
+                                        false : true}
+                                    value="4" onClick={() => this.handleChange('4')} />
                             </TabList>
                         </Box>
                         <TabPanel value="1">
@@ -69,6 +74,9 @@ class AccountManagement extends Component {
                         </TabPanel>
                         <TabPanel value="3">
                             <PurchaseHistory />
+                        </TabPanel>
+                        <TabPanel value="4">
+                            <ListGiaCong />
                         </TabPanel>
                     </TabContext>
                 </Box>
