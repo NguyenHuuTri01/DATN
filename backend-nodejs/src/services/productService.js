@@ -184,44 +184,6 @@ let getAllPaintProduct = () => {
     })
 }
 
-// let getPaintProductById = (inputId) => {
-//     return new Promise(async (resolve, reject) => {
-//         try {
-//             if (!inputId) {
-//                 resolve({
-//                     errCode: 1,
-//                     errMessage: 'Missing parameter'
-//                 })
-//             } else {
-//                 let data = await db.Product.findOne({
-//                     where: {
-//                         paintId: inputId
-//                     },
-//                     attributes: ['paintId', 'paintName', 'paintPrice', 'paintDiscount',
-//                         'paintQuantity', 'paintCatelory', 'paintDescription', 'imageBase64'],
-//                 })
-//                 if (data) {
-//                     let doctorClinic = [];
-//                     doctorClinic = await db.Doctor_Infor.findAll({
-//                         where: { clinicId: inputId },
-//                         attributes: ['doctorId', 'provinceId'],
-//                     })
-
-//                     data.doctorClinic = doctorClinic;
-
-//                 } else data = {};
-
-//                 resolve({
-//                     errCode: 0,
-//                     errMessage: 'Ok',
-//                     data
-//                 })
-//             }
-//         } catch (e) {
-//             reject(e);
-//         }
-//     })
-// }
 
 let editPaintProduct = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -296,6 +258,26 @@ let deleltePaintProduct = (inputId) => {
     })
 }
 
+let getDataSelectProduct = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.Product.findAll({
+                order: [["createdAt", "DESC"]],
+                attributes: ['id', 'paintId', 'paintName']
+            });
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+                data
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+
+
 module.exports = {
     createLoaiSon: createLoaiSon,
     getAllLoaiSon: getAllLoaiSon,
@@ -303,7 +285,7 @@ module.exports = {
     delelteLoaiSon: delelteLoaiSon,
     createPaintProduct: createPaintProduct,
     getAllPaintProduct: getAllPaintProduct,
-    // getPaintProductById: getPaintProductById,
     editPaintProduct: editPaintProduct,
     deleltePaintProduct: deleltePaintProduct,
+    getDataSelectProduct: getDataSelectProduct,
 };

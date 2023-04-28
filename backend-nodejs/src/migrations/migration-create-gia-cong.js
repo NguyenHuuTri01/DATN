@@ -44,6 +44,9 @@ module.exports = {
             status: {
                 type: Sequelize.STRING,
             },
+            constructorId: {
+                type: Sequelize.INTEGER,
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

@@ -6,6 +6,7 @@ import paypalController from '../controllers/paypalController';
 import customerController from '../controllers/customerController';
 import cashController from '../controllers/cashController';
 import giaCongColtroller from '../controllers/giaCongController';
+import detailController from '../controllers/detailController';
 
 let router = express.Router();
 
@@ -30,6 +31,7 @@ let initWebRoutes = (app) => {
   router.get("/api/get-all-paint-product", productController.getAllPaintProduct);
   router.put("/api/edit-paint-product", productController.editPaintProduct);
   router.delete("/api/delete-paint-product", productController.deleltePaintProduct);
+  router.get("/api/get-all-select-product", productController.getDataSelectProduct);
 
   router.post("/api/add-to-cart", cartController.addToCart);
   router.get("/api/get-cart-by-id", cartController.getAllCartById);
@@ -59,6 +61,13 @@ let initWebRoutes = (app) => {
 
   router.post("/api/submit-gia-cong", giaCongColtroller.submitForm);
   router.get("/api/get-gia-cong", giaCongColtroller.getGiaCong);
+  router.put("/api/nhan-gia-cong", giaCongColtroller.nhanGiaCong);
+  router.post("/api/get-gia-cong-by-id", giaCongColtroller.nhanGiaCongById);
+  router.put("/api/hoan-thanh", giaCongColtroller.hoanThanh);
+
+  router.post("/api/create-detail-paint", detailController.createInformationPaint);
+  router.put("/api/update-detail-paint", detailController.updateInformationPaint);
+  router.get("/api/get-detail-paint-by-id", detailController.getInformationById);
 
   router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);

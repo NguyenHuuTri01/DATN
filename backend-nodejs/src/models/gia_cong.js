@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             endDate: DataTypes.STRING,
             require: DataTypes.TEXT("long"),
             status: DataTypes.STRING,
+            constructorId: DataTypes.INTEGER,
         },
         {
             sequelize,
