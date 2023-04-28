@@ -22,6 +22,10 @@ export const employeeMenu = [
         name: "menu.employee.manage-paint",
         link: "/system/manage-paint",
       },
+      {
+        name: "menu.employee.imformation-paint",
+        link: "/system/information-paint",
+      },
     ]
   },
   {

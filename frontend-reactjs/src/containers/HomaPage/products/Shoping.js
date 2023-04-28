@@ -8,6 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import CurrencyFormat from 'react-currency-format';
 import { getAllLoaiSon, getAllPaintProduct } from '../../../services/userService';
+import { withRouter } from 'react-router';
 
 class Shoping extends Component {
     constructor(props) {
@@ -52,8 +53,10 @@ class Shoping extends Component {
             this.props.handleAddToCart(item)
         }
     }
-    handleSeeDetail = () => {
-        console.log("see detail")
+    handleSeeDetail = (itemData) => {
+        if (this.props.history) {
+            this.props.history.push(`/detail/${itemData}`);
+        }
     }
     handleKeyDown = (event) => {
         if (event.key === 'Enter' || event.keyCode === 13) {
@@ -125,7 +128,7 @@ class Shoping extends Component {
                                     key={index}
                                     className="content-child"
                                     style={{ backgroundImage: `url(${item.image})` }}
-                                    onClick={() => this.handleSeeDetail()}
+                                    onClick={() => this.handleSeeDetail(item.paintId)}
                                 >
                                     <div className="name-sale">
                                         <div className="name-item">
@@ -179,4 +182,4 @@ const mapDispatchToProps = (dispatch) => {
     return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Shoping);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Shoping));

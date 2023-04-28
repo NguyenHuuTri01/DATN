@@ -31,7 +31,7 @@ class HomeHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '1',
+      value: '2',
       store: [],
       isOpenModal: false,
       openUserMenu: null
@@ -171,7 +171,7 @@ class HomeHeader extends Component {
                     color="action"
                     fontSize="large"
                     onClick={() => this.handleOpenModal()}
-
+                    className="icon-store"
                   />
                 </Badge>
                 <Stack direction="row" spacing={2}>

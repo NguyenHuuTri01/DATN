@@ -3,10 +3,12 @@
     justify-content : center;
     align-items     : center;
     width           : 100%;
-    background-color: whitesmoke;
+    background-color: #A5C0DD;
 
     .machining-content {
-        width: 60%;
+        width           : 70%;
+        padding         : 0 5%;
+        background-color: whitesmoke;
 
         .machining-title {
             text-align   : center;
@@ -17,23 +19,23 @@
         }
 
         .panner {
-            margin-bottom: 10px;
+            margin-bottom: 2%;
             color        : red;
         }
 
         .machining-input {
-            height  : 560px;
+            height  : 554px;
             overflow: auto;
 
             .machining-item {
-                margin-bottom: 20px;
+                margin-bottom: 2%;
 
                 label {
                     font-weight: 600;
                 }
 
                 button {
-                    width: 200px;
+                    width: 20%;
                 }
             }
         }

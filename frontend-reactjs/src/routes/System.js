@@ -6,6 +6,7 @@ import Header from "../containers/Header/Header";
 import DanhMucHang from "../containers/System/DanhMucHang";
 import ManageUser from '../containers/System/Admin/ManageUser';
 import ListOrder from "../containers/System/Statistical/ListOrder";
+import InformationPaint from "../containers/System/InformationPaint";
 
 class System extends Component {
   render() {
@@ -20,6 +21,7 @@ class System extends Component {
               <Route path="/system/manage-paint" component={PaintManage} />
               <Route path="/system/manage-user" component={ManageUser} />
               <Route path="/system/list-order" component={ListOrder} />
+              <Route path="/system/information-paint" component={InformationPaint} />
               <Route
                 component={() => { return <Redirect to={systemMenuPath} /> }}
               />

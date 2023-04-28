@@ -8,6 +8,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import ModalViewOrder from "./ModalViewOrder";
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 class ListOrder extends Component {
     constructor(props) {
@@ -18,6 +20,10 @@ class ListOrder extends Component {
             perPage: 10, // Số phần tử trên một trang
             isOpenView: false,
             dataTransaction: [],
+            searchTransaction: '',
+            searchEmail: '',
+            searchPTTT: '',
+            searchTransport: ''
         };
     }
     async componentDidMount() {
@@ -81,19 +87,100 @@ class ListOrder extends Component {
             // xử lý khi chọn No
         }
     }
+    selectSearch = (e, id) => {
+        let valueInput = e.target.value;
+        let coppyState = { ...this.state };
+        coppyState[id] = valueInput;
+        this.setState({
+            ...coppyState
+        })
+    }
 
+    handleKeyDownEmail = (event) => {
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            this.setState({
+                searchEmail: event.target.value
+            })
+        }
+    }
+    handleKeyDownTransaction = (event) => {
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            this.setState({
+                searchTransaction: event.target.value
+            })
+        }
+    }
     render() {
-        let { currentPage, perPage, listOrder } = this.state;
+        let { currentPage, perPage, listOrder, searchPTTT, searchTransport,
+            searchTransaction, searchEmail } = this.state;
+        let searchListOrder = listOrder.filter((item) => {
+            return searchPTTT === '' ?
+                item :
+                item.typePayment.includes(searchPTTT);
+        }).filter((item) => {
+            return searchTransport === '' ?
+                item :
+                item.transportStatus.includes(searchTransport);
+        }).filter((item) => {
+            return searchEmail.toLowerCase() === '' ?
+                item :
+                item.email.toLowerCase().includes(searchEmail.toLowerCase());
+        }).filter((item) => {
+            return searchTransaction.toLowerCase() === '' ?
+                item :
+                item.transactionId.toLowerCase().includes(searchTransaction.toLowerCase());
+        })
+
         let offset = currentPage * perPage;
-        let pageCount = Math.ceil(listOrder.length / perPage);
-        let currentPageData = listOrder.slice(offset, offset + perPage);
+        let pageCount = Math.ceil(searchListOrder.length / perPage);
+        let currentPageData = searchListOrder.slice(offset, offset + perPage);
         return (
             <div className="danh-sach-don-hang">
                 <div className="title-danh-sach-don-hang">
                     Danh Sách Đơn Hàng
                 </div>
-                <div>
-                    <input placeholder="Tìm Kiếm" />
+                <div className="search-input">
+                    <input
+                        className="form-control md-3"
+                        placeholder="Tìm kiếm theo mã đơn hàng"
+                        onKeyDown={(e) => this.handleKeyDownTransaction(e)}
+                    />
+                    <input
+                        className="form-control md-3"
+                        placeholder="Tìm kiếm theo email"
+                        onKeyDown={(e) => this.handleKeyDownEmail(e)}
+                    />
+                    <Select
+                        value={searchPTTT}
+                        onChange={(e) => this.selectSearch(e, "searchPTTT")}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        className="form-control"
+                        defaultValue={""}
+                    >
+                        <MenuItem value={""}>Tất Cả</MenuItem>
+                        <MenuItem value="" hidden={true}>
+                            Tìm kiếm theo phương thức thanh toán
+                        </MenuItem>
+                        <MenuItem value={"cashonreceipt"}>Thanh toán khi nhận hàng</MenuItem>
+                        <MenuItem value={"paypal"}>Paypal</MenuItem>
+                    </Select>
+                    <Select
+                        value={searchTransport}
+                        onChange={(e) => this.selectSearch(e, "searchTransport")}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        className="form-control"
+                        defaultValue={""}
+                    >
+                        <MenuItem value={""}>Tất Cả</MenuItem>
+                        <MenuItem value="" hidden={true}>
+                            Tìm kiếm theo trạng thái giao hàng
+                        </MenuItem>
+                        <MenuItem value={"chua"}>Chưa</MenuItem>
+                        <MenuItem value={"dang van chuyen"}>Đang Vận Chuyển</MenuItem>
+                        <MenuItem value={"da giao hang"}>Đã Giao Hàng</MenuItem>
+                    </Select>
                 </div>
                 <div className="table-danh-sach-don-hang">
                     <table>

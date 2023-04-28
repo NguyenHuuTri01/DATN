@@ -156,6 +156,32 @@ const submitForm = (data) => {
 const getGiaCong = () => {
   return axios.get('/api/get-gia-cong')
 }
+const nhanGiaCong = (data) => {
+  return axios.put("/api/nhan-gia-cong", data);
+};
+const nhanGiaCongById = (data) => {
+  return axios.post('/api/get-gia-cong-by-id', data)
+}
+const hoanThanh = (data) => {
+  return axios.put("/api/hoan-thanh", data);
+};
+
+const getDataSelectProduct = () => {
+  return axios.get('/api/get-all-select-product')
+}
+
+
+const createInformationPaint = (data) => {
+  return axios.post('/api/create-detail-paint', data)
+}
+const updateInformationPaint = (data) => {
+  return axios.put("/api/update-detail-paint", data);
+};
+
+const getInformationById = (paintId) => {
+  return axios.get(`/api/get-detail-paint-by-id/?paintId=${paintId}`)
+}
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -199,5 +225,12 @@ export {
   getOrderByTransactionPaypal,
   updateTransport,
   submitForm,
-  getGiaCong
+  getGiaCong,
+  nhanGiaCong,
+  nhanGiaCongById,
+  hoanThanh,
+  getDataSelectProduct,
+  createInformationPaint,
+  updateInformationPaint,
+  getInformationById
 };

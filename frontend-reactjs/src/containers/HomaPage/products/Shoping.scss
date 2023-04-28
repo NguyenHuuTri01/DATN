@@ -3,9 +3,10 @@
 }
 
 .shoping-container {
-    display   : flex;
-    height    : calc(100vh - 48px - 20px);
-    margin-top: 20px;
+    display         : flex;
+    height          : calc(100vh - 48px - 21.5px);
+    margin-top      : 20px;
+    background-color: #A5C0DD;
 
     .content-left {
         width           : 25%;
@@ -52,13 +53,13 @@
     }
 
     .content-right {
-        width           : 75%;
-        height          : 100%;
-        overflow        : auto;
-        display         : flex;
-        flex-wrap       : wrap;
-        background-color: whitesmoke;
-        overflow-x      : hidden;
+        width     : 75%;
+        height    : 100%;
+        overflow  : auto;
+        display   : flex;
+        flex-wrap : wrap;
+        background: #A5C0DD;
+        overflow-x: hidden;
 
         .content-child {
             width              : 30%;
@@ -72,10 +73,11 @@
             cursor             : pointer;
             box-shadow         : 0px 10px 30px rgba(57, 56, 61, 0.205);
             overflow           : hidden;
+            background-color   : whitesmoke;
 
             &:hover {
                 background-size: 60%;
-                box-shadow     : 0px 10px 30px rgba(6, 2, 94, 0.3);
+                box-shadow     : 0px 10px 30px rgba(102, 231, 16, 0.3);
             }
 
             .name-item {

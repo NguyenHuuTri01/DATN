@@ -55,7 +55,14 @@ table th {
         text-align : center;
         font-size  : 20px;
         font-weight: 600;
-        margin     : 20px 0;
+        margin     : 18px 0;
+    }
+
+    .search-input {
+        display      : flex;
+        margin       : 0 50px;
+        margin-bottom: 5px;
+        gap          : 10px;
     }
 
     .table-danh-sach-don-hang {

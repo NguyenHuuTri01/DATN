@@ -1,9 +1,27 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getAllTransaction, updateTransport } from '../../services/userService';
 import ReactPaginate from 'react-paginate';
-import moment from 'moment';
+import { nhanGiaCongById, hoanThanh } from '../../services/userService';
+import SearchIcon from '@mui/icons-material/Search';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import { toast } from "react-toastify";
+import DoneIcon from '@mui/icons-material/Done';
+import CancelIcon from '@mui/icons-material/Cancel';
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 900,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+};
 class ListGiaCong extends Component {
     constructor(props) {
         super(props);
@@ -11,85 +29,115 @@ class ListGiaCong extends Component {
             listGiaCong: [],
             currentPage: 0, // Số trang hiện tại
             perPage: 10, // Số phần tử trên một trang
-            isOpenView: false,
-            dataTransaction: [],
+            isOpen: false,
+            dataModal: ''
         };
     }
     async componentDidMount() {
-        let datalist = await getAllTransaction();
-        if (datalist && datalist.errCode === 0) {
-            this.setState({
-                listGiaCong: datalist.data
-            })
-        }
-    }
-    handlePageClick = ({ selected }) => {
-        this.setState({
-            currentPage: selected
+        let res = await nhanGiaCongById({
+            constructorId: this.props.userInfo.id
         });
-    };
-    handleOpenView = (data) => {
-        this.setState({
-            dataTransaction: data,
-            isOpenView: true,
-        })
-    }
-    handleCloseView = () => {
-        this.setState({
-            isOpenView: false,
-            dataTransaction: []
-        })
-    }
-    handleUpdateTransport = async (transactionId) => {
-        if (window.confirm('Cập nhật tình trạng đang vận chuyển?')) {
-            let isUpdate = await updateTransport({
-                transactionId: transactionId,
-                transportStatus: 'dang van chuyen'
+        if (res && res.errCode === 0) {
+            this.setState({
+                listGiaCong: res.data
             })
-            if (isUpdate && isUpdate.errCode === 0) {
-                let datalist = await getAllTransaction();
-                if (datalist && datalist.errCode === 0) {
+        }
+    }
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+
+    }
+    viewRequire = (require) => {
+        this.setState({
+            isOpen: true,
+            dataModal: require
+        })
+    }
+    viewAddress = (address) => {
+        this.setState({
+            isOpen: true,
+            dataModal: address
+        })
+    }
+    handleClose = () => {
+        this.setState({
+            isOpen: false
+        })
+    }
+    handleTakeMachining = async (id) => {
+        if (window.confirm('Đã Kí Hợp Đồng?')) {
+            let nhangiacong = await hoanThanh({
+                constructorId: this.props.userInfo.id,
+                id: id,
+                status: 'xong'
+            })
+            if (nhangiacong && nhangiacong.errCode === 0) {
+                let res = await nhanGiaCongById({
+                    constructorId: this.props.userInfo.id
+                });
+                if (res && res.errCode === 0) {
                     this.setState({
-                        listGiaCong: datalist.data
+                        listGiaCong: res.data
+                    })
+                }
+                toast.success("Thành Công.")
+            } else {
+                let res = await nhanGiaCongById({
+                    constructorId: this.props.userInfo.id
+                });
+                if (res && res.errCode === 0) {
+                    this.setState({
+                        listGiaCong: res.data
+                    })
+                }
+                toast.error("Thất Bại.")
+            }
+        } else {
+            // xử lý khi chọn No
+        }
+
+    }
+    handleCancelMachining = async (id) => {
+        if (window.confirm('Người Dùng Không Kí Hợp Đồng?')) {
+            let nhangiacong = await hoanThanh({
+                constructorId: this.props.userInfo.id,
+                id: id,
+                status: 'cancel'
+            })
+            if (nhangiacong && nhangiacong.errCode === 0) {
+                let res = await nhanGiaCongById({
+                    constructorId: this.props.userInfo.id
+                });
+                if (res && res.errCode === 0) {
+                    this.setState({
+                        listGiaCong: res.data
+                    })
+                }
+            } else {
+                let res = await nhanGiaCongById({
+                    constructorId: this.props.userInfo.id
+                });
+                if (res && res.errCode === 0) {
+                    this.setState({
+                        listGiaCong: res.data
                     })
                 }
             }
         } else {
             // xử lý khi chọn No
         }
+
     }
-    succeedTransport = async (transactionId) => {
-        if (window.confirm('Đã giao hàng?')) {
-            let isUpdate = await updateTransport({
-                transactionId: transactionId,
-                transportStatus: 'da giao hang'
-            })
-            if (isUpdate && isUpdate.errCode === 0) {
-                let datalist = await getAllTransaction();
-                if (datalist && datalist.errCode === 0) {
-                    this.setState({
-                        listGiaCong: datalist.data
-                    })
-                }
-            }
-        } else {
-            // xử lý khi chọn No
-        }
-    }
+
     render() {
 
         let { currentPage, perPage, listGiaCong } = this.state;
         let offset = currentPage * perPage;
         let pageCount = Math.ceil(listGiaCong.length / perPage);
         let currentPageData = listGiaCong.slice(offset, offset + perPage);
-
         return (
             <div className="danh-sach-don-thue-gia-cong">
                 <div className="title-gia-cong">
                     Danh Sách Đơn Thuê Gia Công
-                </div>
-                <div>
-                    <input placeholder="Tìm Kiếm" />
                 </div>
                 <div className="table-gia-cong">
                     <table>
@@ -100,20 +148,56 @@ class ListGiaCong extends Component {
                                 <th>Email</th>
                                 <th>Loại Công Trình</th>
                                 <th>Diện Tích</th>
+                                <th>Địa Chỉ</th>
                                 <th>Màu Mong Muốn</th>
+                                <th>Ngày Khởi Công</th>
+                                <th>Ngày Hoàn Thành</th>
+                                <th>Yêu Cầu Đặc Biệc</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentPageData.map((item, index) => (
                                 <tr key={index}>
-                                    <td style={{ width: 300 }}>{item.transactionId}</td>
-                                    <td>{item.email}</td>
+                                    <td>{item.customerName}</td>
                                     <td>{item.phonenumber}</td>
-                                    <td>
-                                        {moment(item.updatedAt).format('DD/MM/YYYY')}
+                                    <td>{item.email}</td>
+                                    <td>{item.loaiCongTrinh}</td>
+                                    <td>{item.area}</td>
+                                    <td className="design-center">
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={() => this.viewAddress(item.address)}
+                                        >
+                                            <SearchIcon />
+                                        </button>
                                     </td>
-                                    <td>{item.typePayment}</td>
-                                    <td>{item.transportStatus}</td>
+                                    <td>{item.color}</td>
+                                    <td>{item.startDate}</td>
+                                    <td>{item.endDate}</td>
+                                    <td className="design-center">
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={() => this.viewRequire(item.require)}
+                                        >
+                                            <SearchIcon />
+                                        </button>
+                                    </td>
+                                    <td className="design-center">
+                                        {
+                                            item.status !== 'datiepnhan' ? item.status :
+                                                <div>
+                                                    <button
+                                                        className="btn btn-success"
+                                                        onClick={() => this.handleTakeMachining(item.id)}
+                                                    ><DoneIcon /></button>
+                                                    <button
+                                                        className="btn btn-secondary"
+                                                        onClick={() => this.handleCancelMachining(item.id)}
+                                                    ><CancelIcon /></button>
+                                                </div>
+                                        }
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -127,6 +211,18 @@ class ListGiaCong extends Component {
                         activeClassName={'active'}
                     />
                 </div>
+                <Modal
+                    open={this.state.isOpen}
+                    onClose={() => this.handleClose()}
+                    aria-labelledby="child-modal-title"
+                    aria-describedby="child-modal-description"
+                >
+                    <Box sx={{
+                        ...style, width: 500, height: 400, textAlign: 'center', paddingTop: 10
+                    }}>
+                        {this.state.dataModal}
+                    </Box>
+                </Modal>
             </div>
         );
     }
