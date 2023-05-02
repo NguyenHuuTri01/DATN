@@ -1,5 +1,13 @@
 import db from "../models/index";
 const { Op } = require("sequelize");
+const Sequelize = require("sequelize");
+
+// Option 1: Passing parameters separately
+const sequelize = new Sequelize("sellpaint", "root", null, {
+    host: "localhost",
+    dialect: "mysql",
+    logging: false,
+});
 
 let createOrder = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -152,10 +160,52 @@ let updateTransport = (data) => {
     })
 }
 
+let sumNumberItemBought = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = []
+            let dataCash = await db.CashOnReceipt.findAll({
+                attributes: [
+                    'userId',
+                    [sequelize.fn('sum', sequelize.col('amount')), 'total_amount']
+                ],
+                group: ['userId']
+            });
+            let dataPaypal = await db.PayPaypal.findAll({
+                attributes: [
+                    'userId',
+                    [sequelize.fn('sum', sequelize.col('amount')), 'total_amount']
+                ],
+                group: ['userId']
+            });
+            data = [...dataCash, ...dataPaypal]
+
+            let result = data.reduce((acc, cur) => {
+                let index = acc.findIndex(item => item.userId === cur.userId);
+                if (index === -1) {
+                    acc.push(cur);
+                } else {
+                    acc[index].total_amount = +acc[index].total_amount + (+cur.total_amount);
+                }
+                return acc;
+            }, [])
+            if (!result) result = {}
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+                result
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     createOrder: createOrder,
     getTransactionById: getTransactionById,
     getAllTransaction: getAllTransaction,
     updateTransport: updateTransport,
     getAllCancelOrder: getAllCancelOrder,
+    sumNumberItemBought: sumNumberItemBought,
 };

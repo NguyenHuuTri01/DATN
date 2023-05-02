@@ -52,6 +52,7 @@ let initWebRoutes = (app) => {
   router.get("/api/get-all-transaction", customerController.getAllTransaction);
   router.get("/api/get-all-cancel-order", customerController.getAllCancelOrder);
   router.put("/api/update-transport", customerController.updateTransport);
+  router.get("/api/sum-number-item-bought", customerController.sumNumberItemBought);
 
   router.post("/api/create-cash-on-receipt", cashController.createCashOnReceipt);
   router.post('/api/verify-order', cashController.postVerifyOrder);
