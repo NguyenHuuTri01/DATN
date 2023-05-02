@@ -54,7 +54,7 @@ class ModalStore extends Component {
         if (e.target.checked) {
             coppyState.push(item)
             this.setState({
-                calculateTotal: this.state.calculateTotal + item.productData.paintPrice * item.amount,
+                calculateTotal: this.state.calculateTotal + (item.productData.paintPrice * (100 - item.productData.paintDiscount) / 100) * item.amount,
                 listPainBucket: [...coppyState],
                 isUpdateCountItem: false,
             })
@@ -62,7 +62,7 @@ class ModalStore extends Component {
             let removeIndex = coppyState.findIndex((itemList) => itemList.productData.id === item.productData.id);
             coppyState.splice(removeIndex, 1)
             this.setState({
-                calculateTotal: this.state.calculateTotal - item.productData.paintPrice * item.amount,
+                calculateTotal: this.state.calculateTotal - (item.productData.paintPrice * (100 - item.productData.paintDiscount) / 100) * item.amount,
                 listPainBucket: [...coppyState],
                 isUpdateCountItem: true,
             })

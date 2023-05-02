@@ -8,7 +8,8 @@ class Detail extends Component {
         super(props);
         this.state = {
             contentHTML: '',
-            contentMarkdown: ''
+            contentMarkdown: '',
+            data: []
         }
     }
     async componentDidMount() {
@@ -20,6 +21,7 @@ class Detail extends Component {
                 this.setState({
                     contentHTML: res.findPaint.contentHTML,
                     contentMarkdown: res.findPaint.contentMarkdown,
+                    data: res.findPaint
                 })
             }
         }
@@ -27,13 +29,21 @@ class Detail extends Component {
     }
 
     render() {
-        let { contentHTML } = this.state;
+        let { data } = this.state;
         return (
             <div className="detail-paint-container">
-                <div className="image-paint">image</div>
+                <div className="name-paint">
+                    {data.detailProduct && data.detailProduct.paintName}
+                </div>
+                <div
+                    className="image-paint"
+                    style={{
+                        backgroundImage: `url(${data.detailProduct && data.detailProduct.image})`
+                    }}
+                ></div>
                 <div className="detail-paint">
                     {
-                        <div dangerouslySetInnerHTML={{ __html: contentHTML }}>
+                        <div dangerouslySetInnerHTML={{ __html: data.contentHTML }}>
                         </div>
                     }
                 </div>

@@ -137,6 +137,9 @@ const cancelOrderCash = (transactionId) => {
 const getAllTransaction = () => {
   return axios.get(`/api/get-all-transaction`);
 };
+const getAllCancelOrder = () => {
+  return axios.get(`/api/get-all-cancel-order`);
+};
 const getAllOrderCash = () => {
   return axios.get(`/api/get-all-order-cash`);
 };
@@ -232,5 +235,6 @@ export {
   getDataSelectProduct,
   createInformationPaint,
   updateInformationPaint,
-  getInformationById
+  getInformationById,
+  getAllCancelOrder
 };

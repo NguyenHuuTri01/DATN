@@ -46,6 +46,7 @@ class InformationPaint extends Component {
                 object.label = item.paintName;
                 object.value = item.paintId;
                 result.push(object);
+                return result;
             })
         }
         return result;

@@ -90,6 +90,7 @@ class PaintManage extends Component {
         object.label = item.name;
         object.value = item.paintId;
         result.push(object);
+        return result;
       })
     }
     return result;

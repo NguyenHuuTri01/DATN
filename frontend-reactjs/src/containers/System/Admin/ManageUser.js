@@ -76,6 +76,7 @@ class ManageUser extends Component {
                 object.label = item.name;
                 object.value = item.roleId;
                 result.push(object);
+                return result;
             })
         }
         return result;
