@@ -44,6 +44,20 @@ let getAllTransaction = async (req, res) => {
         })
     }
 }
+let getAllCancelOrder = async (req, res) => {
+    try {
+        let infor = await customerServices.getAllCancelOrder();
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
 let updateTransport = async (req, res) => {
     try {
         let infor = await customerServices.updateTransport(req.body);
@@ -64,4 +78,5 @@ module.exports = {
     getTransactionById: getTransactionById,
     getAllTransaction: getAllTransaction,
     updateTransport: updateTransport,
+    getAllCancelOrder: getAllCancelOrder,
 };

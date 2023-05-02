@@ -95,6 +95,27 @@ let getAllTransaction = () => {
         }
     })
 }
+let getAllCancelOrder = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.Customer.findAll({
+                order: [["createdAt", "DESC"]],
+                where: {
+                    transportStatus: 'cancel'
+                },
+                raw: true,
+            })
+            if (!data) data = {}
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+                data
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 let updateTransport = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -136,4 +157,5 @@ module.exports = {
     getTransactionById: getTransactionById,
     getAllTransaction: getAllTransaction,
     updateTransport: updateTransport,
+    getAllCancelOrder: getAllCancelOrder,
 };

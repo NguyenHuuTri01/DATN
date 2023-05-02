@@ -85,9 +85,20 @@ let getInformationById = (paintId) => {
                     where: {
                         paintId: paintId,
                     },
-                    raw: false
+                    include: [
+                        {
+                            model: db.Product,
+                            as: 'detailProduct',
+                            attributes: [
+                                'paintName', 'image'
+                            ]
+                        }
+                    ],
+                    raw: true,
+                    nest: true,
                 })
-                if (findPaint) {
+                if (findPaint && findPaint.detailProduct.image) {
+                    findPaint.detailProduct.image = new Buffer(findPaint.detailProduct.image, "base64").toString("binary")
                     resolve({
                         errCode: 0,
                         errMessage: 'Ok',
