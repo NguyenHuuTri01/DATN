@@ -169,13 +169,36 @@ let sumNumberItemBought = () => {
                     'userId',
                     [sequelize.fn('sum', sequelize.col('amount')), 'total_amount']
                 ],
-                group: ['userId']
+                include: [
+                    {
+                        model: db.User,
+                        as: 'userCash',
+                        attributes: [
+                            'email',
+                        ]
+                    }
+                ],
+                raw: true,
+                nest: true,
+                group: ['userId', 'email']
             });
+
             let dataPaypal = await db.PayPaypal.findAll({
                 attributes: [
                     'userId',
                     [sequelize.fn('sum', sequelize.col('amount')), 'total_amount']
                 ],
+                include: [
+                    {
+                        model: db.User,
+                        as: 'userPaypal',
+                        attributes: [
+                            'email',
+                        ]
+                    }
+                ],
+                raw: true,
+                nest: true,
                 group: ['userId']
             });
             data = [...dataCash, ...dataPaypal]
@@ -189,7 +212,7 @@ let sumNumberItemBought = () => {
                 }
                 return acc;
             }, [])
-            if (!result) result = {}
+
             resolve({
                 errCode: 0,
                 errMessage: 'Ok',
