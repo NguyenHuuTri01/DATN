@@ -184,6 +184,9 @@ const updateInformationPaint = (data) => {
 const getInformationById = (paintId) => {
   return axios.get(`/api/get-detail-paint-by-id/?paintId=${paintId}`)
 }
+const sumNumberItemBought = () => {
+  return axios.get(`/api/sum-number-item-bought`)
+}
 
 export {
   handleLoginApi,
@@ -236,5 +239,6 @@ export {
   createInformationPaint,
   updateInformationPaint,
   getInformationById,
-  getAllCancelOrder
+  getAllCancelOrder,
+  sumNumberItemBought
 };

@@ -201,7 +201,7 @@ class HomeHeader extends Component {
                           <Typography
                             textAlign="center"
                             onClick={() => this.handleLogin()}
-                          >Login</Typography>
+                          >Đăng Nhập</Typography>
                         </MenuItem>
                         :
                         <div>
@@ -209,7 +209,7 @@ class HomeHeader extends Component {
                             <Typography
                               textAlign="center"
                               onClick={() => this.handleAccountManagement(userInfo.id)}
-                            >More</Typography>
+                            >Xem Thêm</Typography>
                           </MenuItem>
                           {
                             this.props.userInfo &&
@@ -219,7 +219,7 @@ class HomeHeader extends Component {
                               <Typography
                                 textAlign="center"
                                 onClick={() => this.handlePaintManagement()}
-                              >Paint Management</Typography>
+                              >Quản Lý Sản Phẩm</Typography>
                             </MenuItem>
                           }
                           {
@@ -230,14 +230,14 @@ class HomeHeader extends Component {
                               <Typography
                                 textAlign="center"
                                 onClick={() => this.handleManageUser()}
-                              >Manage User</Typography>
+                              >Quản Lý Người Dùng</Typography>
                             </MenuItem>
                           }
                           <MenuItem onClick={() => this.handleCloseUserMenu()}>
                             <Typography
                               textAlign="center"
                               onClick={() => this.handleLogOut()}
-                            >Logout</Typography>
+                            >Đăng Xuất</Typography>
                           </MenuItem>
                         </div>
                     }

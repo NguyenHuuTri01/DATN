@@ -74,7 +74,7 @@ class Login extends Component {
         <div className="login-container">
           <div className="login-content">
             <div className="login-form">
-              <h1>Login</h1>
+              <h1>Đăng Nhập</h1>
               <div className="group">
                 <input
                   type="text"
@@ -83,7 +83,7 @@ class Login extends Component {
                   value={this.state.username}
                   onChange={(e) => this.handleOnChangeUserName(e)}
                 />
-                <label>Username</label>
+                <label>Email</label>
               </div>
 
               <div className="group">
@@ -95,7 +95,7 @@ class Login extends Component {
                   onChange={(event) => this.handleOnChangePassword(event)}
                   onKeyDown={(event) => this.handleKeyDown(event)}
                 />
-                <label>Password </label>
+                <label>Mật Khẩu </label>
 
                 <span onClick={() => this.handleShowHidePassword()}>
                   <i
@@ -109,7 +109,7 @@ class Login extends Component {
               </div>
 
               <button className="btn-login" onClick={() => this.handleLogin()}>
-                Login
+                Đăng Nhập
               </button>
               <div className="err-message" style={{ color: "red" }}>
                 {this.state.errMessage}

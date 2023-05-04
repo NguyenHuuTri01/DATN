@@ -65,7 +65,7 @@ class NumberOfItemSold extends Component {
                             <tr>
                                 <th>Mã Sản Phẩm</th>
                                 <th>Tên Sản Phẩm</th>
-                                <th>
+                                <th style={{ width: '300px' }}>
                                     Số Lượng Bán Được
                                     {
                                         sortUp ?

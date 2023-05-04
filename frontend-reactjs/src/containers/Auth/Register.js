@@ -98,7 +98,7 @@ class Register extends Component {
                     <div className="register-container">
                         <div className="register-content">
                             <div className="register-form">
-                                <h1>Register</h1>
+                                <h1>Đăng Ký</h1>
                                 <div className="group">
                                     <input
                                         type="text"
@@ -118,7 +118,7 @@ class Register extends Component {
                                         onChange={(event) => this.handleOnChangeInput(event, "password")}
                                     // onKeyDown={(event) => this.handleKeyDown(event)}
                                     />
-                                    <label>Password </label>
+                                    <label>Mật Khẩu </label>
                                     <span onClick={() => this.handleShowHidePassword()}>
                                         <i
                                             className={
@@ -138,7 +138,7 @@ class Register extends Component {
                                         onChange={(event) => this.handleOnChangeInput(event, "confirmPassword")}
                                         onKeyDown={(event) => this.handleKeyDown(event)}
                                     />
-                                    <label>Password </label>
+                                    <label>Nhập Lại Mật Khẩu </label>
 
                                     <span onClick={() => this.handleShowHidePassword()}>
                                         <i
@@ -151,7 +151,7 @@ class Register extends Component {
                                     </span>
                                 </div>
                                 <button className="btn-register" onClick={() => this.handleRegister()}>
-                                    Register
+                                    Đăng Ký
                                 </button>
                                 <div className="err-message" style={{ color: "red" }}>
                                     {

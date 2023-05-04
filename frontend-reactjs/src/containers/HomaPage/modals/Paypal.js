@@ -74,8 +74,9 @@ class Paypal extends Component {
                         createOrder={this.createOrder}
                         onApprove={this.onApprove}
                         onError={(error) => {
+                            console.log(error)
                             this.props.deleteDataFakePaypal();
-                            toast.error("Đặt hàng thất bại, ai đó đã nhanh tay hơn bạn!")
+                            toast.error("Đặt hàng thất bại!")
                             this.props.getDataStore();
                             this.props.handleClose();
                         }}

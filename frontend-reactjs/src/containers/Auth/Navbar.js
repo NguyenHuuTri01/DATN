@@ -14,8 +14,8 @@ class Navbar extends Component {
         return (
             <div className="navbar">
                 <div className="links">
-                    <NavLink to="/login" activeClassName="active-link">Login</NavLink>
-                    <NavLink to="/register" activeClassName="active-link">Register</NavLink>
+                    <NavLink to="/login" activeClassName="active-link">Đăng Nhập</NavLink>
+                    <NavLink to="/register" activeClassName="active-link">Đăng Ký</NavLink>
                 </div>
             </div>
         );
