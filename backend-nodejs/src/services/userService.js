@@ -41,7 +41,7 @@ let handleUserLogin = (email, password) => {
             userData.user = user;
           } else {
             userData.errCode = 3;
-            userData.errMessage = "Wrong password";
+            userData.errMessage = "Sai mật khẩu";
           }
         } else {
           userData.errCode = 2;
@@ -49,7 +49,7 @@ let handleUserLogin = (email, password) => {
         }
       } else {
         userData.errCode = 1;
-        userData.errMessage = `Your Email doesn't exist in your system. Please try another email!`;
+        userData.errMessage = `Email của bạn không tồn tại trong hệ thống, vui lòng thử 1 email khác!`;
       }
       resolve(userData);
     } catch (e) {
@@ -105,7 +105,7 @@ let createNewUser = (data) => {
         resolve({
           errCode: 1,
           errMessage:
-            "Your email is already in use, please try another email !!!",
+            "Email của bạn đã được sử dụng, vui lòng thử một email khác !!!",
         });
       } else {
         let hashPasswordFromBcrypt = await hashUserPassword(data.password);

@@ -32,6 +32,7 @@ let initWebRoutes = (app) => {
   router.put("/api/edit-paint-product", productController.editPaintProduct);
   router.delete("/api/delete-paint-product", productController.deleltePaintProduct);
   router.get("/api/get-all-select-product", productController.getDataSelectProduct);
+  router.get("/api/get-top-paint-product", productController.getTopPaintProduct);
 
   router.post("/api/add-to-cart", cartController.addToCart);
   router.get("/api/get-cart-by-id", cartController.getAllCartById);

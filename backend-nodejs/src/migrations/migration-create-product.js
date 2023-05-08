@@ -33,7 +33,7 @@ module.exports = {
                 type: Sequelize.BLOB("long"),
             },
             numberSold: {
-                type: Sequelize.STRING,
+                type: Sequelize.INTEGER,
             },
             createdAt: {
                 allowNull: false,
