@@ -18,6 +18,7 @@ import Shoping from "./products/Shoping";
 import Machining from "./machining/Machining";
 import ModalStore from "./modals/ModalStore";
 import ListMachining from "./machining/ListMachining";
+import Description from "./Description";
 
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -245,7 +246,9 @@ class HomeHeader extends Component {
                 </Stack>
               </div>
             </Box>
-            <TabPanel value="1">Home</TabPanel>
+            <TabPanel value="1">
+              <Description />
+            </TabPanel>
             <TabPanel value="2">
               <Shoping
                 addToCart={store}

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, lazy, Suspense } from "react";
 import { connect } from "react-redux";
 import './Shoping.scss';
 import Radio from '@mui/material/Radio';
@@ -6,9 +6,10 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import CurrencyFormat from 'react-currency-format';
 import { getAllLoaiSon, getAllPaintProduct } from '../../../services/userService';
 import { withRouter } from 'react-router';
+
+let ItemProduct = lazy(() => import('./ItemProduct'));
 
 class Shoping extends Component {
     constructor(props) {
@@ -19,6 +20,7 @@ class Shoping extends Component {
             portfolioSearch: '',
             store: [],
             searchName: '',
+            searchDiscount: false,
         }
     }
     async componentDidMount() {
@@ -39,12 +41,14 @@ class Shoping extends Component {
     }
     handleClickPortfolio = (id) => {
         this.setState({
-            portfolioSearch: id
+            portfolioSearch: id,
+            searchDiscount: false
         })
     }
     handleClickAllPortfolio = () => {
         this.setState({
-            portfolioSearch: ''
+            portfolioSearch: '',
+            searchDiscount: false
         })
     }
     handleAddToCart = (e, item) => {
@@ -65,9 +69,14 @@ class Shoping extends Component {
             })
         }
     }
-
+    handleClickSearchDiscount = () => {
+        this.setState({
+            portfolioSearch: '',
+            searchDiscount: true
+        })
+    }
     render() {
-        let { data, portfolio, portfolioSearch, searchName } = this.state;
+        let { data, portfolio, portfolioSearch, searchName, searchDiscount } = this.state;
         return (
             <div className="shoping-container">
                 <div className="content-left">
@@ -93,6 +102,12 @@ class Shoping extends Component {
                                     control={<Radio />}
                                     label={"Tất cả"}
                                     onClick={() => this.handleClickAllPortfolio()}
+                                />
+                                <FormControlLabel
+                                    value=""
+                                    control={<Radio />}
+                                    label={"Đang khuyến mãi"}
+                                    onClick={() => this.handleClickSearchDiscount()}
                                 />
                                 {
                                     portfolio && portfolio.length > 0 && portfolio.map((item, index) => (
@@ -122,48 +137,20 @@ class Shoping extends Component {
                                     item :
                                     item.paintCatelory.toLowerCase().includes(portfolioSearch.toLowerCase());
                             }
+                            ).filter((item) => {
+                                return searchDiscount === false ?
+                                    item :
+                                    item.paintDiscount > 0
+                            }
                             )
                             .map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="content-child"
-                                    style={{ backgroundImage: `url(${item.image})` }}
-                                    onClick={() => this.handleSeeDetail(item.paintId)}
-                                >
-                                    <div className="name-sale">
-                                        <div className="name-item">
-                                            {item.paintName}
-                                        </div>
-                                        <div className={item.paintDiscount === '0' ? "no-sale" : "sale-off-item"} >
-                                            {`- ${item.paintDiscount} %`}
-                                        </div>
-                                        {
-                                            item.paintDiscount !== '0' ?
-                                                <CurrencyFormat
-                                                    value={item.paintPrice}
-                                                    displayType={'text'}
-                                                    thousandSeparator={true}
-                                                    suffix={' đ'}
-                                                    className="price-origin"
-                                                />
-                                                : ""
-                                        }
-                                        <CurrencyFormat
-                                            value={(item.paintPrice * (100 - item.paintDiscount)) / 100}
-                                            displayType={'text'}
-                                            thousandSeparator={true}
-                                            suffix={' đ'}
-                                            className="price-sale"
-                                        />
-                                    </div>
-                                    <div className="btn-add-to-cart">
-                                        <button
-                                            className="btn-add"
-                                            onClick={(e) => this.handleAddToCart(e, item)}
-
-                                        >Thêm vào giỏ hàng</button>
-                                    </div>
-                                </div>
+                                <Suspense key={index} fallback={<div>Loading...</div>}>
+                                    <ItemProduct
+                                        item={item}
+                                        handleAddToCart={this.handleAddToCart}
+                                        handleSeeDetail={this.handleSeeDetail}
+                                    />
+                                </Suspense>
                             ))
                     }
                 </div>

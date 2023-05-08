@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getAllCancelOrder, updateTransport } from '../../../services/userService';
+import { getAllCancelOrder } from '../../../services/userService';
 import ReactPaginate from 'react-paginate';
 import './ListOrder.scss';
 import moment from 'moment';

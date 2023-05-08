@@ -64,6 +64,22 @@
             height  : 60%;
             position: absolute;
 
+            .forgot-password {
+                label {
+                    color          : #850000;
+                    text-decoration: underline;
+                    cursor         : pointer;
+
+                    &:hover {
+                        opacity: 0.7;
+                    }
+                }
+            }
+
+            .err-message {
+                width: 133%;
+            }
+
             h1 {
                 color: #9d5f5f;
             }

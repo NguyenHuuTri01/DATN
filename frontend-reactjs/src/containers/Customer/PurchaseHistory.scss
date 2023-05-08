@@ -1,9 +1,8 @@
 .history-container {
-    width           : 100%;
-    padding         : 0 2%;
-    background-color: #ECF2FF;
-    border          : 1px solid #ECF2FF;
-    height          : calc(100vh - 60px);
+    width  : 100%;
+    padding: 0 2%;
+    border : 1px solid #ECF2FF;
+    height : calc(100vh - 60px);
 
     .history-title {
         font-size    : 30px;
@@ -11,7 +10,6 @@
         margin-top   : 50px;
         margin-bottom: 50px;
         text-align   : center;
-        background   : #ECF2FF;
     }
 
     .history-table-title {

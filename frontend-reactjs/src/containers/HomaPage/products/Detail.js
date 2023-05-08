@@ -4,10 +4,9 @@ import { getInformationById } from '../../../services/userService';
 import './Detail.scss';
 import HomeIcon from '@mui/icons-material/Home';
 import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
 import TabContext from '@material-ui/lab/TabContext';
 import TabList from '@material-ui/lab/TabList';
-import TabPanel from '@material-ui/lab/TabPanel';
+import { createBrowserHistory } from 'history';
 
 class Detail extends Component {
     constructor(props) {
@@ -17,6 +16,7 @@ class Detail extends Component {
             contentMarkdown: '',
             data: []
         }
+        this.history = createBrowserHistory();
     }
     async componentDidMount() {
 
@@ -45,7 +45,7 @@ class Detail extends Component {
             <div className="detail-paint-container">
                 <div className="header-paint">
                     <Box sx={{ width: '100%', typography: 'body1' }}>
-                        <TabContext>
+                        <TabContext value="">
                             <Box sx={{
                                 borderBottom: 1, borderColor: 'divider', display: 'flex',
                                 justifyContent: 'center', background: '#D6E4E5'

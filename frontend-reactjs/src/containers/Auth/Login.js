@@ -5,7 +5,22 @@ import * as actions from "../../store/actions";
 import "./Login.scss";
 import { handleLoginApi } from "../../services/userService";
 import Navbar from "./Navbar";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -14,6 +29,8 @@ class Login extends Component {
       password: "",
       showPassword: false,
       errMessage: "",
+      isOpenModal: false,
+      email: ''
     };
   }
 
@@ -67,6 +84,16 @@ class Login extends Component {
       this.handleLogin();
     }
   }
+  handleOpen = () => {
+    this.setState({
+      isOpenModal: true
+    })
+  }
+  handleClose = () => {
+    this.setState({
+      isOpenModal: false
+    })
+  }
   render() {
     return (
       <div className="login-background">
@@ -107,7 +134,12 @@ class Login extends Component {
                   ></i>
                 </span>
               </div>
-
+              <div
+                className="forgot-password"
+                onClick={() => this.handleOpen()}
+              >
+                <label>Quên mật khẩu</label>
+              </div>
               <button className="btn-login" onClick={() => this.handleLogin()}>
                 Đăng Nhập
               </button>
@@ -118,6 +150,35 @@ class Login extends Component {
 
           </div>
         </div>
+        <Modal
+          open={this.state.isOpenModal}
+          onClose={() => this.handleClose()}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+            >
+              Nhập email của bạn để tiến hành khôi phục tài khoản
+            </Typography>
+            <input
+              type="text"
+              style={{
+                width: "100%", outline: "none", margin: "20px 0",
+                border: "1px solid #333"
+              }}
+              // value={this.state.email}
+              // onChange={(e) => this.handleOnChangeEmail(e)}
+              className="form-control input-forgot-password"
+            />
+            <Button
+              style={{ backgroundColor: "#19A7CE", color: "#fff" }}
+            >Khôi phục</Button>
+          </Box>
+        </Modal>
       </div>
     );
   }
@@ -125,7 +186,6 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    language: state.app.language,
   };
 };
 
