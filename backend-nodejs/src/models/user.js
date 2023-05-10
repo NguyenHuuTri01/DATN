@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasMany(models.PayPaypal, { foreignKey: "userId", as: "userPaypal" });
       User.hasMany(models.CashOnReceipt, { foreignKey: "userId", as: "userCash" });
+      User.hasMany(models.Message, { foreignKey: "senderId", as: "userMessage" });
     }
   }
   User.init(

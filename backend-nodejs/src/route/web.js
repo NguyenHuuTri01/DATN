@@ -7,6 +7,7 @@ import customerController from '../controllers/customerController';
 import cashController from '../controllers/cashController';
 import giaCongColtroller from '../controllers/giaCongController';
 import detailController from '../controllers/detailController';
+import messageController from '../controllers/messageController';
 
 let router = express.Router();
 
@@ -73,6 +74,12 @@ let initWebRoutes = (app) => {
   router.post("/api/create-detail-paint", detailController.createInformationPaint);
   router.put("/api/update-detail-paint", detailController.updateInformationPaint);
   router.get("/api/get-detail-paint-by-id", detailController.getInformationById);
+
+  router.post("/api/send-message", messageController.sendMessage);
+  router.post("/api/get-message", messageController.getMessage);
+  router.post("/api/get-all-message", messageController.getAllMessage);
+  router.post("/api/seen-message", messageController.seenMessage);
+  router.post("/api/get-not-seen-message", messageController.getNotSeenMessage);
 
   return app.use("/", router);
 };
