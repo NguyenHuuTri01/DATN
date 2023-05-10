@@ -26,6 +26,7 @@
     "mysql2": "^2.2.5",
     "nodemailer": "6.6.3",
     "sequelize": "^6.6.2",
+    "socket.io": "^4.6.1",
     "uuid": "8.3.2"
   },
   "devDependencies": {

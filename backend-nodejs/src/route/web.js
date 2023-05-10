@@ -21,6 +21,8 @@ let initWebRoutes = (app) => {
   router.delete("/api/delete-user", userController.handleDelelteUser);
   router.put("/api/change-password", userController.handleChangePassword);
   router.post('/api/verify-account', userController.postVerifyAccount);
+  router.post("/api/forgot-password", userController.forgotPassword);
+  router.post('/api/verify-forgot-password', userController.postVerifyForgotPassword);
 
   router.post("/api/create-loai-son", productController.createLoaiSon);
   router.get("/api/get-all-loai-son", productController.getAllLoaiSon);
@@ -72,7 +74,6 @@ let initWebRoutes = (app) => {
   router.put("/api/update-detail-paint", detailController.updateInformationPaint);
   router.get("/api/get-detail-paint-by-id", detailController.getInformationById);
 
-  router.get("/api/allcode", userController.getAllCode);
   return app.use("/", router);
 };
 

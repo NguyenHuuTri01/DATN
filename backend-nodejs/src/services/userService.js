@@ -9,6 +9,11 @@ let buildUrlEmail = (email, token) => {
   return result;
 }
 
+let urlForgotPassword = (email, token) => {
+  let result = `${process.env.REACT_URL}/forgot-password?email=${email}&token=${token}`;
+  return result;
+}
+
 let hashUserPassword = (password) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -413,38 +418,138 @@ let handleChangePassword = (data) => {
   })
 }
 
-let getAllCodeService = (typeInput) => {
+let forgotPassword = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!typeInput) {
+      if (!data.email) {
         resolve({
           errCode: 1,
-          errMessage: "Missing required parameters!",
-        });
+          errMessage: 'Missing required parameters'
+        })
       } else {
-        let res = {};
-        let allcode = await db.Allcode.findAll({
-          where: { type: typeInput },
-        });
-        res.errCode = 0;
-        res.data = allcode;
-        resolve(res);
+        let res = await db.User.findOne({
+          where: {
+            email: data.email
+          },
+          raw: false
+        })
+        if (res) {
+          let token = uuidv4();
+          let reqforgot = await db.ForgotPassword.findOrCreate({
+            where: { email: data.email, status: 'forgot' },
+            defaults: {
+              email: data.email,
+              token: token,
+              status: 'forgot',
+            }
+          });
+          await emailService.sendForgotPassword({
+            reciverEmail: data.email,
+            redirectLink: urlForgotPassword(data.email, token)
+          })
+          if (!reqforgot[1]) {
+            let update = await db.ForgotPassword.findOne({
+              where: {
+                email: reqforgot[0].email,
+                status: 'forgot'
+              },
+              raw: false
+            });
+            if (update) {
+              update.token = token;
+              await update.save();
+            }
+          }
+          resolve({
+            errCode: 0,
+            errMessage: `Ok`,
+          })
+        } else {
+          resolve({
+            errCode: 1,
+            errMessage: `User's not found!`,
+          })
+        }
       }
     } catch (e) {
       reject(e);
     }
-  });
-};
+  })
+}
+let postVerifyForgotPassword = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!data.email || !data.token) {
+        resolve({
+          errCode: 1,
+          errMessage: 'Missing parameter'
+        })
+      } else {
+        let forgot = await db.ForgotPassword.findOne({
+          where: {
+            email: data.email,
+            token: data.token,
+            status: 'forgot'
+          },
+          raw: false
+        })
+        if (forgot) {
+          // chuổi password 6 kí tự ngẫu nhiên
+          const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+          let randomString = '';
+          for (let i = 0; i < 8; i++) {
+            const randomIndex = Math.floor(Math.random() * chars.length);
+            randomString += chars[randomIndex];
+          }
+          // chuổi password 6 kí tự ngẫu nhiên
+          let hashPassword = await hashUserPassword(randomString);
+          let completeforgot = await db.User.findOne({
+            where: {
+              email: data.email,
+            },
+            raw: false
+          });
+          if (completeforgot) {
+            completeforgot.password = hashPassword
+            await completeforgot.save();
+
+            forgot.status = 'complete';
+            await forgot.save();
+
+            await emailService.sendNewPassword({
+              newPassword: randomString,
+              reciverEmail: data.email
+            })
+            resolve({
+              errCode: 0,
+              errMessage: "Succeed!"
+            })
+          }
+        } else {
+          resolve({
+            errCode: -1,
+            errMessage: "Expired!"
+          })
+        }
+      }
+    } catch (e) {
+      reject(e);
+    }
+  })
+}
+
+
 module.exports = {
   createNewUser: createNewUser,
   handleUserLogin: handleUserLogin,
   handleEditUser: handleEditUser,
   getAllUsers: getAllUsers,
   deleteUser: deleteUser,
-  getAllCodeService: getAllCodeService,
   postVerifyAccount: postVerifyAccount,
   handleGetUserById: handleGetUserById,
   handleChangePassword: handleChangePassword,
   editUserByAdmin: editUserByAdmin,
   createNewUserByAdmin: createNewUserByAdmin,
+  forgotPassword: forgotPassword,
+  postVerifyForgotPassword: postVerifyForgotPassword,
 };

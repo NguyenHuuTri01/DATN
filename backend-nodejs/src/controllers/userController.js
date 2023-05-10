@@ -129,18 +129,34 @@ let handleChangePassword = async (req, res) => {
   }
 }
 
-let getAllCode = async (req, res) => {
+let forgotPassword = async (req, res) => {
   try {
-    let data = await userService.getAllCodeService(req.query.type);
-    return res.status(200).json(data);
+    let infor = await userService.forgotPassword(req.body);
+    return res.status(200).json(
+      infor
+    )
   } catch (e) {
-    console.log("get all code error: ", e);
+    console.log(e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
-    });
+      errMessage: 'Error from the server'
+    })
   }
-};
+}
+let postVerifyForgotPassword = async (req, res) => {
+  try {
+    let infor = await userService.postVerifyForgotPassword(req.body);
+    return res.status(200).json(
+      infor
+    )
+  } catch (e) {
+    console.log(e);
+    return res.status(200).json({
+      errCode: -1,
+      errMessage: 'Error from the server'
+    })
+  }
+}
 
 module.exports = {
   handleLogin: handleLogin,
@@ -148,10 +164,11 @@ module.exports = {
   handleCreateNewUser: handleCreateNewUser,
   handleEditUser: handleEditUser,
   handleDelelteUser: handleDelelteUser,
-  getAllCode: getAllCode,
   postVerifyAccount: postVerifyAccount,
   handleGetUserById: handleGetUserById,
   handleChangePassword: handleChangePassword,
   editUserByAdmin: editUserByAdmin,
   createNewUserByAdmin: createNewUserByAdmin,
+  forgotPassword: forgotPassword,
+  postVerifyForgotPassword: postVerifyForgotPassword,
 };

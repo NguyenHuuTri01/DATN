@@ -54,3 +54,38 @@ app.listen(port, () => {
   //callback
   console.log("backend nodejs is running on the port : " + port);
 });
+
+let io = require('socket.io')(8800, {
+  cors: {
+    origin: "http://localhost:3000",
+  }
+})
+let users = [];
+io.on("connection", (socket) => {
+  socket.on('new-user-add', (newUserId) => {
+    if (!users.some((user) => user.userId === newUserId)) {
+      users.push({
+        userId: newUserId,
+        socketId: socket.id
+      })
+    }
+    console.log("Connected Users", users)
+    io.emit('get-users', users);
+  })
+  socket.on("send-message", (data) => {
+    const { receiverId } = data;
+    const user = users.find((user) => user.userId === receiverId)
+    console.log("Sending from socket to : ", receiverId)
+    console.log("data", data)
+    if (user) {
+      io.to(user.socketId).emit("receive-message", data)
+    }
+  })
+
+  socket.on("disconnect", () => {
+    users = users.filter((user) => user.socketId !== socket.id);
+    console.log("User Disconnected", users);
+    io.emit('get-users', users);
+  })
+})
+
