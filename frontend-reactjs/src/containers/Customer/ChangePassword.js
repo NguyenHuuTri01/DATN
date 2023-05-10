@@ -22,14 +22,23 @@ class ChangePassword extends Component {
             showPassword: false,
             showNewPassword: false,
             showConfirmPassword: false,
+            userId: 0
         }
     }
     async componentDidMount() {
-
+        if (this.props.userInfo && this.props.userInfo.id) {
+            this.setState({
+                userId: this.props.userInfo.id
+            })
+        }
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
-
+        if (prevProps.userInfo !== this.props.userInfo) {
+            this.setState({
+                userId: this.props.userInfo.id
+            })
+        }
     }
 
     handleShowHidePassword = () => {
@@ -56,9 +65,7 @@ class ChangePassword extends Component {
         })
     }
     handleChangePassword = async () => {
-        let { password, newPassword, confirmPassword } = this.state;
-        let urlParams = new URLSearchParams(window.location.search);
-        let userId = urlParams.get('userId')
+        let { password, newPassword, confirmPassword, userId } = this.state;
         if (newPassword === confirmPassword) {
             let resChangePassword = await changePassword({
                 userId: userId,

@@ -190,6 +190,9 @@ const sumNumberItemBought = () => {
 const getTopPaintProduct = () => {
   return axios.get(`/api/get-top-paint-product`);
 };
+const postVerifyForgotPassword = (data) => {
+  return axios.post('/api/verify-forgot-password', data)
+}
 
 export {
   handleLoginApi,
@@ -244,5 +247,6 @@ export {
   getInformationById,
   getAllCancelOrder,
   sumNumberItemBought,
-  getTopPaintProduct
+  getTopPaintProduct,
+  postVerifyForgotPassword
 };

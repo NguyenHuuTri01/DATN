@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getInformationById } from '../../../services/userService';
+import { getInformationById, addToCart } from '../../../services/userService';
 import './Detail.scss';
 import HomeIcon from '@mui/icons-material/Home';
 import Box from '@mui/material/Box';
@@ -38,9 +38,21 @@ class Detail extends Component {
             this.props.history.push(`/home`);
         }
     }
+    handleAddToCart = async () => {
+        let resAddCart = await addToCart({
+            userId: this.props.userInfo.id,
+            paintId: this.state.data.paintId
+        })
+        if (resAddCart && resAddCart.errCode === 0) {
+            alert("Thêm thành công vào giỏ hàng");
+        } else {
+            alert("Sản phẩm đã tồn tại trong giỏ hàng");
+        }
+    }
 
     render() {
         let { data } = this.state;
+        console.log(data)
         return (
             <div className="detail-paint-container">
                 <div className="header-paint">
@@ -74,6 +86,12 @@ class Detail extends Component {
                             backgroundImage: `url(${data.detailProduct && data.detailProduct.image})`
                         }}
                     ></div>
+                    <div className="btn-add-to-cart">
+                        <button
+                            className="btn-add"
+                            onClick={() => this.handleAddToCart()}
+                        >Thêm vào giỏ hàng</button>
+                    </div>
                     <div className="detail-paint">
                         {
                             <div dangerouslySetInnerHTML={{ __html: data.contentHTML }}>
@@ -89,6 +107,7 @@ class Detail extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        userInfo: state.user.userInfo,
     };
 };
 

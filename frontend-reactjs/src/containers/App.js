@@ -19,6 +19,7 @@ import VerifyAccount from "./Auth/VerifyAccount";
 import AccountManagement from "./Customer/AccountManagement";
 import VerifyOrder from "./Auth/VerifyOrder";
 import Detail from "./HomaPage/products/Detail";
+import VerifyForgotPassword from "./Auth/VerifyForgotPassword";
 
 class App extends Component {
   handlePersistorState = () => {
@@ -55,6 +56,7 @@ class App extends Component {
                   <Route path={path.LOGIN} component={userIsNotAuthenticated(Login)} />
                   <Route path={'/verify-account'} component={VerifyAccount} />
                   <Route path={'/verify-order'} component={VerifyOrder} />
+                  <Route path={'/forgot-password'} component={VerifyForgotPassword} />
                   <Route path={'/account-management'} component={AccountManagement} />
                   <Route path={'/detail/:id'} component={Detail} />
                 </Switch>

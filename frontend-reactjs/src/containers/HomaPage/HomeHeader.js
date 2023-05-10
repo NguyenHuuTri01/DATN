@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import * as actions from "../../store/actions";
 import { addToCart, getAllCartById, delelteCart } from '../../services/userService';
+import Messenger from "./messenger/Messenger";
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -11,6 +12,7 @@ import TabContext from '@material-ui/lab/TabContext';
 import TabList from '@material-ui/lab/TabList';
 import TabPanel from '@material-ui/lab/TabPanel';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import MessageIcon from '@mui/icons-material/Message';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
@@ -19,6 +21,7 @@ import Machining from "./machining/Machining";
 import ModalStore from "./modals/ModalStore";
 import ListMachining from "./machining/ListMachining";
 import Description from "./Description";
+import MessengerWithManage from "./messenger/MessengerWithManage";
 
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -35,7 +38,8 @@ class HomeHeader extends Component {
       value: '2',
       store: [],
       isOpenModal: false,
-      openUserMenu: null
+      openUserMenu: null,
+      isExpanded: true
     }
   }
   async componentDidMount() {
@@ -144,6 +148,16 @@ class HomeHeader extends Component {
   handleManageUser = () => {
     window.open("http://localhost:3000/system/manage-user", "_blank");
   }
+  handleOpenMessenger = () => {
+    this.setState({
+      isExpanded: !this.state.isExpanded
+    })
+  }
+  handleCloserMessenger = () => {
+    this.setState({
+      isExpanded: true
+    })
+  }
   render() {
     let { value, store, openUserMenu } = this.state;
     let { userInfo } = this.props;
@@ -173,6 +187,15 @@ class HomeHeader extends Component {
                     fontSize="large"
                     onClick={() => this.handleOpenModal()}
                     className="icon-store"
+                  />
+                </Badge>
+                <Badge badgeContent={1} color="primary">
+                  <MessageIcon
+                    style={{ cursor: "pointer" }}
+                    color="action"
+                    fontSize="large"
+                    onClick={() => this.handleOpenMessenger()}
+                    className="icon-message"
                   />
                 </Badge>
                 <Stack direction="row" spacing={2}>
@@ -263,7 +286,19 @@ class HomeHeader extends Component {
             </TabPanel>
           </TabContext>
         </Box>
-
+        {
+          userInfo && userInfo.roleId === "R3" ?
+            <MessengerWithManage
+              isExpanded={this.state.isExpanded}
+              handleOpenMessenger={this.handleOpenMessenger}
+              handleCloserMessenger={this.handleCloserMessenger}
+            /> :
+            <Messenger
+              isExpanded={this.state.isExpanded}
+              handleOpenMessenger={this.handleOpenMessenger}
+              handleCloserMessenger={this.handleCloserMessenger}
+            />
+        }
         <ModalStore
           isOpenModal={this.state.isOpenModal}
           handleCloseModal={this.handleCloseModal}

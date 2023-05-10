@@ -100,13 +100,15 @@ class Description extends Component {
                                         key={index}
                                         onClick={() => this.handleSeeDetail(item.paintId)}
                                     >
-                                        <div
-                                            className="item-image"
-                                            style={{ backgroundImage: `url(${item.image})` }}
-                                        >
-                                        </div>
-                                        <div className="item-name-paint">
-                                            {item.paintName}
+                                        <div>
+                                            <div
+                                                className="item-image"
+                                                style={{ backgroundImage: `url(${item.image})` }}
+                                            >
+                                            </div>
+                                            <div className="item-name-paint">
+                                                {item.paintName}
+                                            </div>
                                         </div>
                                     </div>
                                 )

@@ -94,6 +94,22 @@ class Login extends Component {
       isOpenModal: false
     })
   }
+  handleOnChangeEmail = (e) => {
+    this.setState({
+      email: e.target.value
+    })
+  }
+  validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+  handleForgotPassword = () => {
+    if (!this.validateEmail(this.state.email)) {
+      alert("Email không hợp lệ")
+    } else {
+
+    }
+  }
   render() {
     return (
       <div className="login-background">
@@ -170,12 +186,13 @@ class Login extends Component {
                 width: "100%", outline: "none", margin: "20px 0",
                 border: "1px solid #333"
               }}
-              // value={this.state.email}
-              // onChange={(e) => this.handleOnChangeEmail(e)}
+              value={this.state.email}
+              onChange={(e) => this.handleOnChangeEmail(e)}
               className="form-control input-forgot-password"
             />
             <Button
               style={{ backgroundColor: "#19A7CE", color: "#fff" }}
+              onClick={() => this.handleForgotPassword()}
             >Khôi phục</Button>
           </Box>
         </Modal>
