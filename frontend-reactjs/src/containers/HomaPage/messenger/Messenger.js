@@ -4,6 +4,7 @@ import './Messenger.scss';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { io } from 'socket.io-client';
+import { sendMessage, getMessage, seenMessage } from '../../../services/userService';
 
 let DisplayMessage = lazy(() => import("./DisplayMessage"));
 
@@ -15,7 +16,7 @@ class Messenger extends Component {
             userId: 0,
             rows: 1,
             maxRows: 3,
-            listMessage: [{ sender: 20, message: "hello", receiver: 21 }, { sender: 21, message: "hi", receiver: 20 },]
+            listMessage: []
         };
         this.socket = React.createRef();
         this.scrollRef = React.createRef();
@@ -26,9 +27,16 @@ class Messenger extends Component {
     async componentDidMount() {
         this.socket.current = io('http://localhost:8800')
         if (this.props.userInfo && this.props.userInfo.id) {
-            this.setState({
-                userId: this.props.userInfo.id
+            let getmessage = await getMessage({
+                senderId: this.props.userInfo.id,
+                receiverId: 21
             })
+            if (getmessage && getmessage.errCode === 0) {
+                this.setState({
+                    userId: this.props.userInfo.id,
+                    listMessage: getmessage.data
+                })
+            }
 
             this.socket.current.emit("new-user-add", this.props.userInfo.id)
             this.socket.current.on("get-users", users => {
@@ -36,15 +44,32 @@ class Messenger extends Component {
             })
             this.socket.current.on("receive-message", (data) => {
                 console.log(data.message)
-                this.addMessage(data.senderId, data.receiverId, data.message)
+                this.addMessage(data.senderId, data.receiverId, data.message, new Date())
             })
         }
     }
     async componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.isExpanded !== this.props.isExpanded) {
+            console.log(this.props.isExpanded)
+            if (!this.props.isExpanded) {
+                await seenMessage({
+                    receiverId: this.props.userInfo.id,
+                    senderId: 21
+                })
+                this.props.getDataNotSeen()
+            }
+        }
         if (prevProps.userInfo !== this.props.userInfo) {
-            this.setState({
-                userId: this.props.userInfo.id
+            let getmessage = await getMessage({
+                senderId: this.props.userInfo.id,
+                receiverId: 21
             })
+            if (getmessage && getmessage.errCode === 0) {
+                this.setState({
+                    userId: this.props.userInfo.id,
+                    listMessage: getmessage.data
+                })
+            }
             if (this.socket.current) {
                 this.socket.current.emit("new-user-add", this.props.userInfo.id)
                 this.socket.current.on("get-users", users => {
@@ -52,7 +77,8 @@ class Messenger extends Component {
                 })
                 this.socket.current.on("receive-message", (data) => {
                     console.log(data.message)
-                    this.addMessage(data.senderId, data.receiverId, data.message)
+                    this.addMessage(data.senderId, data.receiverId, data.message, new Date())
+                    this.props.getDataNotSeen()
                 })
             }
         }
@@ -72,27 +98,28 @@ class Messenger extends Component {
             rows: event.target.value.length / 38 + 1
         });
     }
-    sendMesage = () => {
+    sendMesage = async () => {
         this.socket.current.emit("send-message",
             {
                 senderId: this.state.userId,
                 receiverId: 21,
-                message: this.state.value
+                message: this.state.value,
             }
         )
-        // this.state.socket.emit('chatMessage', {
-        //     sender: this.state.userId,
-        //     receiver: 21,
-        //     message: this.state.value
-        // });
         this.addMessage(this.state.userId, 21, this.state.value)
+        await sendMessage({
+            senderId: this.state.userId,
+            receiverId: 21,
+            message: this.state.value,
+            // status: this.props.isExpanded ? 'notseen' : 'seen'
+        })
     }
-    addMessage = (sender, receiver, message) => {
+    addMessage = (sender, receiver, message, time) => {
         if (message) {
             let list = this.state.listMessage;
             list.push({
-                sender: sender,
-                receiver: receiver,
+                senderId: sender,
+                receiverId: receiver,
                 message: message
             });
             this.setState({

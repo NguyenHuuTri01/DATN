@@ -194,6 +194,22 @@ const postVerifyForgotPassword = (data) => {
   return axios.post('/api/verify-forgot-password', data)
 }
 
+const sendMessage = (data) => {
+  return axios.post('/api/send-message', data)
+}
+const getMessage = (data) => {
+  return axios.post('/api/get-message', data)
+}
+const getAllMessage = (data) => {
+  return axios.post('/api/get-all-message', data)
+}
+const seenMessage = (data) => {
+  return axios.post('/api/seen-message', data)
+}
+const getNotSeenMessage = (data) => {
+  return axios.post('/api/get-not-seen-message', data)
+}
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -248,5 +264,10 @@ export {
   getAllCancelOrder,
   sumNumberItemBought,
   getTopPaintProduct,
-  postVerifyForgotPassword
+  postVerifyForgotPassword,
+  sendMessage,
+  getMessage,
+  getAllMessage,
+  seenMessage,
+  getNotSeenMessage,
 };

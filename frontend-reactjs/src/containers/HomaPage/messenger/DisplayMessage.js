@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { format } from "timeago.js"
 
 class DisplayMessage extends Component {
     constructor(props) {
@@ -14,14 +15,17 @@ class DisplayMessage extends Component {
     }
     render() {
         let { data } = this.props;
-        console.log(data.sender, data.receiver)
-        console.log(this.props.userId)
         return (
             <div
-                className={data.sender === this.props.userId ? "message-sent" : "message-received"}
+                className={data.senderId === this.props.userId ? "message-sent" : "message-received"}
             >
-                <div>
-                    {data.message}
+                <div className="message-content">
+                    <div>
+                        {data.message}
+                    </div>
+                    <div className="time">
+                        {format(data.createdAt)}
+                    </div>
                 </div>
             </div>
         );

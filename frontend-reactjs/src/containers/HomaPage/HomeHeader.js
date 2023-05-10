@@ -3,7 +3,7 @@ import './HomeHeader.scss';
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import * as actions from "../../store/actions";
-import { addToCart, getAllCartById, delelteCart } from '../../services/userService';
+import { addToCart, getAllCartById, delelteCart, getNotSeenMessage } from '../../services/userService';
 import Messenger from "./messenger/Messenger";
 
 import Box from '@mui/material/Box';
@@ -39,18 +39,31 @@ class HomeHeader extends Component {
       store: [],
       isOpenModal: false,
       openUserMenu: null,
-      isExpanded: true
+      isExpanded: true,
+      notSeenMessage: 0,
     }
   }
   async componentDidMount() {
     if (this.props.userInfo && this.props.userInfo.id) {
       this.getDataStore();
+      this.getDataNotSeen();
+    }
+  }
+  getDataNotSeen = async () => {
+    let getNotSeen = await getNotSeenMessage({
+      receiverId: this.props.userInfo.id
+    });
+    if (getNotSeen && getNotSeen.errCode === 0) {
+      this.setState({
+        notSeenMessage: getNotSeen.countNotSeen
+      })
     }
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.userInfo !== this.props.userInfo) {
       this.getDataStore();
+      this.getDataNotSeen();
     }
   }
   getDataStore = async () => {
@@ -149,9 +162,13 @@ class HomeHeader extends Component {
     window.open("http://localhost:3000/system/manage-user", "_blank");
   }
   handleOpenMessenger = () => {
-    this.setState({
-      isExpanded: !this.state.isExpanded
-    })
+    if (this.props.isLoggedIn) {
+      this.setState({
+        isExpanded: !this.state.isExpanded
+      })
+    } else {
+      alert('Đăng nhập để trao đổi trực tuyến')
+    }
   }
   handleCloserMessenger = () => {
     this.setState({
@@ -159,8 +176,9 @@ class HomeHeader extends Component {
     })
   }
   render() {
-    let { value, store, openUserMenu } = this.state;
+    let { value, store, openUserMenu, notSeenMessage } = this.state;
     let { userInfo } = this.props;
+    console.log(notSeenMessage);
     return (
       <>
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -189,7 +207,7 @@ class HomeHeader extends Component {
                     className="icon-store"
                   />
                 </Badge>
-                <Badge badgeContent={1} color="primary">
+                <Badge badgeContent={notSeenMessage} color="primary">
                   <MessageIcon
                     style={{ cursor: "pointer" }}
                     color="action"
@@ -297,6 +315,7 @@ class HomeHeader extends Component {
               isExpanded={this.state.isExpanded}
               handleOpenMessenger={this.handleOpenMessenger}
               handleCloserMessenger={this.handleCloserMessenger}
+              getDataNotSeen={this.getDataNotSeen}
             />
         }
         <ModalStore

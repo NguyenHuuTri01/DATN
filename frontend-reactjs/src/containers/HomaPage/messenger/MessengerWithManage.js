@@ -5,7 +5,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { io } from 'socket.io-client';
 import Avatar from '@mui/material/Avatar';
-import { getAllUsers } from '../../../services/userService';
+import { getAllMessage, sendMessage, getMessage } from '../../../services/userService';
+import { deepOrange } from '@mui/material/colors';
 
 let DisplayMessage = lazy(() => import("./DisplayMessage"));
 
@@ -20,6 +21,7 @@ class MessengerWithManage extends Component {
             listMessage: [],
             listUser: [],
             receiverId: 0,
+            newMessage: {}
         };
         this.socket = React.createRef();
         this.scrollRef = React.createRef();
@@ -28,14 +30,7 @@ class MessengerWithManage extends Component {
     }
 
     async componentDidMount() {
-        let listUserMessage = await getAllUsers();
-        if (listUserMessage.errCode === 0) {
-            this.setState({
-                listUser: listUserMessage.users,
-                unreadMessages: ''
-            })
-        }
-
+        this.getUserMessage();
         this.socket.current = io('http://localhost:8800')
         if (this.props.userInfo && this.props.userInfo.id) {
             this.setState({
@@ -47,9 +42,20 @@ class MessengerWithManage extends Component {
                 console.log(users)
             })
             this.socket.current.on("receive-message", (data) => {
-                console.log(data.message)
-                this.addMessage(data.senderId, data.receiverId, data.message)
-                this.setState({ unreadMessages: this.state.unreadMessages + 1 });
+                if (this.state.receiverId === data.receiverId) {
+                    this.addMessage(data.senderId, data.receiverId, data.message, new Date())
+                }
+                this.getUserMessage()
+            })
+        }
+    }
+    getUserMessage = async () => {
+        let listUserMessage = await getAllMessage({
+            receiverId: 21
+        });
+        if (listUserMessage.errCode === 0) {
+            this.setState({
+                listUser: listUserMessage.dataMessage,
             })
         }
     }
@@ -64,9 +70,8 @@ class MessengerWithManage extends Component {
                     console.log(users)
                 })
                 this.socket.current.on("receive-message", (data) => {
-                    console.log(data)
-                    this.addMessage(data.senderId, data.receiverId, data.message)
-                    this.setState({ unreadMessages: this.state.unreadMessages + 1 });
+                    this.addMessage(data.senderId, data.receiverId, data.message, new Date())
+                    this.getUserMessage()
                 })
             }
         }
@@ -86,7 +91,7 @@ class MessengerWithManage extends Component {
             rows: event.target.value.length / 38 + 1
         });
     }
-    sendMesage = () => {
+    sendMesage = async () => {
         this.socket.current.emit("send-message",
             {
                 senderId: this.state.userId,
@@ -94,19 +99,20 @@ class MessengerWithManage extends Component {
                 message: this.state.value
             }
         )
-        // this.state.socket.emit('chatMessage', {
-        //     sender: this.state.userId,
-        //     receiver: 21,
-        //     message: this.state.value
-        // });
         this.addMessage(this.state.userId, this.state.receiverId, this.state.value)
+        await sendMessage({
+            senderId: this.state.userId,
+            receiverId: this.state.receiverId,
+            message: this.state.value,
+        })
+        this.getUserMessage();
     }
-    addMessage = (sender, receiver, message) => {
+    addMessage = (sender, receiver, message, time) => {
         if (message) {
             let list = this.state.listMessage;
             list.push({
-                sender: sender,
-                receiver: receiver,
+                senderId: sender,
+                receiverId: receiver,
                 message: message
             });
             this.setState({
@@ -115,15 +121,22 @@ class MessengerWithManage extends Component {
             })
         }
     }
-    chooseUserreceiverId = (receiver) => {
-        this.setState({
+    chooseUserreceiverId = async (receiver) => {
+        let getmessenger = await getMessage({
+            senderId: this.state.userId,
             receiverId: receiver
-        })
+        });
+        if (getmessenger && getmessenger.errCode === 0) {
+            this.setState({
+                receiverId: receiver,
+                listMessage: getmessenger.data
+            })
+        }
     }
     render() {
         let { isExpanded } = this.props
-        let { rows, maxRows, value, listMessage, listUser, receiverId } = this.state;
-        console.log("check chua doc:", this.state.unreadMessages)
+        let { rows, maxRows, value, listMessage, listUser, receiverId, newMessage, userId }
+            = this.state;
         return (
             <div className={isExpanded ? 'messenger-container-expanded' : 'messenger-container'}>
                 <button
@@ -173,16 +186,39 @@ class MessengerWithManage extends Component {
                             listUser && listUser.length > 0 &&
                             listUser.map((item, index) => (
                                 <div
-                                    className={receiverId === item.id ?
-                                        "user-item active" :
-                                        "user-item"}
+                                    className={
+                                        receiverId === (item.senderId === userId ?
+                                            item.receiverId : item.senderId)
+                                            ?
+                                            "user-item active" :
+                                            "user-item"}
                                     key={index}
-                                    onClick={() => this.chooseUserreceiverId(item.id)}
+                                    onClick={() => this.chooseUserreceiverId(
+                                        item.senderId === userId ?
+                                            item.receiverId : item.senderId
+                                    )}
                                 >
-                                    <Avatar></Avatar>
-                                    <label>
-                                        {item.email}
-                                    </label>
+                                    <Avatar
+                                        sx={{
+                                            bgcolor: receiverId === (item.senderId === userId ?
+                                                item.receiverId :
+                                                item.senderId)
+                                                ? deepOrange[500] : ""
+                                        }}
+                                    ></Avatar>
+                                    <div>
+                                        <div className="email">
+                                            {item.emailReceiver && item.emailReceiver.email}
+                                            {item.emailSender && item.emailSender.email}
+                                        </div>
+                                        <div className="new-message">
+                                            {
+                                                newMessage.senderId === item.senderId ?
+                                                    newMessage.message :
+                                                    item.message
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             ))
                         }
