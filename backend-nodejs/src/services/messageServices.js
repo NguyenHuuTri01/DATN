@@ -95,7 +95,15 @@ let getAllMessage = (data) => {
                                     },
                                     attributes: ['email'],
                                 })
+                                let messageNotseen = await db.Message.findAll({
+                                    where: {
+                                        senderId: resgetmessage.senderId,
+                                        receiverId: data.receiverId,
+                                        status: "notseen"
+                                    }
+                                });
                                 resgetmessage.emailSender = res
+                                resgetmessage.notSeen = messageNotseen.length
                             } else {
                                 // select  resgetmessage.receiverId
                                 let res = await db.User.findOne({
@@ -104,7 +112,15 @@ let getAllMessage = (data) => {
                                     },
                                     attributes: ['email'],
                                 })
+                                let messageNotseen = await db.Message.findAll({
+                                    where: {
+                                        senderId: resgetmessage.receiverId,
+                                        receiverId: data.receiverId,
+                                        status: "notseen"
+                                    }
+                                });
                                 resgetmessage.emailReceiver = res
+                                resgetmessage.notSeen = messageNotseen.length
                             }
 
                             dataMessage.push(resgetmessage)
