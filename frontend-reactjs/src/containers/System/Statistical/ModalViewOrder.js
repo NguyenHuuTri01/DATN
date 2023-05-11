@@ -74,7 +74,6 @@ class ModalViewOrder extends Component {
 
     render() {
         let { dataOrder } = this.state;
-        console.log(dataOrder)
         return (
             <div className="modal-danh-sach-don-hang">
                 <Modal

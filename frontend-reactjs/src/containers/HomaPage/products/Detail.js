@@ -52,7 +52,6 @@ class Detail extends Component {
 
     render() {
         let { data } = this.state;
-        console.log(data)
         return (
             <div className="detail-paint-container">
                 <div className="header-paint">

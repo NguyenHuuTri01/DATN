@@ -43,14 +43,13 @@ class Messenger extends Component {
                 console.log(users)
             })
             this.socket.current.on("receive-message", (data) => {
-                console.log(data.message)
                 this.addMessage(data.senderId, data.receiverId, data.message, new Date())
+                this.props.getDataNotSeen()
             })
         }
     }
     async componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.isExpanded !== this.props.isExpanded) {
-            console.log(this.props.isExpanded)
             if (!this.props.isExpanded) {
                 await seenMessage({
                     receiverId: this.props.userInfo.id,
@@ -76,7 +75,6 @@ class Messenger extends Component {
                     console.log(users)
                 })
                 this.socket.current.on("receive-message", (data) => {
-                    console.log(data.message)
                     this.addMessage(data.senderId, data.receiverId, data.message, new Date())
                     this.props.getDataNotSeen()
                 })
@@ -106,12 +104,14 @@ class Messenger extends Component {
                 message: this.state.value,
             }
         )
-        this.addMessage(this.state.userId, 21, this.state.value)
+        this.addMessage(this.state.userId, 21, this.state.value, new Date())
         await sendMessage({
             senderId: this.state.userId,
             receiverId: 21,
             message: this.state.value,
-            // status: this.props.isExpanded ? 'notseen' : 'seen'
+        })
+        this.setState({
+            rows: 1
         })
     }
     addMessage = (sender, receiver, message, time) => {
@@ -120,7 +120,8 @@ class Messenger extends Component {
             list.push({
                 senderId: sender,
                 receiverId: receiver,
-                message: message
+                message: message,
+                createdAt: time,
             });
             this.setState({
                 listMessage: list,

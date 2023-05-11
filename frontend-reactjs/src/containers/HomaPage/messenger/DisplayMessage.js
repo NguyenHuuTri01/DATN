@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { format } from "timeago.js"
+import moment from 'moment';
+import localization from 'moment/locale/vi';
 
 class DisplayMessage extends Component {
     constructor(props) {
@@ -24,7 +25,7 @@ class DisplayMessage extends Component {
                         {data.message}
                     </div>
                     <div className="time">
-                        {format(data.createdAt)}
+                        {moment(data.createdAt).locale('vi').calendar()}
                     </div>
                 </div>
             </div>

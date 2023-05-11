@@ -310,6 +310,7 @@ class HomeHeader extends Component {
               isExpanded={this.state.isExpanded}
               handleOpenMessenger={this.handleOpenMessenger}
               handleCloserMessenger={this.handleCloserMessenger}
+              getDataNotSeen={this.getDataNotSeen}
             /> :
             <Messenger
               isExpanded={this.state.isExpanded}

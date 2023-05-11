@@ -79,15 +79,44 @@
                 background-color: #FFD95A;
             }
 
-            .email {
-                margin-left: 10px;
-                font-size  : 16px;
-                font-weight: 600;
-            }
+            .right-user-item {
+                width   : 100%;
+                position: relative;
 
-            .new-message {
-                font-size  : 12px;
-                margin-left: 10px;
+                .email {
+                    margin-left: 10px;
+                    font-size  : 16px;
+                    font-weight: 600;
+                }
+
+                .new-message {
+                    font-size      : 12px;
+                    margin-left    : 10px;
+                    display        : flex;
+                    justify-content: space-between;
+
+                    .message {
+                        display           : -webkit-box;
+                        -webkit-line-clamp: 1;
+                        -webkit-box-orient: vertical;
+                        overflow          : hidden;
+                        text-overflow     : ellipsis;
+                    }
+
+                    .message-not-seen {
+                        width           : 25px;
+                        height          : 25px;
+                        position        : absolute;
+                        right           : 0;
+                        bottom          : 10%;
+                        display         : flex;
+                        justify-content : center;
+                        align-items     : center;
+                        border-radius   : 50%;
+                        color           : #fff;
+                        background-color: red;
+                    }
+                }
             }
         }
     }

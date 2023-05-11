@@ -33,6 +33,19 @@
               font-weight: 600;
           }
 
+          .number-paint {
+              position: relative;
+              width   : 300px;
+
+              .notification {
+                  position   : absolute;
+                  right      : 0;
+                  bottom     : 0;
+                  color      : red;
+                  font-weight: 600;
+              }
+          }
+
           .modal-child {
               height: 200px !important;
           }

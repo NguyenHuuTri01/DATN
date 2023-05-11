@@ -156,10 +156,13 @@ class StoreItem extends Component {
                                     style={{ color: "red" }}
                                 />
                             }</div>
-                        <div>Số lượng:
+                        <div className="number-paint">Số lượng:
                             <label
                                 style={{ marginLeft: "5px", color: "blue", fontSize: "15px" }}
                             >{+countItem}</label>
+                            <label className="notification">
+                                {`(Bạn được mua tối đa ${data && data.productData && data.productData.paintQuantity})`}
+                            </label>
                         </div>
                         <div>
                             {

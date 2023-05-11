@@ -39,7 +39,6 @@ class AccountManagement extends Component {
     }
     render() {
         let { value } = this.state;
-        console.log(this.props.userInfo)
         return (
             <>
                 <Box sx={{ width: '100%', typography: 'body1' }}>

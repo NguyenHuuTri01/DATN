@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { io } from 'socket.io-client';
 import Avatar from '@mui/material/Avatar';
-import { getAllMessage, sendMessage, getMessage } from '../../../services/userService';
+import { getAllMessage, sendMessage, getMessage, seenMessage } from '../../../services/userService';
 import { deepOrange } from '@mui/material/colors';
 
 let DisplayMessage = lazy(() => import("./DisplayMessage"));
@@ -42,10 +42,11 @@ class MessengerWithManage extends Component {
                 console.log(users)
             })
             this.socket.current.on("receive-message", (data) => {
-                if (this.state.receiverId === data.receiverId) {
+                if (this.state.receiverId === data.senderId) {
                     this.addMessage(data.senderId, data.receiverId, data.message, new Date())
                 }
                 this.getUserMessage()
+                this.props.getDataNotSeen()
             })
         }
     }
@@ -60,6 +61,14 @@ class MessengerWithManage extends Component {
         }
     }
     async componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.isExpanded !== this.props.isExpanded) {
+            if (this.props.isExpanded) {
+                this.setState({
+                    receiverId: 0,
+                    listMessage: []
+                })
+            }
+        }
         if (prevProps.userInfo !== this.props.userInfo) {
             this.setState({
                 userId: this.props.userInfo.id
@@ -70,8 +79,11 @@ class MessengerWithManage extends Component {
                     console.log(users)
                 })
                 this.socket.current.on("receive-message", (data) => {
-                    this.addMessage(data.senderId, data.receiverId, data.message, new Date())
+                    if (this.state.receiverId === data.senderId) {
+                        this.addMessage(data.senderId, data.receiverId, data.message, new Date())
+                    }
                     this.getUserMessage()
+                    this.props.getDataNotSeen()
                 })
             }
         }
@@ -83,6 +95,9 @@ class MessengerWithManage extends Component {
         if (event.keyCode === 13) {
             event.preventDefault();
             this.sendMesage()
+            this.setState({
+                value: ''
+            })
         }
     }
     handleChange(event) {
@@ -90,6 +105,12 @@ class MessengerWithManage extends Component {
             value: event.target.value,
             rows: event.target.value.length / 38 + 1
         });
+    }
+    onClickSendMessage = () => {
+        this.sendMesage();
+        this.setState({
+            value: ''
+        })
     }
     sendMesage = async () => {
         this.socket.current.emit("send-message",
@@ -99,13 +120,16 @@ class MessengerWithManage extends Component {
                 message: this.state.value
             }
         )
-        this.addMessage(this.state.userId, this.state.receiverId, this.state.value)
+        this.addMessage(this.state.userId, this.state.receiverId, this.state.value, new Date())
         await sendMessage({
             senderId: this.state.userId,
             receiverId: this.state.receiverId,
             message: this.state.value,
         })
         this.getUserMessage();
+        this.setState({
+            rows: 1
+        })
     }
     addMessage = (sender, receiver, message, time) => {
         if (message) {
@@ -113,11 +137,11 @@ class MessengerWithManage extends Component {
             list.push({
                 senderId: sender,
                 receiverId: receiver,
-                message: message
+                message: message,
+                createdAt: time,
             });
             this.setState({
                 listMessage: list,
-                value: ''
             })
         }
     }
@@ -132,10 +156,16 @@ class MessengerWithManage extends Component {
                 listMessage: getmessenger.data
             })
         }
+        await seenMessage({
+            receiverId: this.state.userId,
+            senderId: receiver
+        })
+        this.getUserMessage();
+        this.props.getDataNotSeen()
     }
     render() {
         let { isExpanded } = this.props
-        let { rows, maxRows, value, listMessage, listUser, receiverId, newMessage, userId }
+        let { rows, maxRows, value, listMessage, listUser, receiverId, userId }
             = this.state;
         return (
             <div className={isExpanded ? 'messenger-container-expanded' : 'messenger-container'}>
@@ -147,7 +177,7 @@ class MessengerWithManage extends Component {
                 </button>
                 <div className="messenger-chat">
                     <div className="messenger-chat-header">
-                        <h2>Tư vấn trực tuyến quản lý</h2>
+                        <h2>Tư vấn khách hàng</h2>
                     </div>
                     <div className="messenger-chat-body">
                         {
@@ -206,17 +236,25 @@ class MessengerWithManage extends Component {
                                                 ? deepOrange[500] : ""
                                         }}
                                     ></Avatar>
-                                    <div>
+                                    <div className="right-user-item">
                                         <div className="email">
                                             {item.emailReceiver && item.emailReceiver.email}
                                             {item.emailSender && item.emailSender.email}
                                         </div>
                                         <div className="new-message">
+                                            <label htmlFor="" className="message">
+                                                {
+                                                    item.senderId === userId ? `Bạn: ${item.message}` : item.message
+                                                }
+                                            </label>
                                             {
-                                                newMessage.senderId === item.senderId ?
-                                                    newMessage.message :
-                                                    item.message
+                                                item.notSeen > 0 ?
+                                                    <div className="message-not-seen">
+                                                        {item.notSeen}
+                                                    </div>
+                                                    : ""
                                             }
+
                                         </div>
                                     </div>
                                 </div>
