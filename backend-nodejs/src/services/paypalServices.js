@@ -35,6 +35,7 @@ let createPaypal = (data) => {
                         userId: data[i].userId,
                         paintId: data[i].paintId,
                         amount: data[i].amount,
+                        color: data[i].color,
                         makePrice: data[i].productData.paintPrice,
                         discount: data[i].productData.paintDiscount,
                         paymentStatus: 'pendingpayment'

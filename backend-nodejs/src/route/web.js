@@ -8,6 +8,7 @@ import cashController from '../controllers/cashController';
 import giaCongColtroller from '../controllers/giaCongController';
 import detailController from '../controllers/detailController';
 import messageController from '../controllers/messageController';
+import paintPackController from '../controllers/paintPackController';
 
 let router = express.Router();
 
@@ -80,6 +81,10 @@ let initWebRoutes = (app) => {
   router.post("/api/get-all-message", messageController.getAllMessage);
   router.post("/api/seen-message", messageController.seenMessage);
   router.post("/api/get-not-seen-message", messageController.getNotSeenMessage);
+
+  router.post("/api/create-paint-pack", paintPackController.createPaintPack);
+  router.put("/api/update-paint-pack", paintPackController.updatePaintPack);
+  router.post("/api/get-paint-pack-by-id", paintPackController.getPaintPackById);
 
   return app.use("/", router);
 };

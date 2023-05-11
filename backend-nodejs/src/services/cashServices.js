@@ -41,6 +41,7 @@ let createCashOnReceipt = (data) => {
                         userId: data[i].userId,
                         paintId: data[i].paintId,
                         amount: data[i].amount,
+                        color: data[i].color,
                         makePrice: data[i].productData.paintPrice,
                         discount: data[i].productData.paintDiscount,
                         transactionId: token,
@@ -81,15 +82,16 @@ let createCashOnReceipt = (data) => {
                         },
                         raw: false,
                     });
-                    if (getAmount) {
-                        let resetamount = await db.Product.findOne({
-                            attributes: ["paintQuantity", "numberSold"],
-                            where: {
-                                paintId: item.paintId
-                            },
-                            raw: false,
-                        })
-                    }
+
+                    // if (getAmount) {
+                    //     let resetamount = await db.Product.findOne({
+                    //         attributes: ["paintQuantity", "numberSold"],
+                    //         where: {
+                    //             paintId: item.paintId
+                    //         },
+                    //         raw: false,
+                    //     })
+                    // }
 
                     await db.CashOnReceipt.destroy({
                         where: {
