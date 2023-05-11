@@ -210,6 +210,18 @@ const getNotSeenMessage = (data) => {
   return axios.post('/api/get-not-seen-message', data)
 }
 
+
+const createPaintPack = (data) => {
+  return axios.post('/api/create-paint-pack', data)
+}
+const updatePaintPack = (data) => {
+  return axios.put("/api/update-paint-pack", data);
+};
+
+const getPaintPackById = (name) => {
+  return axios.post('/api/get-paint-pack-by-id', name)
+}
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -270,4 +282,7 @@ export {
   getAllMessage,
   seenMessage,
   getNotSeenMessage,
+  createPaintPack,
+  updatePaintPack,
+  getPaintPackById
 };

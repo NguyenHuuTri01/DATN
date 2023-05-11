@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import CurrencyFormat from 'react-currency-format';
 import { updateCart } from '../../../services/userService';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import './StoreItem.scss';
 
 const style = {
@@ -29,6 +31,7 @@ class StoreItem extends Component {
             dataChild: {},
             isOpenChildModal: false,
             isUpdateCountItem: true,
+            color: 'Trắng'
         }
     }
     async componentDidMount() {
@@ -51,6 +54,7 @@ class StoreItem extends Component {
     }
 
     handleChecked = (e, dataChild) => {
+        dataChild.color = this.state.color;
         this.props.handleCheckedStore(e, dataChild);
         this.setState({
             isUpdateCountItem: !this.state.isUpdateCountItem
@@ -107,9 +111,14 @@ class StoreItem extends Component {
     updateCountItem = () => {
         this.handleClose();
     }
+    handleChangeSelect = (event) => {
+        this.setState({
+            color: event.target.value
+        })
+    }
 
     render() {
-        let { countItem, dataChild, isOpenChildModal, isUpdateCountItem, } = this.state;
+        let { countItem, dataChild, isOpenChildModal, isUpdateCountItem, color } = this.state;
         let { data } = this.props;
         return (
             <>
@@ -198,6 +207,42 @@ class StoreItem extends Component {
                                     >Ok</Button>
                                 </Box>
                             </Modal>
+                            {isUpdateCountItem ?
+                                <div className="select-color">
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        className="select-content"
+                                        value={color}
+                                        onChange={(e) => this.handleChangeSelect(e)}
+                                    >
+                                        <MenuItem
+                                            style={{ backgroundColor: "#fff" }}
+                                            value={"Trắng"}
+                                        >Trắng</MenuItem>
+                                        <MenuItem
+                                            style={{ backgroundColor: "#C0C0C0" }}
+                                            value={"Xám"}
+                                        >Xám</MenuItem>
+                                        <MenuItem
+                                            value={"Nâu"}
+                                            style={{ backgroundColor: "#964B00" }}
+                                        >Nâu</MenuItem>
+                                        <MenuItem
+                                            style={{ backgroundColor: "#228B22" }}
+                                            value={"Xanh Lá Cây"}
+                                        >Xanh Lá Cây</MenuItem>
+                                        <MenuItem
+                                            style={{ backgroundColor: "#FF69B4" }}
+                                            value={"Hồng"}
+                                        >Hồng</MenuItem>
+                                        <MenuItem
+                                            style={{ backgroundColor: "#FFA500" }}
+                                            value={"Vàng"}
+                                        >Vàng</MenuItem>
+                                    </Select>
+                                </div>
+                                : ""}
                         </div>
                     </div>
                 </div>

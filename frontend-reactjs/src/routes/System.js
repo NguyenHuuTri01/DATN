@@ -10,6 +10,7 @@ import InformationPaint from "../containers/System/InformationPaint";
 import ListCancelOrder from "../containers/System/Statistical/ListCancelOrder";
 import NumberOfItemSold from '../containers/System/Statistical/NumberOfItemSold';
 import CustomerBuyALot from '../containers/System/Statistical/CustomerBuyALot';
+import PaintPack from "../containers/System/PaintPack";
 
 class System extends Component {
   render() {
@@ -26,6 +27,7 @@ class System extends Component {
               <Route path="/system/list-order" component={ListOrder} />
               <Route path="/system/list-cancel-order" component={ListCancelOrder} />
               <Route path="/system/information-paint" component={InformationPaint} />
+              <Route path="/system/paint-pack" component={PaintPack} />
               <Route path="/system/number-of-item-sold" component={NumberOfItemSold} />
               <Route path="/system/customer-buy-a-lot" component={CustomerBuyALot} />
               <Route

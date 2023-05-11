@@ -254,7 +254,6 @@ class MessengerWithManage extends Component {
                                                     </div>
                                                     : ""
                                             }
-
                                         </div>
                                     </div>
                                 </div>

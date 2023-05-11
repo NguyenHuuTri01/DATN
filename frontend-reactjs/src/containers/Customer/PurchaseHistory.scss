@@ -28,7 +28,7 @@
         }
 
         .title-id {
-            width                    : 300px;
+            width                    : 20%;
             border-top-left-radius   : 10px;
             border-bottom-left-radius: 10px;
         }
@@ -42,11 +42,15 @@
         }
 
         .title-amount {
-            width: 50px;
+            width: 52px;
+        }
+
+        .title-color {
+            width: 110px;
         }
 
         .title-price {
-            width: 150px;
+            width: 140px;
         }
 
         .title-discount {
@@ -58,11 +62,11 @@
         }
 
         .title-payment {
-            width: 200px;
+            width: 190px;
         }
 
         .title-transport {
-            width                     : 200px;
+            width                     : 130px;
             border-top-right-radius   : 10px;
             border-bottom-right-radius: 10px;
         }
@@ -74,7 +78,7 @@
         width        : 100%;
 
         .transaction-id {
-            width                    : 300px;
+            width                    : 20.9%;
             display                  : flex;
             align-items              : center;
             padding-left             : 5px;
@@ -114,11 +118,15 @@
             }
 
             .history-price {
-                width: 150px;
+                width: 140px;
             }
 
             .history-discount {
                 width: 50px;
+            }
+
+            .history-color {
+                width: 110px;
             }
 
             .history-payment-date {
@@ -137,7 +145,7 @@
         }
 
         .transport {
-            width: 200px;
+            width: 130px;
             box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
                 rgba(0, 0, 0, 0.23) 0px 6px 6px;
             display                   : flex;

@@ -96,6 +96,7 @@ class PurchaseHistory extends Component {
                     <div className="title-amount title-text">SL</div>
                     <div className="title-price title-text">Giá tiền(VND)</div>
                     <div className="title-discount title-text">KM(%)</div>
+                    <div className="title-color title-text">Màu</div>
                     <div className="title-date title-text">Ngày Đặt</div>
                     <div className="title-payment title-text">Loại Thanh Toán</div>
                     <div className="title-transport title-text">Vận Chuyển</div>
@@ -137,6 +138,9 @@ class PurchaseHistory extends Component {
                                                 <div className="history-discount history-td">
                                                     {paypalItem.discount}
                                                 </div>
+                                                <div className="history-color history-td">
+                                                    {paypalItem.color}
+                                                </div>
                                                 <div className="history-payment-date history-td">
                                                     {moment.unix(paypalItem.paymentDate).format('DD/MM/YYYY')}
                                                 </div>
@@ -174,6 +178,9 @@ class PurchaseHistory extends Component {
                                                 </div>
                                                 <div className="history-discount history-td">
                                                     {cashItem.discount}
+                                                </div>
+                                                <div className="history-color history-td">
+                                                    {cashItem.color}
                                                 </div>
                                                 <div className="history-payment-date history-td">
                                                     {moment(cashItem.updatedAt).format('DD/MM/YYYY')}

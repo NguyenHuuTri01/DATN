@@ -178,7 +178,6 @@ class HomeHeader extends Component {
   render() {
     let { value, store, openUserMenu, notSeenMessage } = this.state;
     let { userInfo } = this.props;
-    console.log(notSeenMessage);
     return (
       <>
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -187,7 +186,7 @@ class HomeHeader extends Component {
               borderBottom: 2, borderColor: 'divider', display: 'flex',
               justifyContent: 'center', background: '#D6E4E5'
             }}>
-              <div className="left-header">Logo</div>
+              <div className="left-header"></div>
               <TabList
                 aria-label="lab API tabs example"
                 centered={true}

@@ -75,9 +75,13 @@ class ModalPayment extends Component {
         }
     }
     handleOpen = () => {
-        this.setState({
-            isOpen: true
-        })
+        if (window.confirm(`Bạn chắc chắn mua những màu vừa chọn chứ!!!`)) {
+            this.setState({
+                isOpen: true
+            })
+        } else {
+            // xử lý khi chọn No
+        }
     }
     handleClose = () => {
         this.setState({

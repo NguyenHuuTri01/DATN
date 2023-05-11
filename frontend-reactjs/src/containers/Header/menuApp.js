@@ -26,6 +26,10 @@ export const employeeMenu = [
         name: "menu.employee.imformation-paint",
         link: "/system/information-paint",
       },
+      {
+        name: "menu.employee.paint-pack",
+        link: "/system/paint-pack",
+      },
     ]
   },
   {

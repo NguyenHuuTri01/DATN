@@ -14,7 +14,7 @@ class ModalStore extends Component {
             calculateTotal: 0,
             listPainBucket: [],
             isUpdateCountItem: true,
-            store: []
+            store: [],
         }
     }
 
@@ -112,7 +112,6 @@ class ModalStore extends Component {
     getDataStore = () => {
         this.props.getDataStore();
     }
-
     render() {
         let { listPainBucket, calculateTotal, store } = this.state;
         return (

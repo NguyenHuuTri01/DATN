@@ -64,5 +64,19 @@
                   color           : #FFFFFF;
               }
           }
+
+          .select-color {
+              position : absolute;
+              width    : 20%;
+              height   : 40%;
+              right    : 21%;
+              top      : 50%;
+              transform: translate(-50%, -50%);
+
+              .select-content {
+                  width : 100%;
+                  height: 100%;
+              }
+          }
       }
   }
