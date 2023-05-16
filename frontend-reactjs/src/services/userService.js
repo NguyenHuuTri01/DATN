@@ -159,6 +159,9 @@ const submitForm = (data) => {
 const getGiaCong = () => {
   return axios.get('/api/get-gia-cong')
 }
+const getGiaCongById = (userId) => {
+  return axios.get(`/api/get-gia-cong-by-id/?userId=${userId}`);
+};
 const nhanGiaCong = (data) => {
   return axios.put("/api/nhan-gia-cong", data);
 };
@@ -167,6 +170,9 @@ const nhanGiaCongById = (data) => {
 }
 const hoanThanh = (data) => {
   return axios.put("/api/hoan-thanh", data);
+};
+const cancelGiaCong = (data) => {
+  return axios.put("/api/cancel-gia-cong", data);
 };
 
 const getDataSelectProduct = () => {
@@ -221,6 +227,9 @@ const updatePaintPack = (data) => {
 const getPaintPackById = (name) => {
   return axios.post('/api/get-paint-pack-by-id', name)
 }
+const getAllPaintPack = () => {
+  return axios.get(`/api/get-all-paint-pack`);
+};
 
 export {
   handleLoginApi,
@@ -284,5 +293,8 @@ export {
   getNotSeenMessage,
   createPaintPack,
   updatePaintPack,
-  getPaintPackById
+  getPaintPackById,
+  getAllPaintPack,
+  getGiaCongById,
+  cancelGiaCong,
 };

@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { io } from 'socket.io-client';
 import { sendMessage, getMessage, seenMessage } from '../../../services/userService';
+import CircularProgress from '@mui/material/CircularProgress';
 
 let DisplayMessage = lazy(() => import("./DisplayMessage"));
 
@@ -152,7 +153,7 @@ class Messenger extends Component {
                                     key={index}
                                     ref={this.scrollRef}
                                 >
-                                    <Suspense fallback={<div>Loading...</div>}>
+                                    <Suspense fallback={<CircularProgress />}>
                                         <DisplayMessage
                                             data={item}
                                             userId={this.state.userId}

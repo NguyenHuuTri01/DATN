@@ -1,0 +1,114 @@
+table {
+    width          : 100%;
+    border-collapse: collapse;
+    margin-bottom  : 20px;
+}
+
+table th,
+table td {
+    border : 1px solid #ddd;
+    padding: 8px;
+}
+
+table th {
+    background-color: #958585;
+    text-align      : center;
+}
+
+.pagination {
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    list-style     : none;
+    margin         : 0;
+    padding        : 0;
+}
+
+.pagination li {
+    display     : inline-block;
+    margin-right: 5px;
+    font-size   : 16px;
+}
+
+.pagination li a {
+    display         : block;
+    padding         : 5px 10px;
+    color           : #333;
+    background-color: #fff;
+    border          : 1px solid #ccc;
+    border-radius   : 3px;
+}
+
+.pagination li.active a {
+    background-color: #428bca;
+    color           : #fff;
+}
+
+.pagination li a:hover {
+    background-color: #ddd;
+    text-decoration : none;
+}
+
+.paint-pack-container {
+    padding         : 3% 10%;
+    overflow        : auto;
+    height          : calc(100vh - 48px);
+    background-color: whitesmoke;
+
+    .title-paint-pack {
+        text-align    : center;
+        margin-bottom : 2%;
+        font-size     : 20px;
+        font-weight   : 600;
+        text-transform: uppercase;
+    }
+
+    .list-paint-pack {
+        width: 100%;
+
+        .paint-pack-item {
+            border         : 1px solid #4C4C6D;
+            height         : auto;
+            min-height     : 70px;
+            display        : flex;
+            align-items    : center;
+            justify-content: space-between;
+            padding        : 0 5%;
+            margin-bottom  : 15px;
+            border-radius  : 10px;
+            box-shadow     : rgba(0, 0, 0, 0.19) 0px 10px 20px,
+                rgba(0, 0, 0, 0.23) 0px 6px 6px;
+
+            .item-name {
+                font-size: 18px;
+            }
+
+            .btn-choose {
+                width      : auto;
+                min-width  : 100px;
+                margin-left: 30px;
+            }
+
+            .view-detail {
+                font-size: 30px;
+                cursor   : pointer;
+                color    : #1B9C85;
+            }
+        }
+    }
+
+    .list-submit {
+        .title-list-submit {
+            margin        : 3% 0;
+            font-size     : 20px;
+            text-transform: uppercase;
+            font-weight   : 600;
+            text-align    : center;
+        }
+
+        .item-status {
+            display        : flex;
+            justify-content: space-between;
+        }
+    }
+}

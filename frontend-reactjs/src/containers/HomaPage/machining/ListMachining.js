@@ -110,9 +110,7 @@ class ListMachining extends Component {
                                 <th>Loại Công Trình</th>
                                 <th>Diện Tích</th>
                                 <th>Địa Chỉ</th>
-                                <th>Màu Mong Muốn</th>
-                                <th>Ngày Khởi Công</th>
-                                <th>Ngày Hoàn Thành</th>
+                                <th>Gói gia công</th>
                                 <th>Yêu Cầu Đặc Biệc</th>
                                 <th>Action</th>
                             </tr>
@@ -133,9 +131,7 @@ class ListMachining extends Component {
                                             <SearchIcon />
                                         </button>
                                     </td>
-                                    <td>{item.color}</td>
-                                    <td>{item.startDate}</td>
-                                    <td>{item.endDate}</td>
+                                    <td>{item.dataPaintPack && item.dataPaintPack.name}</td>
                                     <td>
                                         <button
                                             className="btn btn-primary"
@@ -170,9 +166,9 @@ class ListMachining extends Component {
                     aria-describedby="child-modal-description"
                 >
                     <Box sx={{
-                        ...style, width: 500, height: 400, textAlign: 'center', paddingTop: 10
+                        ...style, width: 500, height: 200, textAlign: 'center', paddingTop: 10
                     }}>
-                        {this.state.dataModal}
+                        {this.state.dataModal === '' ? "( Trống )" : this.state.dataModal}
                     </Box>
                 </Modal>
             </div>

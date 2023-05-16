@@ -248,6 +248,9 @@ class ModalPayment extends Component {
                         aria-describedby="child-modal-description"
                     >
                         <Box sx={{ ...style, width: 900, height: 700 }}>
+                            <div style={{ margin: "10px 0", color: "red" }}>
+                                Mẹo: cập nhật thông tin cá nhân để rút ngắn thời gian mua hàng
+                            </div>
                             <div>
                                 <label>Tên</label>
                                 <input

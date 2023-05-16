@@ -8,6 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { getAllLoaiSon, getAllPaintProduct } from '../../../services/userService';
 import { withRouter } from 'react-router';
+import CircularProgress from '@mui/material/CircularProgress';
 
 let ItemProduct = lazy(() => import('./ItemProduct'));
 
@@ -30,14 +31,13 @@ class Shoping extends Component {
                 data: [...copydata.data],
             })
         }
-
-
         let copyPortfolio = await getAllLoaiSon();
         if (copyPortfolio && copyPortfolio.errCode === 0) {
             this.setState({
                 portfolio: [...copyPortfolio.data],
             })
         }
+        this.handleClickAscPrice();
     }
     handleClickPortfolio = (id) => {
         this.setState({
@@ -75,6 +75,22 @@ class Shoping extends Component {
             searchDiscount: true
         })
     }
+    // giá tăng dần
+    handleClickAscPrice = () => {
+        let coppyState = [...this.state.data]
+        coppyState.sort((a, b) => a.paintPrice * (100 - a.paintDiscount) / 100 - b.paintPrice * (100 - b.paintDiscount) / 100);
+        this.setState({
+            data: [...coppyState]
+        })
+    }
+    // giá giảm dần
+    handleClickDescPrice = () => {
+        let coppyState = [...this.state.data]
+        coppyState.sort((a, b) => b.paintPrice * (100 - b.paintDiscount) / 100 - a.paintPrice * (100 - a.paintDiscount) / 100);
+        this.setState({
+            data: [...coppyState]
+        })
+    }
     render() {
         let { data, portfolio, portfolioSearch, searchName, searchDiscount } = this.state;
         return (
@@ -90,6 +106,22 @@ class Shoping extends Component {
                         />
                     </div>
                     <FormControl>
+                        <RadioGroup defaultValue={"ASC"}>
+                            <div>
+                                <FormControlLabel
+                                    value="ASC"
+                                    control={<Radio />}
+                                    label={"Giá tăng dần"}
+                                    onClick={() => this.handleClickAscPrice()}
+                                />
+                                <FormControlLabel
+                                    value="DESC"
+                                    control={<Radio />}
+                                    label={"Giá giảm dần"}
+                                    onClick={() => this.handleClickDescPrice()}
+                                />
+                            </div>
+                        </RadioGroup>
                         <FormLabel
                             className="title-portfolio"
                         >
@@ -144,7 +176,7 @@ class Shoping extends Component {
                             }
                             )
                             .map((item, index) => (
-                                <Suspense key={index} fallback={<div>Loading...</div>}>
+                                <Suspense key={index} fallback={<CircularProgress />}>
                                     <ItemProduct
                                         item={item}
                                         handleAddToCart={this.handleAddToCart}

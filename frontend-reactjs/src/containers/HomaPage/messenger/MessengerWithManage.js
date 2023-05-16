@@ -7,6 +7,7 @@ import { io } from 'socket.io-client';
 import Avatar from '@mui/material/Avatar';
 import { getAllMessage, sendMessage, getMessage, seenMessage } from '../../../services/userService';
 import { deepOrange } from '@mui/material/colors';
+import CircularProgress from '@mui/material/CircularProgress';
 
 let DisplayMessage = lazy(() => import("./DisplayMessage"));
 
@@ -39,7 +40,7 @@ class MessengerWithManage extends Component {
 
             this.socket.current.emit("new-user-add", this.props.userInfo.id)
             this.socket.current.on("get-users", users => {
-                console.log(users)
+                // console.log(users)
             })
             this.socket.current.on("receive-message", (data) => {
                 if (this.state.receiverId === data.senderId) {
@@ -76,7 +77,7 @@ class MessengerWithManage extends Component {
             if (this.socket.current) {
                 this.socket.current.emit("new-user-add", this.props.userInfo.id)
                 this.socket.current.on("get-users", users => {
-                    console.log(users)
+                    // console.log(users)
                 })
                 this.socket.current.on("receive-message", (data) => {
                     if (this.state.receiverId === data.senderId) {
@@ -187,7 +188,7 @@ class MessengerWithManage extends Component {
                                     key={index}
                                     ref={this.scrollRef}
                                 >
-                                    <Suspense fallback={<div>Loading...</div>}>
+                                    <Suspense fallback={<CircularProgress />}>
                                         <DisplayMessage
                                             data={item}
                                             userId={this.state.userId}

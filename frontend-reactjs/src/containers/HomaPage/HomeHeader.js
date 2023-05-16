@@ -22,6 +22,7 @@ import ModalStore from "./modals/ModalStore";
 import ListMachining from "./machining/ListMachining";
 import Description from "./Description";
 import MessengerWithManage from "./messenger/MessengerWithManage";
+import ListPaintPacks from "./machining/ListPaintPacks";
 
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -298,7 +299,7 @@ class HomeHeader extends Component {
             <TabPanel value="3">
               {this.props.userInfo && this.props.userInfo.roleId === 'R4' ?
                 <ListMachining /> :
-                <Machining />
+                <ListPaintPacks />
               }
             </TabPanel>
           </TabContext>

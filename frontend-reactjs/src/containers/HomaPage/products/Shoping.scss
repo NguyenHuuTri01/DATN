@@ -65,7 +65,7 @@
             width              : 30%;
             height             : 50%;
             margin             : 15px;
-            background-position: center center;
+            background-position: center 35%;
             background-repeat  : no-repeat;
             background-size    : 50%;
             position           : relative;
@@ -76,7 +76,7 @@
             background-color   : whitesmoke;
 
             &:hover {
-                background-size: 60%;
+                background-size: 55%;
                 box-shadow     : 0px 10px 30px rgba(102, 231, 16, 0.3);
             }
 

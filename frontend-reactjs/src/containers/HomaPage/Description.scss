@@ -1,4 +1,7 @@
 .description-container {
+    height  : calc(100vh - 48px);
+    overflow: auto;
+
     .image-description {
         background: url("../../assets/images/gioithieu.png") center no-repeat;
         height    : 380px;
