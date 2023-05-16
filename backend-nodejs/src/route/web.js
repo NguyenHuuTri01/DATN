@@ -68,9 +68,11 @@ let initWebRoutes = (app) => {
 
   router.post("/api/submit-gia-cong", giaCongColtroller.submitForm);
   router.get("/api/get-gia-cong", giaCongColtroller.getGiaCong);
+  router.get("/api/get-gia-cong-by-id", giaCongColtroller.getGiaCongById);
   router.put("/api/nhan-gia-cong", giaCongColtroller.nhanGiaCong);
   router.post("/api/get-gia-cong-by-id", giaCongColtroller.nhanGiaCongById);
   router.put("/api/hoan-thanh", giaCongColtroller.hoanThanh);
+  router.put("/api/cancel-gia-cong", giaCongColtroller.cancelGiaCong);
 
   router.post("/api/create-detail-paint", detailController.createInformationPaint);
   router.put("/api/update-detail-paint", detailController.updateInformationPaint);
@@ -85,6 +87,7 @@ let initWebRoutes = (app) => {
   router.post("/api/create-paint-pack", paintPackController.createPaintPack);
   router.put("/api/update-paint-pack", paintPackController.updatePaintPack);
   router.post("/api/get-paint-pack-by-id", paintPackController.getPaintPackById);
+  router.get("/api/get-all-paint-pack", paintPackController.getAllPaintPack);
 
   return app.use("/", router);
 };

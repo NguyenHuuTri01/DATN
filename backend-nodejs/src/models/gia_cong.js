@@ -9,21 +9,22 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            GiaCong.belongsTo(models.PaintPack, { foreignKey: "paintPack", targetKey: "id", as: "dataPaintPack" });
         }
     }
     GiaCong.init(
         {
-            customerName: DataTypes.STRING,
             userId: DataTypes.INTEGER,
+            customerName: DataTypes.STRING,
             address: DataTypes.TEXT("long"),
             phonenumber: DataTypes.STRING,
             email: DataTypes.STRING,
             loaiCongTrinh: DataTypes.STRING,
             area: DataTypes.STRING,
-            color: DataTypes.STRING,
             startDate: DataTypes.STRING,
             endDate: DataTypes.STRING,
             require: DataTypes.TEXT("long"),
+            paintPack: DataTypes.INTEGER,
             status: DataTypes.STRING,
             constructorId: DataTypes.INTEGER,
         },

@@ -8,11 +8,11 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            customerName: {
-                type: Sequelize.STRING,
-            },
             userId: {
                 type: Sequelize.INTEGER,
+            },
+            customerName: {
+                type: Sequelize.STRING,
             },
             address: {
                 type: Sequelize.TEXT("long"),
@@ -29,9 +29,6 @@ module.exports = {
             area: {
                 type: Sequelize.STRING,
             },
-            color: {
-                type: Sequelize.STRING,
-            },
             startDate: {
                 type: Sequelize.STRING,
             },
@@ -40,6 +37,9 @@ module.exports = {
             },
             require: {
                 type: Sequelize.TEXT("long"),
+            },
+            paintPack: {
+                type: Sequelize.INTEGER,
             },
             status: {
                 type: Sequelize.STRING,

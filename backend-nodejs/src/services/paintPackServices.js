@@ -99,9 +99,28 @@ let getPaintPackById = (name) => {
         }
     })
 }
+let getAllPaintPack = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.PaintPack.findAll(
+                {
+                    order: [["createdAt", "DESC"]],
+                }
+            );
+            resolve({
+                errCode: 0,
+                errMessage: 'Ok',
+                data
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 
 module.exports = {
     createPaintPack: createPaintPack,
     updatePaintPack: updatePaintPack,
     getPaintPackById: getPaintPackById,
+    getAllPaintPack: getAllPaintPack,
 };

@@ -4,8 +4,8 @@ let submitForm = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!data.userId || !data.customerName || !data.address || !data.phonenumber
-                || !data.email || !data.loaiCongTrinh || !data.dientich || !data.color
-                || !data.startDate || !data.endDate
+                || !data.email || !data.loaiCongTrinh || !data.dientich
+                || !data.paintPackId
             ) {
                 resolve({
                     errCode: 1,
@@ -20,10 +20,10 @@ let submitForm = (data) => {
                     email: data.email,
                     loaiCongTrinh: data.loaiCongTrinh,
                     area: data.dientich,
-                    color: data.color,
                     startDate: data.startDate,
                     endDate: data.endDate,
                     require: data.require,
+                    paintPack: data.paintPackId,
                     status: 'pending'
                 })
                 resolve({
@@ -44,7 +44,47 @@ let getGiaCong = () => {
                 where: {
                     status: 'pending'
                 },
-                raw: false
+                include: [
+                    {
+                        model: db.PaintPack,
+                        as: 'dataPaintPack',
+                        attributes: [
+                            'name',
+                        ]
+                    },
+                ],
+                raw: true,
+                nest: true,
+            })
+            resolve({
+                errCode: 0,
+                errMessage: 'ok',
+                data
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+let getGiaCongById = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let data = await db.GiaCong.findAll({
+                where: {
+                    userId: userId
+                },
+                attributes: ['id', 'address', 'loaiCongTrinh', 'area', 'paintPack', 'status'],
+                include: [
+                    {
+                        model: db.PaintPack,
+                        as: 'dataPaintPack',
+                        attributes: [
+                            'name',
+                        ]
+                    },
+                ],
+                raw: true,
+                nest: true,
             })
             resolve({
                 errCode: 0,
@@ -162,10 +202,51 @@ let nhanGiaCongById = (dataInput) => {
         }
     })
 }
+
+let cancelGiaCong = (inputData) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!inputData.id) {
+                resolve({
+                    errCode: -1,
+                    errMessage: 'Missing parameter',
+                })
+            } else {
+                let data = await db.GiaCong.findOne({
+                    where: {
+                        id: inputData.id,
+                        status: 'pending'
+                    },
+                    raw: false
+                })
+                if (data) {
+                    data.status = 'cancel'
+                    let resUpdate = await data.save();
+                    if (resUpdate) {
+                        resolve({
+                            errCode: 0,
+                            errMessage: 'ok',
+                        })
+                    } else {
+                        resolve({
+                            errCode: 1,
+                            errMessage: 'failed',
+                        })
+                    }
+                }
+            }
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
 module.exports = {
     submitForm: submitForm,
     getGiaCong: getGiaCong,
     nhanGiaCong: nhanGiaCong,
     nhanGiaCongById: nhanGiaCongById,
     hoanThanh: hoanThanh,
+    getGiaCongById: getGiaCongById,
+    cancelGiaCong: cancelGiaCong,
 };

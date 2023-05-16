@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            PaintPack.hasMany(models.GiaCong, { foreignKey: "paintPack", as: "dataPaintPack" });
         }
     }
     PaintPack.init(

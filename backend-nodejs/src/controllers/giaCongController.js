@@ -29,6 +29,20 @@ let getGiaCong = async (req, res) => {
         })
     }
 }
+let getGiaCongById = async (req, res) => {
+    try {
+        let infor = await giaCongServices.getGiaCongById(req.query.userId);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
 let nhanGiaCong = async (req, res) => {
     try {
         let infor = await giaCongServices.nhanGiaCong(req.body);
@@ -72,7 +86,21 @@ let hoanThanh = async (req, res) => {
     }
 }
 
-
+let cancelGiaCong = async (req, res) => {
+    try {
+        console.log(req.body)
+        let infor = await giaCongServices.cancelGiaCong(req.body);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
 
 module.exports = {
     submitForm: submitForm,
@@ -80,4 +108,6 @@ module.exports = {
     nhanGiaCong: nhanGiaCong,
     nhanGiaCongById: nhanGiaCongById,
     hoanThanh: hoanThanh,
+    getGiaCongById: getGiaCongById,
+    cancelGiaCong: cancelGiaCong,
 };
