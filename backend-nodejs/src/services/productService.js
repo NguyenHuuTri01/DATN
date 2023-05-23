@@ -276,6 +276,7 @@ let getDataSelectProduct = () => {
     })
 }
 
+
 let getTopPaintProduct = () => {
     return new Promise(async (resolve, reject) => {
         try {
