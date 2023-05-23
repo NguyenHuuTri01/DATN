@@ -131,7 +131,7 @@ class InformationPaint extends Component {
                     value={this.state.descriptionMarkdown}
                 />
                 <button
-                    className="btn btn-primary"
+                    className="btn btn-primary btn-save-information"
                     onClick={() => this.handleSaveDetail()}
                 >
                     Lưu

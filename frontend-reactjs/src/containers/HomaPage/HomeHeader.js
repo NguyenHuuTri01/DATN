@@ -17,7 +17,6 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Shoping from "./products/Shoping";
-import Machining from "./machining/Machining";
 import ModalStore from "./modals/ModalStore";
 import ListMachining from "./machining/ListMachining";
 import Description from "./Description";
@@ -187,7 +186,11 @@ class HomeHeader extends Component {
               borderBottom: 2, borderColor: 'divider', display: 'flex',
               justifyContent: 'center', background: '#D6E4E5'
             }}>
-              <div className="left-header"></div>
+              <div className="left-header">
+                <div className="logo">
+
+                </div>
+              </div>
               <TabList
                 aria-label="lab API tabs example"
                 centered={true}

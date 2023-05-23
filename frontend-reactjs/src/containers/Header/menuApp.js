@@ -23,6 +23,10 @@ export const employeeMenu = [
         link: "/system/manage-paint",
       },
       {
+        name: "menu.employee.manage-discount",
+        link: "/system/manage-paint-discount",
+      },
+      {
         name: "menu.employee.imformation-paint",
         link: "/system/information-paint",
       },

@@ -381,7 +381,7 @@ class PaintManage extends Component {
                 <th>Tên</th>
                 <th>Số Lượng</th>
                 <th>Khuyến Mãi(%)</th>
-                <th>Action</th>
+                <th>Thao Tác</th>
               </tr>
             </thead>
             <tbody>
@@ -395,11 +395,11 @@ class PaintManage extends Component {
                     <button
                       className="btn btn-secondary"
                       onClick={() => this.handleDelete(item.paintId)}
-                    >Delete</button>
+                    >Xóa</button>
                     <button
                       className="btn btn-primary"
                       onClick={() => this.handleUpdate(item)}
-                    >Update</button>
+                    >Chỉnh sửa</button>
                   </td>
                 </tr>
               ))}

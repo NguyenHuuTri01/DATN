@@ -224,11 +224,18 @@ const updatePaintPack = (data) => {
   return axios.put("/api/update-paint-pack", data);
 };
 
-const getPaintPackById = (name) => {
-  return axios.post('/api/get-paint-pack-by-id', name)
+const getPaintPackById = (id) => {
+  return axios.get(`/api/get-paint-pack-by-id?id=${id}`)
 }
 const getAllPaintPack = () => {
   return axios.get(`/api/get-all-paint-pack`);
+};
+const deletePaintPack = (id) => {
+  return axios.delete("/api/delete-paint-pack", {
+    data: {
+      id: id,
+    },
+  });
 };
 
 export {
@@ -297,4 +304,5 @@ export {
   getAllPaintPack,
   getGiaCongById,
   cancelGiaCong,
+  deletePaintPack
 };

@@ -160,9 +160,9 @@ class DanhMucHang extends Component {
                 <table>
                   <thead>
                     <tr>
-                      <th>Paint ID</th>
-                      <th>Name</th>
-                      <th>Action</th>
+                      <th>Mã danh mục</th>
+                      <th>Tên danh mục</th>
+                      <th>Thao tác</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -174,11 +174,11 @@ class DanhMucHang extends Component {
                           <button
                             className="btn btn-secondary"
                             onClick={() => this.handleDelete(item.paintId)}
-                          >Delete</button>
+                          >Xóa</button>
                           <button
                             className="btn btn-primary"
                             onClick={() => this.handleUpdate(item)}
-                          >Update</button>
+                          >Chỉnh sửa</button>
                         </td>
                       </tr>
                     ))}

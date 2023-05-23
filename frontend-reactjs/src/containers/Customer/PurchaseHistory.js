@@ -46,7 +46,7 @@ class PurchaseHistory extends Component {
         }
     }
     handleCancelOrder = async (typePayment, transactionId) => {
-        if (window.confirm('Bạn muốn xóa mặt hàng này?')) {
+        if (window.confirm('Bạn muốn hủy đơn hàng này?')) {
             if (typePayment === 'cashonreceipt') {
                 let res = await cancelOrderCash({
                     transactionId: transactionId
