@@ -86,8 +86,9 @@ let initWebRoutes = (app) => {
 
   router.post("/api/create-paint-pack", paintPackController.createPaintPack);
   router.put("/api/update-paint-pack", paintPackController.updatePaintPack);
-  router.post("/api/get-paint-pack-by-id", paintPackController.getPaintPackById);
+  router.get("/api/get-paint-pack-by-id", paintPackController.getPaintPackById);
   router.get("/api/get-all-paint-pack", paintPackController.getAllPaintPack);
+  router.delete("/api/delete-paint-pack", paintPackController.deletePaintPack);
 
   return app.use("/", router);
 };

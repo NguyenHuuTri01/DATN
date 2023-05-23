@@ -31,7 +31,21 @@ let updatePaintPack = async (req, res) => {
 }
 let getPaintPackById = async (req, res) => {
     try {
-        let infor = await paintPackServices.getPaintPackById(req.body);
+        let infor = await paintPackServices.getPaintPackById(req.query.id);
+        return res.status(200).json(
+            infor
+        )
+    } catch (e) {
+        console.log(e);
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: 'Error from the server'
+        })
+    }
+}
+let deletePaintPack = async (req, res) => {
+    try {
+        let infor = await paintPackServices.deletePaintPack(req.body.id);
         return res.status(200).json(
             infor
         )
@@ -63,4 +77,5 @@ module.exports = {
     updatePaintPack: updatePaintPack,
     getPaintPackById: getPaintPackById,
     getAllPaintPack: getAllPaintPack,
+    deletePaintPack: deletePaintPack,
 };
