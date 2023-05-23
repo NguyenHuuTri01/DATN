@@ -75,6 +75,7 @@ class DiscountManage extends Component {
 
     render() {
         let { startDate, endDate } = this.state;
+
         // Tách ngày và thời gian từ startDate
         let startDateTime = new Date(startDate);
         let startDateString = startDateTime.toISOString().split("T")[0];
