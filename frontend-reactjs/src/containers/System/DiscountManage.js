@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import './DiscountManage.scss'
 import Select from 'react-select';
-import { getDataSelectProduct } from '../../services/userService';
+import { getDataSelectProduct, createPaintDiscount } from '../../services/userService';
 
 class DiscountManage extends Component {
     constructor(props) {
@@ -15,7 +15,8 @@ class DiscountManage extends Component {
             selectedPaint: '',
             action: 'CREATE',
             startDate: new Date(),
-            endDate: new Date()
+            endDate: new Date(),
+            valueDiscount: 0,
         };
     }
     async componentDidMount() {
@@ -42,12 +43,24 @@ class DiscountManage extends Component {
     }
 
     handleChangeSelect = async (selectedOption, name) => {
-
+        let stateName = name.name;
+        let stateCopy = { ...this.state };
+        stateCopy[stateName] = selectedOption;
+        this.setState({
+            ...stateCopy
+        })
     }
 
     handleStartDateChange = (event) => {
         let newStartDate = event.target.value;
         let { endDate } = this.state;
+
+        let startDateTime = new Date(endDate);
+        let endDateTime = new Date(newStartDate);
+
+        if (startDateTime.toISOString() > endDateTime.toISOString()) {
+            return; // Không cập nhật giá trị nếu endDate nhỏ hơn startDate
+        }
 
         if (endDate && newStartDate > endDate) {
             this.setState({
@@ -72,15 +85,60 @@ class DiscountManage extends Component {
 
         this.setState({ endDate: newEndDate });
     }
+    onChangeValueDiscount = (e) => {
+        this.setState({
+            valueDiscount: e.target.value.replace(/^0+/, '')
+        })
+    }
+    onBlurValueDiscount = () => {
+        if (this.state.valueDiscount < 0) {
+            this.setState({
+                valueDiscount: 0
+            })
+        } else if (this.state.valueDiscount > 100) {
+            this.setState({
+                valueDiscount: 100
+            })
+        }
+    }
+    handleSaveDiscount = async () => {
+        let { startDate, endDate, valueDiscount, selectedPaint } = this.state;
+        let newStartDate = new Date(startDate);
+        let newEndDate = new Date(endDate);
 
+        if (!selectedPaint) {
+            alert("Vui lòng chọn sản phẩm!")
+            return
+        }
+
+        if (newEndDate - newStartDate <= 0) {
+            alert("Có gì đó sai sai về ngày giờ!")
+            return
+        }
+        let rescreate = await createPaintDiscount({
+            paintId: selectedPaint.value,
+            startDate: startDate,
+            endDate: endDate,
+            valueDiscount: valueDiscount
+        });
+        if (rescreate && rescreate.errCode === 0) {
+            this.setState({
+                selectedPaint: '',
+                startDate: new Date(),
+                endDate: new Date(),
+                valueDiscount: 0
+            })
+            toast.success("Cập Nhật Khuyến Mãi Thành Công")
+        } else {
+            toast.error("Thời Gian Của Bạn Đã Bị Trùng")
+        }
+    }
     render() {
-        let { startDate, endDate } = this.state;
-
+        let { startDate, endDate, valueDiscount } = this.state;
         // Tách ngày và thời gian từ startDate
         let startDateTime = new Date(startDate);
         let startDateString = startDateTime.toISOString().split("T")[0];
         let startTimeString = startDateTime.toISOString().split("T")[1].substring(0, 5);
-
         return (
             <div className="discount-container">
                 <div className="discount-title">
@@ -102,6 +160,7 @@ class DiscountManage extends Component {
                             type="datetime-local"
                             value={startDate}
                             onChange={(event) => this.handleStartDateChange(event)}
+                            min={`${startDateString}T${startTimeString}`}
                         />
                     </div>
                     <div>
@@ -114,8 +173,21 @@ class DiscountManage extends Component {
                         />
                     </div>
                 </div>
+                <div className="discount-input">
+                    <label>Khuyến Mãi (%) :</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        onChange={(e) => this.onChangeValueDiscount(e)}
+                        value={valueDiscount}
+                        onBlur={() => this.onBlurValueDiscount()}
+                    />
+                </div>
                 <div className="discount-action">
-                    <button className="btn btn-primary btn-range-date">Lưu</button>
+                    <button
+                        className="btn btn-primary btn-range-date"
+                        onClick={() => this.handleSaveDiscount()}
+                    >Lưu</button>
                 </div>
             </div>
         );

@@ -41,6 +41,19 @@
         }
     }
 
+    .discount-input {
+        width     : 40%;
+        margin-top: 2%;
+
+        label {
+            font-size: 15px;
+        }
+
+        input {
+            font-size: 20px;
+        }
+    }
+
     .discount-action {
         text-align: center;
 
