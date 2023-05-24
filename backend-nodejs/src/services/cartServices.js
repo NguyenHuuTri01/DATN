@@ -1,5 +1,5 @@
 import db from "../models/index";
-
+const { Op } = require("sequelize");
 
 let addToCart = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -75,6 +75,24 @@ let getAllCartById = (userId) => {
                         item.productData.image = new Buffer.from(item.productData.image, "base64").toString("binary");
                         return item;
                     })
+                    for (let i = 0; i < data.length; i++) {
+                        let productDiscount = await db.PaintDiscount.findOne({
+                            where: {
+                                paintId: data[i].paintId,
+                                startDate: {
+                                    [Op.lte]: new Date()
+                                },
+                                endDate: {
+                                    [Op.gte]: new Date()
+                                }
+                            }
+                        });
+                        if (productDiscount) {
+                            data[i].productData.paintDiscount = productDiscount.valueDiscount;
+                        } else {
+                            data[i].productData.paintDiscount = 0;
+                        }
+                    }
                 }
                 if (!data) data = {}
                 resolve({

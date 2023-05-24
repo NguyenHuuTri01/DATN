@@ -1,5 +1,5 @@
 import db from "../models/index";
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 
 let createPaintDiscount = (data) => {
     return new Promise(async (resolve, reject) => {

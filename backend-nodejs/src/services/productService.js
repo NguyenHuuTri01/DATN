@@ -1,4 +1,5 @@
 import db from "../models/index";
+const { Op } = require("sequelize");
 
 let createLoaiSon = (data) => {
     return new Promise(async (resolve, reject) => {
@@ -168,16 +169,43 @@ let getAllPaintProduct = () => {
                 }
             );
             if (data && data.length > 0) {
+
                 data.map(item => {
                     item.image = new Buffer(item.image, "base64").toString("binary");
                     return item;
                 })
+
+                for (let i = 0; i < data.length; i++) {
+                    let productDiscount = await db.PaintDiscount.findOne({
+                        where: {
+                            paintId: data[i].paintId,
+                            startDate: {
+                                [Op.lte]: new Date()
+                            },
+                            endDate: {
+                                [Op.gte]: new Date()
+                            }
+                        }
+                    });
+                    if (productDiscount) {
+                        data[i].paintDiscount = productDiscount.valueDiscount;
+                        data[i].startDate = productDiscount.startDate
+                        data[i].endDate = productDiscount.endDate
+                    } else {
+                        data[i].paintDiscount = 0;
+                    }
+                }
+                resolve({
+                    errCode: 0,
+                    errMessage: 'Ok',
+                    data
+                })
+            } else {
+                resolve({
+                    errCode: -1,
+                    errMessage: 'Data not found',
+                })
             }
-            resolve({
-                errCode: 0,
-                errMessage: 'Ok',
-                data
-            })
         } catch (e) {
             reject(e);
         }
