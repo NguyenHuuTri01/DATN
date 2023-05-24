@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import CurrencyFormat from 'react-currency-format';
+import moment from 'moment';
 
 class ItemProduct extends Component {
 
     render() {
         let { item } = this.props;
+        console.log(item.startDate)
         return (
             <div
                 className="content-child"
@@ -15,27 +17,51 @@ class ItemProduct extends Component {
                     <div className="name-item">
                         {item.paintName}
                     </div>
-                    <div className={item.paintDiscount === '0' ? "no-sale" : "sale-off-item"} >
+                    <div className={item.paintDiscount === 0 ? "no-sale" : "sale-off-item"} >
                         {`- ${item.paintDiscount} %`}
                     </div>
-                    {
-                        item.paintDiscount !== '0' ?
-                            <CurrencyFormat
-                                value={item.paintPrice}
-                                displayType={'text'}
-                                thousandSeparator={true}
-                                suffix={' đ'}
-                                className="price-origin"
-                            />
-                            : ""
-                    }
-                    <CurrencyFormat
-                        value={(item.paintPrice * (100 - item.paintDiscount)) / 100}
-                        displayType={'text'}
-                        thousandSeparator={true}
-                        suffix={' đ'}
-                        className="price-sale"
-                    />
+                    <div className="price">
+                        {
+                            item.paintDiscount !== 0 ?
+                                <CurrencyFormat
+                                    value={item.paintPrice}
+                                    displayType={'text'}
+                                    thousandSeparator={true}
+                                    suffix={'.đ'}
+                                    className="price-origin"
+                                />
+                                : ""
+                        }
+                        {
+                            item.paintDiscount !== 0 ?
+                                <label style={{ margin: '0 5px' }}>-</label>
+                                : ""
+                        }
+                        <CurrencyFormat
+                            value={(item.paintPrice * (100 - item.paintDiscount)) / 100}
+                            displayType={'text'}
+                            thousandSeparator={true}
+                            suffix={'.đ'}
+                            className="price-sale"
+                        />
+                    </div>
+
+                    <div className={item.paintDiscount === 0 ? "hide-date-sale" : "date-sale"}>
+
+                        <label
+                            style={{ color: "#333", 'text-decoration-line': 'underline' }}
+                        >Từ:</label>
+                        <label style={{ margin: '0 5px' }}>
+                            {moment(item.startDate).format("HH:mm DD/MM/YYYY")}
+                        </label>
+                        <label
+                            style={{ color: "#333", 'text-decoration-line': 'underline' }}
+                        >Đến:</label>
+                        <label style={{ margin: '0 5px' }}>
+                            {moment(item.endDate).format("HH:mm DD/MM/YYYY")}
+                        </label>
+
+                    </div>
                 </div>
                 <div className="btn-add-to-cart">
                     <button

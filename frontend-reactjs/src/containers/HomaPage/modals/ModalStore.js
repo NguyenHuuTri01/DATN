@@ -50,6 +50,7 @@ class ModalStore extends Component {
     }
 
     handleCheckedStore = (e, item) => {
+        this.props.getDataStore();
         let coppyState = [...this.state.listPainBucket]
         if (e.target.checked) {
             coppyState.push(item)

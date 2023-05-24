@@ -97,6 +97,7 @@ class HomeHeader extends Component {
   }
 
   handleOpenModal = () => {
+    this.getDataStore();
     this.setState({
       isOpenModal: true
     })
