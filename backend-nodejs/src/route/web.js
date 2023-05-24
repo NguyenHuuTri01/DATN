@@ -9,6 +9,7 @@ import giaCongColtroller from '../controllers/giaCongController';
 import detailController from '../controllers/detailController';
 import messageController from '../controllers/messageController';
 import paintPackController from '../controllers/paintPackController';
+import paintDiscountController from '../controllers/paintDiscountController';
 
 let router = express.Router();
 
@@ -89,6 +90,12 @@ let initWebRoutes = (app) => {
   router.get("/api/get-paint-pack-by-id", paintPackController.getPaintPackById);
   router.get("/api/get-all-paint-pack", paintPackController.getAllPaintPack);
   router.delete("/api/delete-paint-pack", paintPackController.deletePaintPack);
+
+  router.post("/api/create-paint-discount", paintDiscountController.createPaintDiscount);
+  router.get("/api/get-paint-discount-by-id", paintDiscountController.getPaintDiscountById);
+  router.put("/api/update-paint-discount", paintDiscountController.updatePaintDiscount);
+  router.delete("/api/delete-paint-discount", paintDiscountController.deletePaintDiscount);
+  router.get("/api/get-all-paint-discount-by-product", paintDiscountController.getAllPaintDiscount);
 
   return app.use("/", router);
 };
