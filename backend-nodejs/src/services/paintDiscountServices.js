@@ -183,6 +183,16 @@ let getAllPaintDiscount = (paintId) => {
                         paintId: paintId
                     }
                 });
+                if (data && data.length > 0) {
+                    data.map(item => {
+                        if (item.startDate > new Date()) {
+                            item.isUpdate = true
+                        } else {
+                            item.isUpdate = false
+                        }
+                        return item
+                    })
+                }
                 if (!data) data = {}
                 resolve({
                     errCode: 0,

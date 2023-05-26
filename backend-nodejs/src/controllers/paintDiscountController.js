@@ -58,7 +58,7 @@ let deletePaintDiscount = async (req, res) => {
 }
 let getAllPaintDiscount = async (req, res) => {
     try {
-        let infor = await paintDiscountServices.getAllPaintDiscount(req.body.paintId);
+        let infor = await paintDiscountServices.getAllPaintDiscount(req.query.paintId);
         return res.status(200).json(
             infor
         )

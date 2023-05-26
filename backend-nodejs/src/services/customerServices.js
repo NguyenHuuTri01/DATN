@@ -87,8 +87,11 @@ let getAllTransaction = () => {
                 order: [["createdAt", "DESC"]],
                 where: {
                     typePayment: {
-                        [Op.not]: ['pending', 'cancel']
-                    }
+                        [Op.not]: ['pending']
+                    },
+                    transportStatus: {
+                        [Op.not]: ['cancel']
+                    },
                 },
                 raw: true,
             })
