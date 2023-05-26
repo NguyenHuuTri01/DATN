@@ -72,6 +72,7 @@ class HomeHeader extends Component {
       this.setState({
         store: [...resData.data]
       })
+      return resData.data
     }
   }
 

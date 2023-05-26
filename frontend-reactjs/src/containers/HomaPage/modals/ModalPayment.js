@@ -239,7 +239,7 @@ class ModalPayment extends Component {
                             _.isEmpty(listPainBucket) || calculateTotal === 0 ?
                                 true : false
                         }
-                    >Thanh Toán</Button>
+                    >Đặt Hàng</Button>
 
                     <Modal
                         open={isOpen}
@@ -325,7 +325,7 @@ class ModalPayment extends Component {
                                             disabled={this.state.isDisable}
                                             onClick={() => this.paymentCashOnReceipt()}
                                         >
-                                            Thanh Toán
+                                            Đặt Hàng
                                         </button>
                                     </div>
                             }

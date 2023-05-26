@@ -93,7 +93,6 @@ class Shoping extends Component {
     }
     render() {
         let { data, portfolio, portfolioSearch, searchName, searchDiscount } = this.state;
-        console.log(data)
         return (
             <div className="shoping-container">
                 <div className="content-left">

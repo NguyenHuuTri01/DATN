@@ -49,8 +49,12 @@ class ModalStore extends Component {
         })
     }
 
-    handleCheckedStore = (e, item) => {
-        this.props.getDataStore();
+    handleCheckedStore = async (e, item) => {
+        let getDataStore = await this.props.getDataStore();
+        let getItem = getDataStore.filter((getItem) => {
+            return getItem.paintId.includes(item.paintId);
+        })
+        item.productData.paintDiscount = getItem[0].productData && getItem[0].productData.paintDiscount
         let coppyState = [...this.state.listPainBucket]
         if (e.target.checked) {
             coppyState.push(item)

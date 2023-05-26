@@ -41,7 +41,7 @@ class Messenger extends Component {
 
             this.socket.current.emit("new-user-add", this.props.userInfo.id)
             this.socket.current.on("get-users", users => {
-                console.log(users)
+                // console.log(users)
             })
             this.socket.current.on("receive-message", (data) => {
                 this.addMessage(data.senderId, data.receiverId, data.message, new Date())
@@ -73,7 +73,7 @@ class Messenger extends Component {
             if (this.socket.current) {
                 this.socket.current.emit("new-user-add", this.props.userInfo.id)
                 this.socket.current.on("get-users", users => {
-                    console.log(users)
+                    // console.log(users)
                 })
                 this.socket.current.on("receive-message", (data) => {
                     this.addMessage(data.senderId, data.receiverId, data.message, new Date())

@@ -6,7 +6,6 @@ class ItemProduct extends Component {
 
     render() {
         let { item } = this.props;
-        console.log(item.startDate)
         return (
             <div
                 className="content-child"
@@ -49,13 +48,13 @@ class ItemProduct extends Component {
                     <div className={item.paintDiscount === 0 ? "hide-date-sale" : "date-sale"}>
 
                         <label
-                            style={{ color: "#333", 'text-decoration-line': 'underline' }}
+                            className="text-price"
                         >Từ:</label>
                         <label style={{ margin: '0 5px' }}>
                             {moment(item.startDate).format("HH:mm DD/MM/YYYY")}
                         </label>
                         <label
-                            style={{ color: "#333", 'text-decoration-line': 'underline' }}
+                            className="text-price"
                         >Đến:</label>
                         <label style={{ margin: '0 5px' }}>
                             {moment(item.endDate).format("HH:mm DD/MM/YYYY")}

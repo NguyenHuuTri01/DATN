@@ -241,6 +241,19 @@ const deletePaintPack = (id) => {
 const createPaintDiscount = (data) => {
   return axios.post('/api/create-paint-discount', data)
 }
+const getAllPaintDiscount = (paintId) => {
+  return axios.get(`/api/get-all-paint-discount-by-product?paintId=${paintId}`)
+}
+const updatePaintDiscount = (data) => {
+  return axios.put("/api/update-paint-discount", data);
+};
+const deletePaintDiscount = (id) => {
+  return axios.delete("/api/delete-paint-discount", {
+    data: {
+      id: id,
+    },
+  });
+};
 
 export {
   handleLoginApi,
@@ -310,4 +323,7 @@ export {
   cancelGiaCong,
   deletePaintPack,
   createPaintDiscount,
+  getAllPaintDiscount,
+  updatePaintDiscount,
+  deletePaintDiscount,
 };
