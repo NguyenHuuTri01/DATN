@@ -4,7 +4,6 @@ import "./PaintManage.scss";
 import { CommonUtils } from "../../utils";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
-import TextareaAutosize from '@mui/base/TextareaAutosize';
 import Select from 'react-select';
 import { toast } from "react-toastify";
 import {
@@ -75,7 +74,7 @@ class PaintManage extends Component {
     }
   };
   onChangeInput = (event, id) => {
-    let valueInput = event.target.value;
+    let valueInput = event.target.value.replace(/^0+/, '');
     let stateCopy = { ...this.state }
     stateCopy[id] = valueInput;
     this.setState({
@@ -106,7 +105,7 @@ class PaintManage extends Component {
 
   handleCreatePaintProduct = async () => {
     let {
-      paintId, name, price, discount, quantity, selectedCatelory, description, imageBase64, action
+      paintId, name, price, quantity, selectedCatelory, description, imageBase64, action
     } = this.state;
     if (
       !paintId || !name || !selectedCatelory || !description || !imageBase64
@@ -119,22 +118,15 @@ class PaintManage extends Component {
       alert('Vui Lòng Nhập Giá Tiền')
       return
     }
-
-    if (quantity !== 0) {
-      if (Number.isInteger(quantity)) {
-        alert('Số lượng phải là số nguyên!')
-        return
-      }
-    }
     if (action === 'CREATE') {
       let resCreatePaint = await createPaintProduct({
         paintId: paintId,
         paintName: name,
         paintPrice: price,
-        paintDiscount: discount,
+        // paintDiscount: discount,
         paintQuantity: quantity,
         paintCatelory: selectedCatelory.value,
-        paintDescription: description,
+        // paintDescription: description,
         imageBase64: imageBase64,
       })
 
@@ -149,10 +141,10 @@ class PaintManage extends Component {
           paintId: '',
           name: '',
           price: 0,
-          discount: 0,
+          // discount: 0,
           quantity: 0,
           selectedCatelory: '',
-          description: '',
+          // description: '',
         })
       }
     } else {
@@ -160,10 +152,10 @@ class PaintManage extends Component {
         paintId: paintId,
         paintName: name,
         paintPrice: price,
-        paintDiscount: discount,
+        // paintDiscount: discount,
         paintQuantity: quantity,
         paintCatelory: selectedCatelory.value,
-        paintDescription: description,
+        // paintDescription: description,
         imageBase64: imageBase64,
       })
       if (resUpdatePaint && resUpdatePaint.errCode === 0) {
@@ -175,10 +167,10 @@ class PaintManage extends Component {
           paintId: '',
           name: '',
           price: 0,
-          discount: 0,
+          // discount: 0,
           quantity: 0,
           selectedCatelory: '',
-          description: '',
+          // description: '',
           action: 'CREATE',
           disablePaintId: false,
         })
@@ -197,10 +189,10 @@ class PaintManage extends Component {
       paintId: itemData.paintId,
       name: itemData.paintName,
       price: itemData.paintPrice,
-      discount: itemData.paintDiscount,
+      // discount: itemData.paintDiscount,
       quantity: itemData.paintQuantity,
       selectedCatelory: selectedCatelory,
-      description: itemData.paintDescription,
+      // description: itemData.paintDescription,
       previewImgURL: itemData.image,
       action: 'EDIT',
       disablePaintId: true,
@@ -213,10 +205,10 @@ class PaintManage extends Component {
       paintId: '',
       name: '',
       price: 0,
-      discount: 0,
+      // discount: 0,
       quantity: 0,
       selectedCatelory: '',
-      description: '',
+      // description: '',
       previewImgURL: '',
       action: 'CREATE',
       disablePaintId: false,
@@ -239,8 +231,17 @@ class PaintManage extends Component {
       currentPage: selected
     });
   };
+
+  onBlurValueQuantity = () => {
+    if (!Number.isInteger(this.state.quantity)) {
+      alert('Số lượng phải là số nguyên!')
+      this.setState({
+        quantity: Math.floor(this.state.quantity)
+      })
+    }
+  }
   render() {
-    let { paintId, name, price, discount, quantity, catelogy, description,
+    let { paintId, name, price, quantity, catelogy,
       selectedCatelory, action, currentPage, perPage, allProduct, disablePaintId }
       = this.state;
     let offset = currentPage * perPage;
@@ -283,7 +284,7 @@ class PaintManage extends Component {
               />
             </div>
           </div>
-          <div className="col-3">
+          {/* <div className="col-3">
             <label>{`Khuyến Mãi(%):`}</label>
             <div>
               <input
@@ -294,7 +295,7 @@ class PaintManage extends Component {
                 onChange={(e) => this.onChangeInput(e, "discount")}
               />
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="form-group">
           <div className="col-3">
@@ -306,6 +307,7 @@ class PaintManage extends Component {
                 type="number"
                 min={0}
                 onChange={(e) => this.onChangeInput(e, "quantity")}
+                onBlur={() => this.onBlurValueQuantity()}
               />
             </div>
           </div>
@@ -342,7 +344,7 @@ class PaintManage extends Component {
             </div>
           </div>
         </div>
-        <div className="col-12">
+        {/* <div className="col-12">
           <label>Mô Tả:</label>
           <div>
             <TextareaAutosize
@@ -351,7 +353,7 @@ class PaintManage extends Component {
               onChange={(e) => this.onChangeInput(e, "description")}
               minRows={5} />
           </div>
-        </div>
+        </div> */}
         <div className="btn-create-product">
           {
             action === "CREATE" ?

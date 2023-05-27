@@ -43,8 +43,14 @@ class Messenger extends Component {
             this.socket.current.on("get-users", users => {
                 // console.log(users)
             })
-            this.socket.current.on("receive-message", (data) => {
+            this.socket.current.on("receive-message", async (data) => {
                 this.addMessage(data.senderId, data.receiverId, data.message, new Date())
+                if (!this.props.isExpanded) {
+                    await seenMessage({
+                        receiverId: this.props.userInfo.id,
+                        senderId: 21
+                    })
+                }
                 this.props.getDataNotSeen()
             })
         }
@@ -75,8 +81,14 @@ class Messenger extends Component {
                 this.socket.current.on("get-users", users => {
                     // console.log(users)
                 })
-                this.socket.current.on("receive-message", (data) => {
+                this.socket.current.on("receive-message", async (data) => {
                     this.addMessage(data.senderId, data.receiverId, data.message, new Date())
+                    if (!this.props.isExpanded) {
+                        await seenMessage({
+                            receiverId: this.props.userInfo.id,
+                            senderId: 21
+                        })
+                    }
                     this.props.getDataNotSeen()
                 })
             }

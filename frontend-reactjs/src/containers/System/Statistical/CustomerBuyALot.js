@@ -57,7 +57,7 @@ class CustomerBuyALot extends Component {
         return (
             <div className="customer-buy-alot-container">
                 <div className="customer-buy-alot-title">
-                    Thông Kê Lượt Mua Hàng Của Các Tài Khoản
+                    Thống Kê Lượt Mua Hàng Của Các Tài Khoản
                 </div>
                 <div className="table-danhmuchang">
                     <table>

@@ -39,14 +39,18 @@ class Detail extends Component {
         }
     }
     handleAddToCart = async () => {
-        let resAddCart = await addToCart({
-            userId: this.props.userInfo.id,
-            paintId: this.state.data.paintId
-        })
-        if (resAddCart && resAddCart.errCode === 0) {
-            alert("Thêm thành công vào giỏ hàng");
+        if (this.props.isLoggedIn) {
+            let resAddCart = await addToCart({
+                userId: this.props.userInfo.id,
+                paintId: this.state.data.paintId
+            })
+            if (resAddCart && resAddCart.errCode === 0) {
+                alert("Thêm thành công vào giỏ hàng");
+            } else {
+                alert("Sản phẩm đã tồn tại trong giỏ hàng");
+            }
         } else {
-            alert("Sản phẩm đã tồn tại trong giỏ hàng");
+            alert("Đăng nhập để mua hàng");
         }
     }
 
@@ -107,6 +111,7 @@ class Detail extends Component {
 const mapStateToProps = (state) => {
     return {
         userInfo: state.user.userInfo,
+        isLoggedIn: state.user.isLoggedIn,
     };
 };
 

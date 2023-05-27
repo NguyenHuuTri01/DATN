@@ -22,7 +22,7 @@ class MessengerWithManage extends Component {
             listMessage: [],
             listUser: [],
             receiverId: 0,
-            newMessage: {}
+            newMessage: {},
         };
         this.socket = React.createRef();
         this.scrollRef = React.createRef();
@@ -42,11 +42,15 @@ class MessengerWithManage extends Component {
             this.socket.current.on("get-users", users => {
                 // console.log(users)
             })
-            this.socket.current.on("receive-message", (data) => {
+            this.socket.current.on("receive-message", async (data) => {
                 if (this.state.receiverId === data.senderId) {
                     this.addMessage(data.senderId, data.receiverId, data.message, new Date())
                 }
                 this.getUserMessage()
+                await seenMessage({
+                    receiverId: this.state.userId,
+                    senderId: this.state.receiverId
+                })
                 this.props.getDataNotSeen()
             })
         }
@@ -79,11 +83,15 @@ class MessengerWithManage extends Component {
                 this.socket.current.on("get-users", users => {
                     // console.log(users)
                 })
-                this.socket.current.on("receive-message", (data) => {
+                this.socket.current.on("receive-message", async (data) => {
                     if (this.state.receiverId === data.senderId) {
                         this.addMessage(data.senderId, data.receiverId, data.message, new Date())
                     }
                     this.getUserMessage()
+                    await seenMessage({
+                        receiverId: this.state.userId,
+                        senderId: this.state.receiverId
+                    })
                     this.props.getDataNotSeen()
                 })
             }
@@ -154,7 +162,7 @@ class MessengerWithManage extends Component {
         if (getmessenger && getmessenger.errCode === 0) {
             this.setState({
                 receiverId: receiver,
-                listMessage: getmessenger.data
+                listMessage: getmessenger.data,
             })
         }
         await seenMessage({
