@@ -55,6 +55,9 @@ class Shoping extends Component {
         if (this.props.isLoggedIn) {
             e.stopPropagation()
             this.props.handleAddToCart(item)
+        } else {
+            e.stopPropagation()
+            alert("Đăng nhập để mua hàng!")
         }
     }
     handleSeeDetail = (itemData) => {

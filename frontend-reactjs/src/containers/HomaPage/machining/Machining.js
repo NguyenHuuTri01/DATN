@@ -31,9 +31,6 @@ class Machining extends Component {
             email: '',
             loaiCongTrinh: '',
             dientich: '',
-            color: '',
-            startDate: '',
-            endDate: '',
             require: '',
             listGiaCong: [],
         }
@@ -62,8 +59,7 @@ class Machining extends Component {
         return phoneNumberRegex.test(phoneNumber);
     }
     handleSubmit = async () => {
-        let { customerName, address, phonenumber, email, loaiCongTrinh, dientich,
-            startDate, endDate, require
+        let { customerName, address, phonenumber, email, loaiCongTrinh, dientich, require
         } = this.state;
         if (!this.props.isLoggedIn) {
             alert("Đăng nhập để thuê gia công")
@@ -90,8 +86,6 @@ class Machining extends Component {
             email: email,
             loaiCongTrinh: loaiCongTrinh,
             dientich: dientich,
-            startDate: startDate,
-            endDate: endDate,
             require: require,
             userId: this.props.userInfo.id,
             paintPackId: this.props.paintPackId
@@ -105,11 +99,10 @@ class Machining extends Component {
                 email: '',
                 loaiCongTrinh: '',
                 dientich: '',
-                color: '',
-                startDate: '',
-                endDate: '',
                 require: '',
             })
+            this.props.getListSubmit();
+            this.props.closeRent();
         }
 
     }
@@ -196,24 +189,6 @@ class Machining extends Component {
                                     placeholder="Nhập diện tích ..."
                                     value={this.state.dientich}
                                     onChange={(e) => this.handleChangeInput(e, 'dientich')}
-                                />
-                            </div>
-                            <div className="machining-item">
-                                <label>Ngày bắt đầu dự án</label>
-                                <input
-                                    className="form-control"
-                                    placeholder="Nhập ngày bắt đầu ..."
-                                    value={this.state.startDate}
-                                    onChange={(e) => this.handleChangeInput(e, 'startDate')}
-                                />
-                            </div>
-                            <div className="machining-item">
-                                <label>Ngày hoàn thành dự án</label>
-                                <input
-                                    className="form-control"
-                                    placeholder="Nhập ngày kết thúc ..."
-                                    value={this.state.endDate}
-                                    onChange={(e) => this.handleChangeInput(e, 'endDate')}
                                 />
                             </div>
                             <div className="machining-item">

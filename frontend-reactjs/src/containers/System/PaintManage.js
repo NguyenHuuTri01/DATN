@@ -105,10 +105,10 @@ class PaintManage extends Component {
 
   handleCreatePaintProduct = async () => {
     let {
-      paintId, name, price, quantity, selectedCatelory, description, imageBase64, action
+      paintId, name, price, quantity, selectedCatelory, imageBase64, action
     } = this.state;
     if (
-      !paintId || !name || !selectedCatelory || !description || !imageBase64
+      !paintId || !name || !selectedCatelory || !imageBase64
     ) {
       alert('Vui Lòng Nhập Đầy Đủ Thông Tin')
       return
@@ -233,13 +233,26 @@ class PaintManage extends Component {
   };
 
   onBlurValueQuantity = () => {
-    if (!Number.isInteger(this.state.quantity)) {
-      alert('Số lượng phải là số nguyên!')
+    if (this.state.quantity > 0) {
+      if (Number.isInteger(this.state.quantity)) {
+        alert('Số lượng phải là số nguyên!')
+        this.setState({
+          quantity: Math.floor(this.state.quantity)
+        })
+      }
+    }
+  }
+  handleKeyDownSearch = (event, id) => {
+    if (event.key === 'Enter' || event.keyCode === 13) {
+      let valueInput = event.target.value;
+      let stateCopy = { ...this.state }
+      stateCopy[id] = valueInput;
       this.setState({
-        quantity: Math.floor(this.state.quantity)
+        ...stateCopy
       })
     }
   }
+
   render() {
     let { paintId, name, price, quantity, catelogy,
       selectedCatelory, action, currentPage, perPage, allProduct, disablePaintId }
@@ -284,18 +297,6 @@ class PaintManage extends Component {
               />
             </div>
           </div>
-          {/* <div className="col-3">
-            <label>{`Khuyến Mãi(%):`}</label>
-            <div>
-              <input
-                className="form-control"
-                type="number"
-                min={0}
-                value={discount}
-                onChange={(e) => this.onChangeInput(e, "discount")}
-              />
-            </div>
-          </div> */}
         </div>
         <div className="form-group">
           <div className="col-3">
@@ -344,16 +345,6 @@ class PaintManage extends Component {
             </div>
           </div>
         </div>
-        {/* <div className="col-12">
-          <label>Mô Tả:</label>
-          <div>
-            <TextareaAutosize
-              className="form-control"
-              value={description}
-              onChange={(e) => this.onChangeInput(e, "description")}
-              minRows={5} />
-          </div>
-        </div> */}
         <div className="btn-create-product">
           {
             action === "CREATE" ?

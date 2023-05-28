@@ -210,11 +210,16 @@ class ModalPayment extends Component {
             await this.props.getDataStore();
             await this.handleClose();
             toast.success("Vui Lòng Xác Nhận Email Để Hoàn Tất Quá Trình Đặt Hàng")
-        } else if (resOrder && resOrder.errCode === -1) {
+        } else if (resOrder && resOrder.errCode === -2) {
             await this.props.getDataStore();
             this.handleClose();
             toast.error(
                 "Đặt Hàng Thất Bại, Có Lẻ Số Lượng Không Đủ Đáp Ứng Cho Nhu Cầu Của Bạn"
+            )
+        } else if (resOrder && resOrder.errCode === -1) {
+            // this.handleClose();
+            toast.error(
+                "Có Gì Đó Không Đúng Với Email Của Bạn"
             )
         }
         this.setState({

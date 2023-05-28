@@ -200,6 +200,7 @@ class ListPaintPacks extends Component {
                     openRent={openRent}
                     closeRent={this.closeRent}
                     paintPackId={paintPackId}
+                    getListSubmit={this.getListSubmit}
                 />
             </div>
         );

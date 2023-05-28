@@ -149,9 +149,6 @@ class ListGiaCong extends Component {
                                 <th>Loại Công Trình</th>
                                 <th>Diện Tích</th>
                                 <th>Địa Chỉ</th>
-                                <th>Màu Mong Muốn</th>
-                                <th>Ngày Khởi Công</th>
-                                <th>Ngày Hoàn Thành</th>
                                 <th>Yêu Cầu Đặc Biệc</th>
                                 <th>Action</th>
                             </tr>
@@ -172,9 +169,6 @@ class ListGiaCong extends Component {
                                             <SearchIcon />
                                         </button>
                                     </td>
-                                    <td>{item.color}</td>
-                                    <td>{item.startDate}</td>
-                                    <td>{item.endDate}</td>
                                     <td className="design-center">
                                         <button
                                             className="btn btn-primary"

@@ -166,7 +166,7 @@ class ListMachining extends Component {
                     aria-describedby="child-modal-description"
                 >
                     <Box sx={{
-                        ...style, width: 500, height: 200, textAlign: 'center', paddingTop: 10
+                        ...style, width: 1000, height: 100, textAlign: 'center', paddingTop: 5
                     }}>
                         {this.state.dataModal === '' ? "( Trống )" : this.state.dataModal}
                     </Box>
