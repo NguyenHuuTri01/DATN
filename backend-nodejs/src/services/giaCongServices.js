@@ -73,6 +73,7 @@ let getGiaCongById = (userId) => {
                 where: {
                     userId: userId
                 },
+                order: [["createdAt", "DESC"]],
                 attributes: ['id', 'address', 'loaiCongTrinh', 'area', 'paintPack', 'status'],
                 include: [
                     {
@@ -184,6 +185,7 @@ let nhanGiaCongById = (dataInput) => {
                 })
             } else {
                 let data = await db.GiaCong.findAll({
+                    order: [["createdAt", "DESC"]],
                     where: {
                         constructorId: dataInput.constructorId,
                     },

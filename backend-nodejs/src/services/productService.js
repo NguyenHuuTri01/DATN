@@ -100,6 +100,9 @@ let delelteLoaiSon = (data) => {
                     errMessage: `The loaison isn't exists`,
                 });
             }
+            await db.Product.destroy({
+                where: { paintCatelory: data.paintId },
+            });
             await db.LoaiSon.destroy({
                 where: { paintId: data.paintId },
             });
@@ -121,7 +124,6 @@ let createPaintProduct = (data) => {
                 || !data.paintName
                 || !data.paintPrice
                 || !data.paintCatelory
-                || !data.paintDescription
                 || !data.imageBase64
             ) {
                 resolve({
@@ -135,10 +137,8 @@ let createPaintProduct = (data) => {
                         paintId: data.paintId,
                         paintName: data.paintName,
                         paintPrice: data.paintPrice,
-                        paintDiscount: data.paintDiscount,
                         paintQuantity: data.paintQuantity,
                         paintCatelory: data.paintCatelory,
-                        paintDescription: data.paintDescription,
                         image: data.imageBase64,
                         numberSold: 0
                     }
@@ -220,7 +220,6 @@ let editPaintProduct = (data) => {
                 || !data.paintName
                 || !data.paintPrice
                 || !data.paintCatelory
-                || !data.paintDescription
                 || !data.imageBase64
             ) {
                 resolve({
@@ -237,10 +236,8 @@ let editPaintProduct = (data) => {
                 paint.paintId = data.paintId;
                 paint.paintName = data.paintName;
                 paint.paintPrice = data.paintPrice;
-                paint.paintDiscount = data.paintDiscount;
                 paint.paintQuantity = data.paintQuantity;
                 paint.paintCatelory = data.paintCatelory;
-                paint.paintDescription = data.paintDescription;
                 paint.image = data.imageBase64;
                 await paint.save();
                 resolve({

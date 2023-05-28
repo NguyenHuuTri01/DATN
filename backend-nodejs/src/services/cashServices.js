@@ -102,7 +102,7 @@ let createCashOnReceipt = (data) => {
                     });
                 })
                 resolve({
-                    errCode: -1,
+                    errCode: -2,
                     errMessage: 'Đặt Hàng Thất Bại'
                 })
             }
