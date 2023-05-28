@@ -7,6 +7,7 @@ import { createNewUserService } from "../../services/userService";
 import Navbar from "./Navbar";
 import { toast } from "react-toastify";
 import LoadingOverlay from "react-loading-overlay";
+import unorm from 'unorm';
 
 class Register extends Component {
     constructor(props) {
@@ -30,6 +31,12 @@ class Register extends Component {
     }
 
     validateEmail = (email) => {
+        const normalizedStr = unorm.nfkd(email);
+        const regex = /[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF\u1EF0-\u1EFF]/;
+        if (regex.test(normalizedStr)) {
+            return false
+        }
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }

@@ -260,6 +260,7 @@ class PaintManage extends Component {
     let offset = currentPage * perPage;
     let pageCount = Math.ceil(allProduct.length / perPage);
     let currentPageData = allProduct.slice(offset, offset + perPage);
+
     return (
       <div className="paint-container">
         <div className="title-qlsp">Quản Lý Sản Phẩm</div>

@@ -6,6 +6,7 @@ import { submitForm } from '../../../services/userService';
 import { toast } from "react-toastify";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import unorm from 'unorm';
 
 const style = {
     position: 'absolute',
@@ -51,6 +52,12 @@ class Machining extends Component {
         })
     }
     validateEmail = (email) => {
+        const normalizedStr = unorm.nfkd(email);
+        const regex = /[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF\u1EF0-\u1EFF]/;
+        if (regex.test(normalizedStr)) {
+            return false
+        }
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }

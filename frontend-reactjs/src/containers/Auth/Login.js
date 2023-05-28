@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import unorm from 'unorm';
 
 const style = {
   position: 'absolute',
@@ -100,6 +101,12 @@ class Login extends Component {
     })
   }
   validateEmail = (email) => {
+    const normalizedStr = unorm.nfkd(email);
+    const regex = /[\u0300-\u036F\u1DC0-\u1DFF\u1AB0-\u1AFF\u1EF0-\u1EFF]/;
+    if (regex.test(normalizedStr)) {
+      return false
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
@@ -111,6 +118,7 @@ class Login extends Component {
     }
   }
   render() {
+
     return (
       <div className="login-background">
         <Navbar />
