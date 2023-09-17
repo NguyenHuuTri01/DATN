@@ -1,0 +1,163 @@
+.history-container {
+    width  : 100%;
+    padding: 0 2%;
+    border : 1px solid #ECF2FF;
+    height : calc(100vh - 60px);
+
+    .history-title {
+        font-size    : 30px;
+        font-weight  : 600;
+        margin-top   : 50px;
+        margin-bottom: 50px;
+        text-align   : center;
+    }
+
+    .history-table-title {
+        display: flex;
+
+        .title-text {
+            display         : flex;
+            justify-content : center;
+            align-items     : center;
+            height          : 50px;
+            border          : 1px solid #333;
+            margin-bottom   : 20px;
+            background-color: #9BA4B5;
+            color           : #FEFF86;
+            font-weight     : 600;
+        }
+
+        .title-id {
+            width                    : 20%;
+            border-top-left-radius   : 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        .title-image {
+            width: 100px;
+        }
+
+        .title-name {
+            width: 270px;
+        }
+
+        .title-amount {
+            width: 52px;
+        }
+
+        .title-color {
+            width: 110px;
+        }
+
+        .title-price {
+            width: 140px;
+        }
+
+        .title-discount {
+            width: 50px;
+        }
+
+        .title-date {
+            width: 150px;
+        }
+
+        .title-payment {
+            width: 190px;
+        }
+
+        .title-transport {
+            width                     : 130px;
+            border-top-right-radius   : 10px;
+            border-bottom-right-radius: 10px;
+        }
+    }
+
+    .history-list {
+        display      : flex;
+        margin-bottom: 15px;
+        width        : 100%;
+
+        .transaction-id {
+            width                    : 20.9%;
+            display                  : flex;
+            align-items              : center;
+            padding-left             : 5px;
+            border-bottom-left-radius: 10px;
+            box-shadow               : rgba(0, 0, 0, 0.19) 0px 10px 20px,
+                rgba(0, 0, 0, 0.23) 0px 6px 6px;
+        }
+
+        .filter-transaction {
+            justify-content: center;
+            align-items    : center;
+
+            .history-paint-image {
+                width              : 100px;
+                height             : 50px;
+                background-size    : contain;
+                background-position: center;
+                background-repeat  : no-repeat;
+                box-shadow         : rgba(0, 0, 0, 0.19) 0px 10px 20px,
+                    rgba(0, 0, 0, 0.23) 0px 6px 6px;
+            }
+
+            .history-td {
+                display     : flex;
+                align-items : center;
+                padding-left: 5px;
+                box-shadow  : rgba(0, 0, 0, 0.19) 0px 10px 20px,
+                    rgba(0, 0, 0, 0.23) 0px 6px 6px;
+            }
+
+            .history-paint-name {
+                width: 270px;
+            }
+
+            .history-amount {
+                width: 50px;
+            }
+
+            .history-price {
+                width: 140px;
+            }
+
+            .history-discount {
+                width: 50px;
+            }
+
+            .history-color {
+                width: 110px;
+            }
+
+            .history-payment-date {
+                width: 150px;
+            }
+        }
+
+        .type-payment {
+            width: 200px;
+            box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+                rgba(0, 0, 0, 0.23) 0px 6px 6px;
+            display        : flex;
+            align-items    : center;
+            justify-content: center;
+            padding-left   : 5px;
+        }
+
+        .transport {
+            width: 130px;
+            box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+                rgba(0, 0, 0, 0.23) 0px 6px 6px;
+            display                   : flex;
+            justify-content           : center;
+            align-items               : center;
+            padding-left              : 5px;
+            border-bottom-right-radius: 10px;
+
+            button {
+                width        : 100px;
+                border-radius: 20px;
+            }
+        }
+    }
+}

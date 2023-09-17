@@ -1,0 +1,24 @@
+.btn-payment {
+    margin-left     : 20px !important;
+    background-color: #7978FF !important;
+    width           : 200px;
+    color           : white !important;
+
+    &:disabled {
+        opacity: 0.5;
+    }
+}
+
+.btn-close-payment {
+    margin-top      : 50px !important;
+    background-color: #666666 !important;
+    color           : #FFFFFF !important;
+}
+
+div._loading_overlay_wrapper {
+    position: unset;
+
+    ._loading_overlay_overlay {
+        z-index: 10000;
+    }
+}

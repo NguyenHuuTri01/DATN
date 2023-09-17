@@ -1,0 +1,83 @@
+table {
+    width          : 100%;
+    border-collapse: collapse;
+    margin-bottom  : 20px;
+}
+
+table th,
+table td {
+    border : 1px solid #ddd;
+    padding: 8px;
+}
+
+table th {
+    background-color: #958585;
+    text-align      : center;
+}
+
+.pagination {
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    list-style     : none;
+    margin         : 0;
+    padding        : 0;
+}
+
+.pagination li {
+    display     : inline-block;
+    margin-right: 5px;
+    font-size   : 16px;
+}
+
+.pagination li a {
+    display         : block;
+    padding         : 5px 10px;
+    color           : #333;
+    background-color: #fff;
+    border          : 1px solid #ccc;
+    border-radius   : 3px;
+}
+
+.pagination li.active a {
+    background-color: #428bca;
+    color           : #fff;
+}
+
+.pagination li a:hover {
+    background-color: #ddd;
+    text-decoration : none;
+}
+
+.danh-sach-don-hang {
+
+    .title-danh-sach-don-hang {
+        text-align : center;
+        font-size  : 20px;
+        font-weight: 600;
+        margin     : 18px 0;
+    }
+
+    .search-input {
+        display      : flex;
+        margin       : 0 50px;
+        margin-bottom: 5px;
+        gap          : 10px;
+    }
+
+    .table-danh-sach-don-hang {
+        padding      : 0 50px;
+        margin-bottom: 15px;
+
+        .action-btn {
+            width     : 150px;
+            text-align: center;
+
+            button {
+                margin   : 0 10px;
+                height   : 30px;
+                font-size: 12px;
+            }
+        }
+    }
+}

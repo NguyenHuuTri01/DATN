@@ -1,0 +1,47 @@
+.paint-container {
+    width: 100%;
+
+    .title-qlsp {
+        text-align : center;
+        font-size  : 20px;
+        font-weight: 600;
+        margin     : 20px 0;
+    }
+
+    .form-group {
+        display: flex;
+
+        .label-upload {
+            padding      : 5px;
+            border-radius: 3px;
+            background   : #ddd;
+            cursor       : pointer;
+
+            &:hover {
+                opacity: 0.9;
+            }
+        }
+
+        .preview-image {
+            height         : 50px;
+            width          : 100%;
+            border         : 1px solid #ddd;
+            background     : center center no-repeat;
+            background-size: contain;
+            cursor         : pointer;
+        }
+    }
+
+    .btn-create-product {
+        display        : flex;
+        justify-content: center;
+        margin-top     : 20px;
+        margin-bottom  : 20px;
+        gap            : 20px;
+
+        button {
+            width : 200px;
+            height: 30px;
+        }
+    }
+}

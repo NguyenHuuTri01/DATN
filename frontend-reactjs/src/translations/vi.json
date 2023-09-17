@@ -1,0 +1,21 @@
+{
+    "menu": {
+        "admin":{
+            "manage-paint":"Sản phẩm",
+            "statistical": "Thống kê",
+             "manage-user": "Quản lý tài khoản"
+        },
+        "employee": {
+            "manage-paint": "Quản lý sản phẩm",
+            "statistical":"Thống kê",
+            "danh-muc-hang":"Danh mục hàng",
+            "list-order":"Danh sách đơn hàng",
+            "cancel-order":"Đơn bị hủy",
+            "imformation-paint":"Thông chi tiết sản phẩm",
+            "paint-pack":"Các gói gia công",
+            "number-of-item-sold":"Số lượng đã bán",
+            "customer-buy-a-lot":"Khách hàng mua nhiều",
+            "manage-discount":"Khuyến mãi"
+        }
+    }
+}

@@ -1,0 +1,80 @@
+.discount-container {
+    padding: 0 5%;
+
+    .discount-title {
+        text-align : center;
+        font-size  : 20px;
+        font-weight: 600;
+        margin     : 20px 0;
+    }
+
+    .discount-select {
+        width        : 40%;
+        margin-bottom: 2%;
+
+        label {
+            font-size: 15px;
+        }
+    }
+
+    .date-range-picker-container {
+        display        : flex;
+        justify-content: space-between;
+
+        div {
+            display       : flex;
+            flex-direction: column;
+            width         : 40%;
+
+            label {
+                margin-bottom: 5px;
+                font-size    : 15px;
+            }
+
+            input[type="datetime-local"] {
+                padding      : 5px;
+                border-radius: 5px;
+                border       : 1px solid #ccc;
+                width        : 100%;
+                font-size    : 20px;
+            }
+        }
+    }
+
+    .discount-input {
+        width     : 40%;
+        margin-top: 2%;
+
+        label {
+            font-size: 15px;
+        }
+
+        input {
+            font-size: 20px;
+        }
+    }
+
+    .discount-action {
+        margin-top     : 5%;
+        margin-bottom  : 2%;
+        display        : flex;
+        justify-content: center;
+        gap            : 2%;
+
+        .btn-range-date {
+            width: 100px;
+        }
+    }
+
+    .table-discount {
+        .action-btn {
+            text-align: center;
+
+            button {
+                margin: 0 10px;
+                width : 100px;
+            }
+        }
+    }
+
+}

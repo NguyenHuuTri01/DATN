@@ -1,0 +1,20 @@
+.detail-container {
+    padding: 0 2%;
+
+    .detail-title {
+        text-align : center;
+        font-size  : 20px;
+        font-weight: 600;
+        margin     : 20px 0;
+    }
+
+    .detail-select {
+        width        : 30%;
+        margin-bottom: 2%;
+    }
+
+    .btn-save-information {
+        margin-top: 20px;
+        width     : 100px;
+    }
+}

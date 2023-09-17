@@ -1,0 +1,82 @@
+  .store-item {
+      display     : flex;
+      margin      : 20px 5px;
+      align-items : center;
+      position    : relative;
+      padding-left: 20px;
+
+      &.store-item-checked {
+          border-radius   : 50px;
+          outline         : none;
+          background-color: #FCDDB0;
+      }
+
+      .checkbox-item {
+          width : 20px;
+          height: 20px;
+      }
+
+      .image-item {
+          margin-left        : 20px;
+          width              : 100px;
+          height             : 100px;
+          background-size    : contain;
+          background-position: center;
+          background-repeat  : no-repeat;
+      }
+
+      .infor-item {
+          margin-left: 20px;
+
+          .name-product {
+              font-size  : 20px;
+              font-weight: 600;
+          }
+
+          .number-paint {
+              position: relative;
+              width   : 300px;
+
+              .notification {
+                  position   : absolute;
+                  right      : 0;
+                  bottom     : 0;
+                  color      : red;
+                  font-weight: 600;
+              }
+          }
+
+          .modal-child {
+              height: 200px !important;
+          }
+
+          .btn-update-count-item {
+              position        : absolute;
+              right           : 0;
+              top             : 50%;
+              transform       : translate(-50%, -50%);
+              background-color: #FF1744;
+              color           : #FFFFFF;
+              border-radius   : 20px;
+
+              &:hover {
+                  background-color: #388E3C;
+                  color           : #FFFFFF;
+              }
+          }
+
+          .select-color {
+              position : absolute;
+              width    : 20%;
+              height   : 40%;
+              right    : 21%;
+              top      : 50%;
+              transform: translate(-50%, -50%);
+
+              .select-content {
+                  width : 100%;
+                  height: 100%;
+              }
+          }
+      }
+  }

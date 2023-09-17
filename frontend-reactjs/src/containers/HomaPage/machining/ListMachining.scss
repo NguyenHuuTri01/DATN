@@ -1,0 +1,22 @@
+.danh-sach-don-thue-gia-cong {
+    padding: 0 2%;
+
+    .title-gia-cong {
+        font-size    : 30px;
+        font-weight  : 600;
+        margin-top   : 50px;
+        margin-bottom: 50px;
+        text-align   : center;
+    }
+
+    .table-gia-cong {
+        .design-center {
+            text-align: center;
+
+            button {
+                margin: 0 5px;
+            }
+        }
+    }
+
+}

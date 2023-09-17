@@ -1,0 +1,37 @@
+  .left-header {
+    width    : 20%;
+    font-size: 20px;
+
+    .logo {
+      background         : url("../../assets/images/logo.png") center no-repeat;
+      background-position: center 49%;
+      background-size    : cover;
+      height             : 100%;
+      width              : 190px;
+    }
+  }
+
+  .right-header {
+    padding        : 0 20px;
+    width          : 20%;
+    font-size      : 20px;
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+
+    .icon-store {
+      color: red;
+    }
+
+    .icon-message {
+      color: #0A4D68;
+    }
+  }
+
+  .tab-list {
+    width: 60%;
+
+    button {
+      font-weight: 600;
+    }
+  }

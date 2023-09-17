@@ -1,0 +1,228 @@
+.MuiTabPanel-root {
+    padding: 0 !important;
+}
+
+.shoping-container {
+    display         : flex;
+    height          : calc(100vh - 48px - 21.5px);
+    margin-top      : 20px;
+    background-color: #A5C0DD;
+
+    .content-left {
+        width           : 25%;
+        padding-top     : 5%;
+        padding-left    : 3%;
+        margin-left     : 15px;
+        margin-right    : 10px;
+        position        : relative;
+        background-color: whitesmoke;
+        box-shadow      : rgba(0, 0, 0, 0.4) 0px 2px 4px,
+            rgba(0, 0, 0, 0.3) 0px 7px 13px -3px,
+            rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+        .search-paint {
+            position: absolute;
+            display : flex;
+            top     : 20px;
+            left    : 40px;
+
+            input {
+                width       : 300px;
+                padding-left: 10px;
+                margin-right: 10px;
+                outline     : none;
+            }
+
+        }
+
+        .title-portfolio {
+            font-size    : 25px;
+            font-weight  : 600;
+            margin-bottom: 20px;
+        }
+
+        .radio-btn-portfolio {
+            display       : flex;
+            flex-direction: column;
+            height        : 70%;
+            width         : 15%;
+            position      : fixed;
+            overflow      : auto;
+            overflow-x    : hidden;
+        }
+    }
+
+    .content-right {
+        width     : 75%;
+        height    : 100%;
+        overflow  : auto;
+        display   : flex;
+        flex-wrap : wrap;
+        background: #A5C0DD;
+        overflow-x: hidden;
+
+        .content-child {
+            width              : 30%;
+            height             : 50%;
+            margin             : 15px;
+            background-position: center 35%;
+            background-repeat  : no-repeat;
+            background-size    : 50%;
+            position           : relative;
+            transition         : background-size 0.3s;
+            cursor             : pointer;
+            box-shadow         : 0px 10px 30px rgba(57, 56, 61, 0.205);
+            overflow           : hidden;
+            background-color   : whitesmoke;
+
+            &:hover {
+                background-size: 55%;
+                box-shadow     : 0px 10px 30px rgba(102, 231, 16, 0.3);
+            }
+
+            .name-item {
+                position : absolute;
+                font-size: 15px;
+                top      : 20px;
+                left     : 10px;
+            }
+
+            .name-sale {
+                height: 100%;
+
+                .no-sale {
+                    display: none;
+                }
+
+                .sale-off-item {
+                    position        : absolute;
+                    width           : 50px;
+                    height          : 40px;
+                    background-color: orange;
+                    right           : 0;
+                    display         : flex;
+                    justify-content : center;
+                    align-items     : center;
+                    font-size       : 15px;
+                }
+
+                .sale-off-item::after {
+                    content     : "";
+                    position    : absolute;
+                    left        : 0;
+                    right       : 0;
+                    bottom      : -20px;
+                    border-width: 0 25px 20px;
+                    border-style: solid;
+                    border-color: transparent orange transparent orange;
+                }
+
+                .price {
+                    position : absolute;
+                    bottom   : 65px;
+                    left     : 50%;
+                    transform: translate(-50%, -50%);
+                    margin   : auto;
+
+                    .price-sale {
+                        color: blue;
+                    }
+
+                    .price-origin {
+                        text-decoration: line-through;
+                        color          : red;
+                    }
+                }
+
+                .date-sale {
+                    position  : absolute;
+                    bottom    : 35px;
+                    left      : 50%;
+                    transform : translate(-50%, -50%);
+                    width     : 100%;
+                    text-align: center;
+                    margin    : auto;
+                    font-size : 13px;
+                    color     : green;
+
+                    .text-price {
+                        color               : #333;
+                        text-decoration-line: underline;
+                    }
+                }
+
+                .hide-date-sale {
+                    display: none;
+                }
+            }
+
+            .btn-add-to-cart {
+                position       : absolute;
+                bottom         : 0;
+                width          : 100%;
+                display        : flex;
+                justify-content: center;
+
+                .btn-add {
+                    background-color: #c47135;
+                    border          : none;
+                    color           : #ffffff;
+                    cursor          : pointer;
+                    display         : inline-block;
+                    font-family     : 'BenchNine',
+                        Arial,
+                        sans-serif;
+                    font-size     : 1em;
+                    font-size     : 80%;
+                    line-height   : 1em;
+                    margin        : 15px 40px;
+                    outline       : none;
+                    padding       : 12px 40px 10px;
+                    position      : relative;
+                    text-transform: uppercase;
+                    font-weight   : 700;
+                }
+
+                .btn-add::before,
+                .btn-add::after {
+                    border-color      : transparent;
+                    -webkit-transition: all 0.25s;
+                    transition        : all 0.25s;
+                    border-style      : solid;
+                    border-width      : 0;
+                    content           : "";
+                    height            : 24px;
+                    position          : absolute;
+                    width             : 24px;
+                }
+
+                .btn-add::before {
+                    border-color    : #c47135;
+                    border-top-width: 2px;
+                    left            : 0px;
+                    top             : -5px;
+                }
+
+                .btn-add::after {
+                    border-bottom-width: 2px;
+                    border-color       : #c47135;
+                    bottom             : -5px;
+                    right              : 0px;
+                }
+
+                .btn-add:hover,
+                .btn-add.hover {
+                    background-color: #c47135;
+                }
+
+                .btn-add:hover:before,
+                .btn-add.hover:before,
+                .btn-add:hover:after,
+                .btn-add.hover:after {
+                    height: 100%;
+                    width : 100%;
+                }
+            }
+        }
+    }
+}

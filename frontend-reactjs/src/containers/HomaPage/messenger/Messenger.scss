@@ -1,0 +1,219 @@
+.messenger-container {
+    position           : fixed;
+    bottom             : 0;
+    right              : 0;
+    margin             : 20px;
+    padding            : 10px;
+    // border-radius   : 20px;
+    background-color   : #FFF7D4;
+    box-shadow         : 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar {
+    width : 6px;
+    /* chiều rộng thanh overflow */
+    height: 6px;
+    /* chiều cao thanh overflow */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    /* màu của nút bấm thanh overflow */
+}
+
+.messenger-container-expanded {
+    height : 400px;
+    display: none;
+}
+
+.messenger-chat {
+    height        : 600px;
+    width         : 400px;
+    display       : flex;
+    flex-direction: column;
+    position      : relative;
+
+    .messenger-chat-header {
+        display        : flex;
+        justify-content: space-between;
+        align-items    : center;
+        padding        : 10px;
+        border-bottom  : 1px solid #ccc;
+
+        h2 {
+            margin: 0;
+        }
+
+        button {
+            background-color: transparent;
+            border          : none;
+            color           : #0084ff;
+            cursor          : pointer;
+            font-weight     : bold;
+        }
+    }
+
+    .list-user {
+        position        : absolute;
+        overflow        : auto;
+        top             : -10px;
+        width           : 300px;
+        height          : 620px;
+        left            : -310px;
+        background-color: #E1D4BB;
+        padding         : 10px 5px;
+
+        .active {
+            background-color: #FFD95A;
+        }
+
+        .user-item {
+            margin-top   : 7px;
+            display      : flex;
+            height       : 50px;
+            align-items  : center;
+            cursor       : pointer;
+            border-bottom: 1px solid #A0D8B3;
+
+            &:hover {
+                background-color: #FFD95A;
+            }
+
+            .right-user-item {
+                width   : 100%;
+                position: relative;
+
+                .email {
+                    margin-left: 10px;
+                    font-size  : 16px;
+                    font-weight: 600;
+                }
+
+                .new-message {
+                    font-size      : 12px;
+                    margin-left    : 10px;
+                    display        : flex;
+                    justify-content: space-between;
+
+                    .message {
+                        display           : -webkit-box;
+                        -webkit-line-clamp: 1;
+                        -webkit-box-orient: vertical;
+                        overflow          : hidden;
+                        text-overflow     : ellipsis;
+                    }
+
+                    .message-not-seen {
+                        width           : 25px;
+                        height          : 25px;
+                        position        : absolute;
+                        right           : 0;
+                        bottom          : 10%;
+                        display         : flex;
+                        justify-content : center;
+                        align-items     : center;
+                        border-radius   : 50%;
+                        color           : #fff;
+                        background-color: red;
+                    }
+                }
+            }
+        }
+    }
+
+    .messenger-chat-body {
+        flex         : 1;
+        padding      : 10px;
+        overflow-y   : auto;
+        border-bottom: 1px solid #ccc;
+
+        .message-received {
+            display        : flex;
+            justify-content: flex-start;
+            margin-top     : 5px;
+
+            .message-content {
+                height          : auto;
+                max-width       : 70%;
+                padding         : 5px 10px;
+                font-size       : 17px;
+                border-radius   : 5px;
+                background-color: #3e4042;
+                color           : #fff;
+
+                .time {
+                    font-size : 10px;
+                    font-style: italic;
+                }
+            }
+        }
+
+        .message-sent {
+            display        : flex;
+            justify-content: flex-end;
+            margin-top     : 5px;
+            height         : auto;
+
+            .message-content {
+                height          : auto;
+                max-width       : 70%;
+                padding         : 5px 10px;
+                font-size       : 17px;
+                border-radius   : 5px;
+                background-color: rgb(0, 132, 255);
+                color           : #fff;
+                text-align      : right;
+
+                .time {
+                    font-size : 10px;
+                    font-style: italic;
+                }
+            }
+        }
+    }
+
+    .messenger-chat-action {
+        margin         : 10px 0;
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+
+        .input-chat {
+            width           : 90%;
+            height          : auto;
+            padding         : 12px;
+            border          : 1px solid #9BA4B588;
+            border-radius   : 24px;
+            background-color: #F5F5F5;
+            font-size       : 16px;
+            line-height     : 1.5;
+            resize          : none;
+            box-sizing      : border-box;
+            transition      : all 0.2s ease-in-out;
+
+            &:focus {
+                outline   : none;
+                box-shadow: 0 0 0 2px #0057FF;
+            }
+        }
+
+        .btn-send {
+            width    : 10%;
+            font-size: 30px;
+            cursor   : pointer;
+        }
+    }
+}
+
+.messenger-toggle {
+    position        : absolute;
+    top             : -50px;
+    right           : 0;
+    background-color: #0084ff;
+    color           : #fff;
+    border          : none;
+    border-radius   : 50%;
+    padding         : 10px;
+    cursor          : pointer;
+    box-shadow      : 0 0 10px rgba(0, 0, 0, 0.3);
+}

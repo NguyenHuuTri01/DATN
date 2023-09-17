@@ -1,0 +1,33 @@
+.paint-pack-container {
+    padding: 0 2%;
+
+    .paint-pack-title {
+        text-align : center;
+        font-size  : 20px;
+        font-weight: 600;
+    }
+
+    .paint-pack-name {
+        width        : 70%;
+        margin-bottom: 2%;
+    }
+
+    .btn-save {
+        margin-top: 10px;
+    }
+
+    .btn-cancel {
+        margin: 10px 0 0 20px;
+    }
+
+    .table-list-paint-pack {
+        margin-top: 10px;
+
+        .action-btn {
+            button {
+                width : 100px;
+                margin: 0 10px;
+            }
+        }
+    }
+}

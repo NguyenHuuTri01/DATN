@@ -1,0 +1,19 @@
+.number-sold-container {
+    .number-sold-title {
+        text-align : center;
+        font-size  : 20px;
+        font-weight: 600;
+        margin     : 18px 0;
+    }
+
+    .sort {
+        color      : #fff;
+        font-size  : 25px;
+        margin-left: 10px;
+        cursor     : pointer;
+
+        &:hover {
+            color: rgb(16, 196, 236);
+        }
+    }
+}

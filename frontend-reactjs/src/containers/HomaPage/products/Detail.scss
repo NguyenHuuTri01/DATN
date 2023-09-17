@@ -1,0 +1,100 @@
+.detail-paint-container {
+
+    height: 100%;
+
+    .header-paint {
+        width   : 100%;
+        position: fixed;
+        top     : 0;
+    }
+
+    .information-paint {
+        padding: 0 15%;
+
+        .name-paint {
+            margin-top : 8%;
+            text-align : center;
+            font-size  : 20px;
+            font-weight: 600;
+        }
+
+        .image-paint {
+            height             : 200px;
+            margin-top         : 2%;
+            background-position: center center;
+            background-repeat  : no-repeat;
+            background-size    : contain;
+        }
+
+        .btn-add-to-cart {
+            width          : 100%;
+            display        : flex;
+            justify-content: center;
+
+            .btn-add {
+                background-color: #c47135;
+                border          : none;
+                color           : #ffffff;
+                cursor          : pointer;
+                display         : inline-block;
+                font-family     : 'BenchNine',
+                    Arial,
+                    sans-serif;
+                font-size     : 1em;
+                font-size     : 80%;
+                line-height   : 1em;
+                margin        : 15px 40px;
+                outline       : none;
+                padding       : 12px 40px 10px;
+                position      : relative;
+                text-transform: uppercase;
+                font-weight   : 700;
+            }
+
+            .btn-add::before,
+            .btn-add::after {
+                border-color      : transparent;
+                -webkit-transition: all 0.25s;
+                transition        : all 0.25s;
+                border-style      : solid;
+                border-width      : 0;
+                content           : "";
+                height            : 24px;
+                position          : absolute;
+                width             : 24px;
+            }
+
+            .btn-add::before {
+                border-color    : #c47135;
+                border-top-width: 2px;
+                left            : 0px;
+                top             : -5px;
+            }
+
+            .btn-add::after {
+                border-bottom-width: 2px;
+                border-color       : #c47135;
+                bottom             : -5px;
+                right              : 0px;
+            }
+
+            .btn-add:hover,
+            .btn-add.hover {
+                background-color: #c47135;
+            }
+
+            .btn-add:hover:before,
+            .btn-add.hover:before,
+            .btn-add:hover:after,
+            .btn-add.hover:after {
+                height: 100%;
+                width : 100%;
+            }
+        }
+
+        .detail-paint {
+            margin-top   : 2%;
+            margin-bottom: 2%;
+        }
+    }
+}
